@@ -1,9 +1,9 @@
 .divider {
-  width: 30vh;
+  width: 15vw;
 }
 
 .sidenav {
-  width: 30vh;
+  width: 15vw;
   @apply bg-black-500 z-40 fixed top-0 h-screen;
 }
 
@@ -13,4 +13,9 @@
 
 .container {
   @apply flex;
+}
+
+.children {
+  width: 85vw;
+  @apply p-4;
 }

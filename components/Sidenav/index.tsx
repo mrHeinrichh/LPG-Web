@@ -3,17 +3,15 @@ import style from "./style.module.css";
 
 import { Button, Navbar } from "@/components";
 
-function Sidenav() {
+function Sidenav({ children }: any) {
   return (
     <>
-      <div className={style.sidenav}>
-        <h3>LPG ADMIN</h3>
-      </div>
+      <div className={style.sidenav}></div>
       <div className={style.container}>
         <div className={style.divider}></div>
         <div>
           <Navbar />
-          <h1>asd</h1>
+          <div className={style.children}>{children}</div>
         </div>
       </div>
     </>
