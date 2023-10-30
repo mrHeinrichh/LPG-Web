@@ -19,3 +19,11 @@
   width: 85vw;
   @apply p-4;
 }
+
+.header {
+  height: 10vh;
+}
+
+.link_container {
+  @apply p-4 flex gap-3 transition-all hover:bg-black-900;
+}
