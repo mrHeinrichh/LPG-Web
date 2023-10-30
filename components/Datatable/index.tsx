@@ -1,7 +1,7 @@
 import React from "react";
 import style from "./style.module.css";
 
-function Datatable({ header }: any) {
+function Datatable({ header, children }: any) {
   return (
     <>
       <table className={style.styled_table}>
@@ -12,16 +12,7 @@ function Datatable({ header }: any) {
             ))}
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>Dom</td>
-            <td>6000</td>
-          </tr>
-          <tr className="active-row">
-            <td>Melissa</td>
-            <td>5150</td>
-          </tr>
-        </tbody>
+        <tbody>{children}</tbody>
       </table>
     </>
   );
