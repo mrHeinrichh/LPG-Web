@@ -1,0 +1,16 @@
+.divider {
+  width: 30vh;
+}
+
+.sidenav {
+  width: 30vh;
+  @apply bg-black-500 z-40 fixed top-0 h-screen;
+}
+
+.links_container {
+  @apply text-white-500 flex items-center gap-9 font-bold;
+}
+
+.container {
+  @apply flex;
+}

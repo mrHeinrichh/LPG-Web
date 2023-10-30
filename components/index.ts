@@ -1,4 +1,4 @@
 import Button from "./Button";
 import Navbar from "./Navbar";
-
-export { Navbar, Button };
+import Sidenav from "./Sidenav";
+export { Sidenav, Navbar, Button };
