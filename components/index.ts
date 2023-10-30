@@ -1,4 +1,6 @@
 import Button from "./Button";
 import Navbar from "./Navbar";
 import Sidenav from "./Sidenav";
-export { Sidenav, Navbar, Button };
+import Card from "./Card";
+import StatsCard from "./StatsCard";
+export { StatsCard, Card, Sidenav, Navbar, Button };

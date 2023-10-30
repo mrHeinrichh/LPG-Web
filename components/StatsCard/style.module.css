@@ -1,0 +1,10 @@
+.container {
+  @apply p-5 bg-black-500 rounded;
+}
+
+.gain {
+  @apply text-green-500;
+}
+.loss {
+  @apply text-red-500;
+}
