@@ -6,8 +6,6 @@ import Image from "next/image";
 export async function getData() {
   const response = await fetch(`${API_URL}items`);
   const data = (await response.json()).data;
-  console.log(data);
-
   return data;
 }
 
