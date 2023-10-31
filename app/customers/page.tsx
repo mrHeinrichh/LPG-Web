@@ -10,7 +10,14 @@ export async function getUsers() {
 }
 
 export default async function Transactions({}: any) {
-  const header: any[] = ["Name", "Contact Number", "Type", "Action"];
+  const header: any[] = [
+    "Name",
+    "Contact Number",
+    "Address",
+    "Address",
+    "Discounted",
+    "Action",
+  ];
 
   const data = await getUsers();
 
@@ -23,7 +30,9 @@ export default async function Transactions({}: any) {
             <TableRow key={e._id}>
               <td>{e.name}</td>
               <td>{e.contactNumber}</td>
-              <td>{e.__t}</td>
+              <td>{e.address}</td>
+              <td>{e.verified ? "Verfied" : "Pending"}</td>
+              <td>{e.discounted ? "Discounted" : "Not Discounted"}</td>
               <td>
                 <Image src={trash} alt={"trash"}></Image>
               </td>
