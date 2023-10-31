@@ -6,8 +6,6 @@ import Image from "next/image";
 export async function getUsers() {
   const response = await fetch(`${API_URL}users?filter={"__t": "Retailer"}`);
   const data = (await response.json()).data;
-  console.log(data);
-
   return data;
 }
 
@@ -26,7 +24,7 @@ export default async function Transactions({}: any) {
   return (
     <>
       <Sidenav>
-        <h4>Customers</h4>
+        <h4>Retailers</h4>
         <Datatable header={header}>
           {data.map((e: any) => (
             <TableRow key={e._id}>
