@@ -2,48 +2,62 @@ import React from "react";
 import style from "./style.module.css";
 
 import { Button, Navbar } from "@/components";
+import Link from "next/link";
 
 function Sidenav({ children }: any) {
   const links: any[] = [
     {
+      link: "/",
       title: "Dashboard",
     },
     {
+      link: "/transactions",
       title: "Transactions",
     },
     {
+      link: "/",
       title: "Feedbacks",
     },
     {
+      link: "/",
       title: "Chats",
     },
     {
+      link: "/",
       title: "Order History",
     },
     {
+      link: "/",
       title: "Appointment",
     },
     {
+      link: "/",
       title: "Products",
     },
     {
+      link: "/customers",
       title: "Customers",
     },
     {
+      link: "/",
       title: "Retailers",
     },
     {
+      link: "/",
       title: "Riders",
     },
   ];
+
   return (
     <>
       <div className={style.sidenav}>
         <div className={style.header}></div>
         {links.map((e: any) => (
-          <div key={e.title} className={style.link_container}>
-            <p>{e.title} </p>
-          </div>
+          <Link key={e.title} href={e.link}>
+            <div className={style.link_container}>
+              <p> {e.title}</p>
+            </div>
+          </Link>
         ))}
       </div>
       <div className={style.container}>
