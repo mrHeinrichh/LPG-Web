@@ -4,16 +4,16 @@
 
 .styled_table thead tr {
   text-align: left;
-  @apply bg-black-500;
+  @apply bg-white-100;
 }
 
 .styled_table th,
 .styled_table td {
-  @apply p-5;
+  @apply p-2;
 }
 
-.styled_table tbody tr:nth-of-type(even) {
-  @apply bg-black-500;
+.styled_table tbody tr {
+  @apply bg-white-100 border-b-8 border-grey-50;
 }
 
 .styled_table tbody tr.active-row {
