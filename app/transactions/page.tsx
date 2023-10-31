@@ -1,4 +1,4 @@
-import { Datatable, Sidenav } from "@/components";
+import { TableRow, Datatable, Sidenav } from "@/components";
 
 export default function Transactions() {
   const header: any[] = [
@@ -14,7 +14,63 @@ export default function Transactions() {
   return (
     <main>
       <Sidenav>
-        <Datatable header={header} />
+        <h4>Transactions</h4>
+        <Datatable header={header}>
+          <TableRow>
+            <td>TEST</td>
+            <td>TEST</td>
+            <td>TEST</td>
+            <td>TEST</td>
+            <td>TEST</td>
+            <td>TEST</td>
+            <td>6000</td>
+          </TableRow>
+          <TableRow>
+            <td>TEST</td>
+            <td>TEST</td>
+            <td>TEST</td>
+            <td>TEST</td>
+            <td>TEST</td>
+            <td>TEST</td>
+            <td>6000</td>
+          </TableRow>{" "}
+          <TableRow>
+            <td>TEST</td>
+            <td>TEST</td>
+            <td>TEST</td>
+            <td>TEST</td>
+            <td>TEST</td>
+            <td>TEST</td>
+            <td>6000</td>
+          </TableRow>{" "}
+          <TableRow>
+            <td>TEST</td>
+            <td>TEST</td>
+            <td>TEST</td>
+            <td>TEST</td>
+            <td>TEST</td>
+            <td>TEST</td>
+            <td>6000</td>
+          </TableRow>{" "}
+          <TableRow>
+            <td>TEST</td>
+            <td>TEST</td>
+            <td>TEST</td>
+            <td>TEST</td>
+            <td>TEST</td>
+            <td>TEST</td>
+            <td>6000</td>
+          </TableRow>{" "}
+          <TableRow>
+            <td>TEST</td>
+            <td>TEST</td>
+            <td>TEST</td>
+            <td>TEST</td>
+            <td>TEST</td>
+            <td>TEST</td>
+            <td>6000</td>
+          </TableRow>
+        </Datatable>
       </Sidenav>
     </main>
   );
