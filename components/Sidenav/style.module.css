@@ -25,5 +25,5 @@
 }
 
 .link_container {
-  @apply p-4 flex gap-3 transition-all hover:bg-black-900;
+  @apply p-4 flex gap-3 transition-all hover:bg-black-900 hover:text-white-100;
 }
