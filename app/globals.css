@@ -30,8 +30,7 @@
 }
 
 body {
-  background-color: #141414;
-  color: #fff;
+  @apply bg-grey-50;
 }
 
 h1 {
