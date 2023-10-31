@@ -31,8 +31,8 @@ function Sidenav({ children }: any) {
       title: "Appointment",
     },
     {
-      link: "/",
-      title: "Products",
+      link: "/items",
+      title: "Items",
     },
     {
       link: "/customers",
