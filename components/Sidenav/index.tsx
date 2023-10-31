@@ -43,7 +43,7 @@ function Sidenav({ children }: any) {
       title: "Retailers",
     },
     {
-      link: "/",
+      link: "/riders",
       title: "Riders",
     },
   ];
