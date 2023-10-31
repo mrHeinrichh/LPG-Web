@@ -3,11 +3,11 @@
 }
 
 .filled {
-  @apply bg-secondary-500 text-white-500;
+  @apply bg-white-500 text-white-500;
 }
 
 .outlined {
-  @apply bg-transparent text-secondary-500 border-secondary-500 border;
+  @apply bg-transparent text-white-500 border-white-500 border;
 }
 
 .light {
