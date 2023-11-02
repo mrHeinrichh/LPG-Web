@@ -1,19 +1,15 @@
 "use client";
-import { TableRow, Datatable, Sidenav } from "@/components";
+import { TableRow, Datatable, Sidenav, Button } from "@/components";
 import { API_URL } from "@/env";
 import trash from "@/public/trash.svg";
 import { useItemStore } from "@/states";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-
-export async function getData() {
-  const response = await fetch(`${API_URL}items`);
-  const data = (await response.json()).data;
-  return data;
-}
 
 export default function Transactions({}: any) {
   const { items, getItems, removeItem } = useItemStore() as any;
+  const router = useRouter();
   const header: any[] = [
     "Name",
     "Category",
@@ -46,6 +42,13 @@ export default function Transactions({}: any) {
     <>
       <Sidenav>
         <h4>Items</h4>
+        <Button
+          onClick={() => {
+            router.push("/items/add");
+          }}
+        >
+          Create Items
+        </Button>
         <Datatable header={header}>
           {items.map((e: any) => (
             <TableRow key={e._id}>
