@@ -2,6 +2,7 @@
 import { TableRow, Datatable, Sidenav, Button } from "@/components";
 import { API_URL } from "@/env";
 import trash from "@/public/trash.svg";
+import edit from "@/public/edit.svg";
 import { useItemStore } from "@/states";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -58,17 +59,17 @@ export default function Transactions({}: any) {
               <td>{e.customerPrice} PHP</td>
               <td>{e.retailerPrice} PHP</td>
               <td>{e.type} </td>
-              <td>
-                <div
-                  onClick={() => {
-                    deleteTodo(e._id);
-                  }}
-                >
-                  <Image src={trash} alt={"trash"}></Image>
-                </div>
+              <td className="flex justify-evenly">
                 <div
                   onClick={() => {
                     router.push(`/items/edit?id=${e._id}`);
+                  }}
+                >
+                  <Image src={edit} alt={"edit"}></Image>
+                </div>
+                <div
+                  onClick={() => {
+                    deleteTodo(e._id);
                   }}
                 >
                   <Image src={trash} alt={"trash"}></Image>
