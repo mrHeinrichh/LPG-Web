@@ -1,7 +1,10 @@
+"use client";
 import { TableRow, Datatable, Sidenav } from "@/components";
 import { API_URL } from "@/env";
 import trash from "@/public/trash.svg";
+import { useItemStore } from "@/states";
 import Image from "next/image";
+import { useEffect } from "react";
 
 export async function getData() {
   const response = await fetch(`${API_URL}items`);
@@ -9,7 +12,8 @@ export async function getData() {
   return data;
 }
 
-export default async function Transactions({}: any) {
+export default function Transactions({}: any) {
+  const { items, getItems, removeItem } = useItemStore() as any;
   const header: any[] = [
     "Name",
     "Category",
@@ -20,14 +24,30 @@ export default async function Transactions({}: any) {
     "Action",
   ];
 
-  const data = await getData();
+  useEffect(() => {
+    getItems();
+  }, []);
+
+  const deleteTodo = async (id: any) => {
+    try {
+      const response = await fetch(`${API_URL}items/${id}`, {
+        method: "DELETE",
+      });
+
+      const { status } = await response.json();
+
+      if (status == "success") removeItem(id);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
 
   return (
     <>
       <Sidenav>
         <h4>Items</h4>
         <Datatable header={header}>
-          {data.map((e: any) => (
+          {items.map((e: any) => (
             <TableRow key={e._id}>
               <td>{e.name}</td>
               <td>{e.category}</td>
@@ -35,9 +55,14 @@ export default async function Transactions({}: any) {
               <td>{e.customerPrice} PHP</td>
               <td>{e.retailerPrice} PHP</td>
               <td>{e.type} </td>
-
               <td>
-                <Image src={trash} alt={"trash"}></Image>
+                <div
+                  onClick={() => {
+                    deleteTodo(e._id);
+                  }}
+                >
+                  <Image src={trash} alt={"trash"}></Image>
+                </div>
               </td>
             </TableRow>
           ))}
