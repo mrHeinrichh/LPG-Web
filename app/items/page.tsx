@@ -66,6 +66,13 @@ export default function Transactions({}: any) {
                 >
                   <Image src={trash} alt={"trash"}></Image>
                 </div>
+                <div
+                  onClick={() => {
+                    router.push(`/items/edit?id=${e._id}`);
+                  }}
+                >
+                  <Image src={trash} alt={"trash"}></Image>
+                </div>
               </td>
             </TableRow>
           ))}
