@@ -8,7 +8,7 @@ function Datatable({ header, children }: any) {
         <thead>
           <tr>
             {header.map((e: any) => (
-              <th>{e}</th>
+              <th key={e}>{e}</th>
             ))}
           </tr>
         </thead>
