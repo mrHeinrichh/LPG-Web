@@ -25,7 +25,6 @@ export default function Transactions({}: any) {
     const start = async () => {
       try {
         const response = await fetch(`${API_URL}items/${id}`);
-
         const { data, status } = await response.json();
 
         if (status === "success") {
@@ -81,7 +80,7 @@ export default function Transactions({}: any) {
       <Sidenav>
         <form onSubmit={handleSubmit} className={style.form}>
           <div className="col-span-2">
-            <h3 className="font-bold text-lg">Add Item Details</h3>
+            <h3 className="font-bold text-lg">Edit Item Details</h3>
           </div>
           <InputField
             name="name"
