@@ -1,15 +1,16 @@
-import { TableRow, Datatable, Sidenav } from "@/components";
-import { API_URL } from "@/env";
+"use client";
+import { Button, Datatable, Sidenav } from "@/components";
 import trash from "@/public/trash.svg";
+import { useCustomerStore } from "@/states";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
-export async function getUsers() {
-  const response = await fetch(`${API_URL}users?filter={"__t": "Customer"}`);
-  const data = (await response.json()).data;
-  return data;
-}
+export default function Customers({}: any) {
+  const router = useRouter();
 
-export default async function Transactions({}: any) {
+  const { getCustomer, customers } = useCustomerStore() as any;
+
   const header: any[] = [
     "Name",
     "Contact Number",
@@ -19,15 +20,27 @@ export default async function Transactions({}: any) {
     "Action",
   ];
 
-  const data = await getUsers();
+  useEffect(() => {
+    getCustomer();
+  }, []);
 
   return (
     <>
       <Sidenav>
-        <h4>Customers</h4>
+        <div className="flex justify-between items-center w-full">
+          <h4>Items</h4>
+          <Button
+            onClick={() => {
+              router.push("/customers/add");
+            }}
+          >
+            Create Customer
+          </Button>
+        </div>
+
         <Datatable header={header}>
-          {data.map((e: any) => (
-            <TableRow key={e._id}>
+          {customers.map((e: any) => (
+            <tr key={e._id}>
               <td>{e.name}</td>
               <td>{e.contactNumber}</td>
               <td>{e.address}</td>
@@ -36,7 +49,7 @@ export default async function Transactions({}: any) {
               <td>
                 <Image src={trash} alt={"trash"}></Image>
               </td>
-            </TableRow>
+            </tr>
           ))}
         </Datatable>
       </Sidenav>
