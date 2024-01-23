@@ -1,41 +1,67 @@
-import { TableRow, Datatable, Sidenav } from "@/components";
-import { API_URL } from "@/env";
+"use client";
+import { TableRow, Datatable, Sidenav, Button } from "@/components";
 import trash from "@/public/trash.svg";
+import { useRiderStore } from "@/states";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import edit from "@/public/edit.svg";
 
-export async function getUsers() {
-  const response = await fetch(`${API_URL}users?filter={"__t": "Rider"}`);
-  const data = (await response.json()).data;
-  console.log(data);
+export default function Customers({}: any) {
+  const router = useRouter();
 
-  return data;
-}
-
-export default async function Transactions({}: any) {
+  const { riders, getRider, removeRider } = useRiderStore() as any;
   const header: any[] = [
     "Name",
+    "Email",
     "Contact Number",
     "Address",
     "GCASH NO.",
     "Action",
   ];
 
-  const data = await getUsers();
+  useEffect(() => {
+    getRider();
+    return () => {};
+  }, [riders]);
 
   return (
     <>
       <Sidenav>
-        <h4>Riders</h4>
+        <div className="flex justify-between items-center w-full">
+          <h4>Riders</h4>
+          <Button
+            onClick={() => {
+              router.push("/riders/create");
+            }}
+          >
+            Create Rider
+          </Button>
+        </div>
         <Datatable header={header}>
-          {data.map((e: any) => (
+          {riders.map((e: any) => (
             <TableRow key={e._id}>
               <td>{e.name}</td>
+              <td>{e.email}</td>
               <td>{e.contactNumber}</td>
               <td>{e.address}</td>
               <td>{e.gcash}</td>
 
-              <td>
-                <Image src={trash} alt={"trash"}></Image>
+              <td className="flex justify-evenly">
+                <div
+                  onClick={() => {
+                    router.push(`/riders/edit?id=${e._id}`);
+                  }}
+                >
+                  <Image src={edit} alt={"edit"}></Image>
+                </div>
+                <div
+                  onClick={() => {
+                    removeRider(e._id);
+                  }}
+                >
+                  <Image src={trash} alt={"trash"}></Image>
+                </div>
               </td>
             </TableRow>
           ))}
