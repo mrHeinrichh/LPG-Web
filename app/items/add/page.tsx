@@ -7,18 +7,14 @@ import {
   Button,
   SelectField,
 } from "@/components";
-import { API_URL } from "@/env";
-import trash from "@/public/trash.svg";
-import { useItemStore } from "@/states";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import style from "./style.module.css";
 import { useRouter } from "next/navigation";
 import { post } from "@/config";
 export default function Transactions({}: any) {
   const router = useRouter();
 
-  const { items, getItems, removeItem } = useItemStore() as any;
   const [formData, setFormData] = useState<any>({
     name: "",
     category: "",
