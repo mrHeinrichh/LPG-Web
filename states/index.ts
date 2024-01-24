@@ -31,6 +31,14 @@ export const useCustomerStore = create((set) => ({
     const { data } = await get(`users?filter={"__t": "Customer"}`);
     return set(() => ({ customers: data.data }));
   },
+  removeCustomer: async (id: string) => {
+    const { data } = await remove(`users/${id}`);
+    if (data.state == "success") {
+      return set((state: any) => ({
+        customers: [...state.customers.filter((e: any) => e._id != id)],
+      }));
+    }
+  },
 }));
 
 export const useItemStore = create((set) => ({
