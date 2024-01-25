@@ -9,9 +9,33 @@ export type TransationStatus =
   | "Completed"
   | "On Going"
   | "Cancelled";
+export const useTransactionStore = create((set) => ({
+  transactions: [],
+  getTransactions: async () => {
+    const { data } = await get(`transactions`);
+    if (data.status == "success") {
+      return set(() => ({ transactions: data.data }));
+    }
+  },
+  getRiderTransactions: async (rider: string) => {
+    const { data } = await get(`transactions?filter={"rider": "${rider}"}`);
   console.log(data);
-  return data;
-}
+
+    if (data.status == "success") {
+      return set(() => ({ transactions: data.data }));
+    }
+  },
+  updateStatus: async (_id: string, status: TransationStatus) => {
+    const { data } = await patch(`transactions/${_id}`, { status });
+    if (data.status == "success") {
+      const temp = data.data.map((e: any) => {
+        if (e._id == _id) e.status = status;
+        return e;
+      });
+      return set(() => ({ transactions: temp }));
+    }
+  },
+}));
 
 export const useRiderStore = create((set) => ({
   riders: [],
