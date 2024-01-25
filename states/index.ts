@@ -65,9 +65,26 @@ export const useMessageStore = create((set) => ({
 
 export const useCustomerStore = create((set) => ({
   customers: [],
+  appointments: [],
   getCustomer: async () => {
     const { data } = await get(`users?filter={"__t": "Customer"}`);
     return set(() => ({ customers: data.data }));
+  },
+  getAppointments: async () => {
+    const { data } = await get(
+      `users?filter={"__t": "Customer", "appointmentStatus": "Pending"}`
+    );
+    return set(() => ({ appointments: data.data }));
+  },
+  updateAppointmentStatus: async (_id: string, status: AppointmentStatus) => {
+    const { data } = await patch(`users/${_id}`, { status, type: "Customer" });
+    if (data.status == "success") {
+      const temp = data.data.map((e: any) => {
+        if (e._id == _id) e.appointmentStatus = status;
+        return e;
+      });
+      return set(() => ({ appointments: temp }));
+    }
   },
   removeCustomer: async (id: string) => {
     const { data } = await remove(`users/${id}`);
