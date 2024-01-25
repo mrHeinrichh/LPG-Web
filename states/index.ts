@@ -2,9 +2,13 @@ import { get, remove } from "@/config";
 import { API_URL } from "@/env";
 import { create } from "zustand";
 
-export async function deleteCustomer(id: string) {
-  const response = await fetch(`${API_URL}users/${id}`, { method: "DELETE" });
-  const data = (await response.json()).data;
+export type TransationStatus =
+  | "Pending"
+  | "Approved"
+  | "Declined"
+  | "Completed"
+  | "On Going"
+  | "Cancelled";
   console.log(data);
   return data;
 }
