@@ -51,6 +51,16 @@ export const useRiderStore = create((set) => ({
       }));
     }
   },
+
+export const useMessageStore = create((set) => ({
+  messages: [],
+  getMessages: async (customer: string) => {
+    const { data } = await get(`messages?filter={"customer": "${customer}"}`);
+    return set(() => ({ messages: data.data }));
+  },
+  addMessage: async (message: any) => {
+    return set((state: any) => ({ messages: [...state.messages, message] }));
+  },
 }));
 
 export const useCustomerStore = create((set) => ({
