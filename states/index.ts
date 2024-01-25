@@ -67,6 +67,23 @@ export const useCustomerStore = create((set) => ({
       }));
     }
   },
+  toggleVerify: async (id: string, status: boolean) => {
+    const { data } = await patch(`users/${id}`, {
+      verified: status,
+      type: "Customer",
+    });
+    if (data.state == "success") {
+      set((state: any) => {
+        const temp = state.customers.map((e: any) => {
+          if (e._id == id) e.verified = status;
+          return e;
+        });
+        return {
+          customers: [...temp],
+        };
+      });
+    }
+  },
 }));
 
 export const useItemStore = create((set) => ({
