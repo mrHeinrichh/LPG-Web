@@ -1,5 +1,4 @@
-import { get, remove } from "@/config";
-import { API_URL } from "@/env";
+import { get, patch, remove } from "@/config";
 import { create } from "zustand";
 
 export type TransationStatus =
@@ -9,6 +8,7 @@ export type TransationStatus =
   | "Completed"
   | "On Going"
   | "Cancelled";
+
 export const useTransactionStore = create((set) => ({
   transactions: [],
   getTransactions: async () => {
@@ -19,7 +19,7 @@ export const useTransactionStore = create((set) => ({
   },
   getRiderTransactions: async (rider: string) => {
     const { data } = await get(`transactions?filter={"rider": "${rider}"}`);
-  console.log(data);
+    console.log(data);
 
     if (data.status == "success") {
       return set(() => ({ transactions: data.data }));
@@ -96,5 +96,40 @@ export const useItemStore = create((set) => ({
     set((state: any) => ({
       items: [...state.items.filter((e: any) => e._id != id)],
     }));
+  },
+}));
+
+export const useWalkInStore = create((set) => ({
+  items: [],
+  increment: (item: any) => {
+    set((state: any) => {
+      const temp = state.items.find((e: any) => e._id == item._id);
+      if (!temp) {
+        item.quantity = 1;
+        return { items: [...state.items, item] };
+      }
+      const updated = state.items.map((e: any) => {
+        if (e._id == item._id) e.quantity++;
+        return e;
+      });
+      return { items: updated };
+    });
+  },
+  decrement: (item: any) => {
+    set((state: any) => {
+      const temp = state.items.find((e: any) => e._id == item._id);
+      if (temp.quantity - 1 == 0) {
+        const updated = state.items.filter((e: any) => e._id != item._id);
+        return { items: updated };
+      }
+
+      if (temp) {
+        const updated = state.items.map((e: any) => {
+          if (e._id == item._id) e.quantity--;
+          return e;
+        });
+        return { items: updated };
+      }
+    });
   },
 }));
