@@ -1,6 +1,5 @@
 "use client";
 import { Sidenav, InputField, Button, SelectField } from "@/components";
-import { API_URL } from "@/env";
 import { useEffect, useState } from "react";
 import style from "./style.module.css";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -12,7 +11,6 @@ export default function Transactions({}: any) {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
   const [image, setimage] = useState<null | string>(null);
-
   const [formData, setFormData] = useState<any>({
     name: "",
     category: "",
@@ -26,7 +24,7 @@ export default function Transactions({}: any) {
 
   useEffect(() => {
     fetchItem();
-  }, []);
+  }, [formData]);
 
   const fetchItem = async () => {
     try {
