@@ -1,7 +1,6 @@
 import React from "react";
 import style from "./style.module.css";
-
-import { Button, Navbar } from "@/components";
+import { Navbar } from "@/components";
 import Link from "next/link";
 
 function Sidenav({ children }: any) {
@@ -15,22 +14,6 @@ function Sidenav({ children }: any) {
       title: "Transactions",
     },
     {
-      link: "/",
-      title: "Feedbacks",
-    },
-    {
-      link: "/",
-      title: "Chats",
-    },
-    {
-      link: "/",
-      title: "Order History",
-    },
-    {
-      link: "/",
-      title: "Appointment",
-    },
-    {
       link: "/items",
       title: "Items",
     },
@@ -39,12 +22,16 @@ function Sidenav({ children }: any) {
       title: "Customers",
     },
     {
-      link: "/retailers",
-      title: "Retailers",
+      link: "/deliveries",
+      title: "Deliveries",
     },
     {
       link: "/riders",
       title: "Riders",
+    },
+    {
+      link: "/walk-in",
+      title: "Walk In",
     },
   ];
 
