@@ -5,7 +5,13 @@ import { useEffect } from "react";
 
 export default function Transactions() {
   const { getTransactions, transactions } = useTransactionStore() as any;
-  const header: any[] = ["Name", "Contact Number", "Walk In", "Action"];
+  const header: any[] = [
+    "Name",
+    "Contact Number",
+    "Type",
+    "Date Created",
+    "Action",
+  ];
 
   useEffect(() => {
     getTransactions();
@@ -21,6 +27,7 @@ export default function Transactions() {
               <td>{e.name}</td>
               <td>{e.contactNumber}</td>
               <td>{e.__t ? `${e.__t}` : "Walk In"}</td>
+              <td>{e.createdAt}</td>
               <td className="flex justify-evenly"></td>
             </TableRow>
           ))}
