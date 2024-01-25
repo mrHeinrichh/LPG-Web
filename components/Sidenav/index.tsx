@@ -2,39 +2,9 @@ import React from "react";
 import style from "./style.module.css";
 import { Navbar } from "@/components";
 import Link from "next/link";
+import { links } from "./links";
 
 function Sidenav({ children }: any) {
-  const links: any[] = [
-    {
-      link: "/",
-      title: "Dashboard",
-    },
-    {
-      link: "/transactions",
-      title: "Transactions",
-    },
-    {
-      link: "/items",
-      title: "Items",
-    },
-    {
-      link: "/customers",
-      title: "Customers",
-    },
-    {
-      link: "/deliveries",
-      title: "Deliveries",
-    },
-    {
-      link: "/riders",
-      title: "Riders",
-    },
-    {
-      link: "/walk-in",
-      title: "Walk In",
-    },
-  ];
-
   return (
     <>
       <div className={style.sidenav}>
