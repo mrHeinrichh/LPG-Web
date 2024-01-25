@@ -1,15 +1,6 @@
 "use client";
-import {
-  TableRow,
-  Datatable,
-  Sidenav,
-  InputField,
-  Button,
-  SelectField,
-} from "@/components";
-import { API_URL } from "@/env";
-import trash from "@/public/trash.svg";
-import { useItemStore } from "@/states";
+import { Sidenav, InputField, Button } from "@/components";
+import { useTransactionStore } from "@/states";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import style from "./style.module.css";
@@ -19,7 +10,6 @@ export default function Transactions({}: any) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
-  const { items, getItems, removeItem } = useItemStore() as any;
   const [formData, setFormData] = useState<any>({
     name: "",
     address: "",
@@ -33,11 +23,17 @@ export default function Transactions({}: any) {
   const [license, setlicense] = useState<null | string>(null);
   const [seminarCert, setseminarCert] = useState<null | string>(null);
 
+  const { getRiderTransactions, transactions } = useTransactionStore() as any;
+
   useEffect(() => {
-    fetchItem();
+    fetchRider();
   }, []);
 
-  const fetchItem = async () => {
+  useEffect(() => {
+    getRiderTransactions(id);
+  }, [transactions]);
+
+  const fetchRider = async () => {
     try {
       const { data } = await get(
         `users?filter={"__t": "Rider", "_id": "${id}"}`
@@ -125,6 +121,26 @@ export default function Transactions({}: any) {
   return (
     <>
       <Sidenav>
+        <div className="flex flex-col gap-2 w-1/2">
+          <p>Approved</p>
+          {transactions.map((e: any) => {
+            return (
+              <div key={e._id} className=" bg-slate-800 p-3 rounded">
+                <p className="text-white-100">{e.name}</p>
+                <p className="text-white-100">{e.status}</p>
+                <p className="text-white-100">Items: {e.items.length}</p>
+                <p className="text-white-100">Total: {e.total}PHP</p>
+
+                <Button>
+                  <p className="text-white-100">Approve</p>
+                </Button>
+                <Button>
+                  <p className="text-white-100">Decline</p>
+                </Button>
+              </div>
+            );
+          })}
+        </div>
         <form className={style.form}>
           <div className="col-span-2">
             <h3 className="font-bold text-lg">Edit Rider Details</h3>
