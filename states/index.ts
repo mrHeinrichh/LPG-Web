@@ -8,6 +8,7 @@ export type TransationStatus =
   | "Completed"
   | "On Going"
   | "Cancelled";
+export type AppointmentStatus = "Pending" | "Approved" | "Declined";
 
 export const useTransactionStore = create((set) => ({
   transactions: [],
@@ -51,6 +52,17 @@ export const useRiderStore = create((set) => ({
       }));
     }
   },
+  updateStatus: async (_id: string, status: TransationStatus) => {
+    const { data } = await patch(`transactions/${_id}`, { status });
+    if (data.status == "success") {
+      const temp = data.data.map((e: any) => {
+        if (e._id == _id) e.status = status;
+        return e;
+      });
+      return set(() => ({ transactions: temp }));
+    }
+  },
+}));
 
 export const useMessageStore = create((set) => ({
   messages: [],
