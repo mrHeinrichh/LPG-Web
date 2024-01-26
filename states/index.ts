@@ -9,6 +9,39 @@ export type TransationStatus =
   | "On Going"
   | "Cancelled";
 export type AppointmentStatus = "Pending" | "Approved" | "Declined";
+export const useDashboardStore = create((set) => ({
+  transactions: [],
+  getTransactions: async () => {
+    const { data } = await get(`dashboard/transaction`);
+    if (data.status == "success") {
+      return set(() => ({
+        transactions: data.data[0].transactions,
+      }));
+    }
+  },
+  getTransactionsByStatus: async (statuses = ["Pending"]) => {
+    const query = statuses.map((e: any) => `statuses[]=${e}`).join("&");
+    const { data } = await get(`dashboard/transaction?${query}`);
+    if (data.status == "success") {
+      return set(() => ({
+        transactions: data.data[0].transactions,
+      }));
+    }
+  },
+  updateStatus: async (_id: string, status: TransationStatus) => {
+    const { data } = await patch(`transactions/${_id}`, {
+      status,
+      type: "Delivery",
+    });
+    if (data.status == "success") {
+      const temp = data.data.map((e: any) => {
+        if (e._id == _id) e.status = status;
+        return e;
+      });
+      return set(() => ({ transactions: temp }));
+    }
+  },
+}));
 
 export const useTransactionStore = create((set) => ({
   transactions: [],
@@ -67,7 +100,7 @@ export const useRiderStore = create((set) => ({
 export const useMessageStore = create((set) => ({
   messages: [],
   getMessages: async (customer: string) => {
-    const { data } = await get(`messages?filter={"customer": "${customer}"}`);
+    const { data } = await get(`messages?filter={"user": "${customer}"}`);
     return set(() => ({ messages: data.data }));
   },
   addMessage: async (message: any) => {

@@ -15,11 +15,7 @@ function StatsCard({ title, value, net }: any) {
     <>
       <Card>
         <h5>{title ?? "Untitled"}</h5>
-        <h4>₱ {value}.00</h4>
-        <p className={isLoss(net) ? style.loss : style.gain}>
-          {isLoss(net) ? "- " : "+ "}
-          {parseNet(net)}
-        </p>
+        <h4>{value}</h4>
       </Card>
     </>
   );
