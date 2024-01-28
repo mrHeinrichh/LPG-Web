@@ -3,8 +3,10 @@ import style from "./style.module.css";
 import { Navbar } from "@/components";
 import Link from "next/link";
 import { links } from "./links";
+import { useAuthStore } from "@/states";
 
 function Sidenav({ children }: any) {
+  const authStore = useAuthStore() as any;
   return (
     <>
       <div className={style.sidenav}>
@@ -16,6 +18,14 @@ function Sidenav({ children }: any) {
             </div>
           </Link>
         ))}
+        <div
+          className={style.link_container}
+          onClick={() => {
+            authStore.signOut();
+          }}
+        >
+          <p> Sign Out</p>
+        </div>
       </div>
       <div className={style.container}>
         <div className={style.divider}></div>
