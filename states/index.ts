@@ -1,4 +1,4 @@
-import { get, patch, remove } from "@/config";
+import { get, patch, post, remove } from "@/config";
 import { create } from "zustand";
 
 export type TransationStatus =
@@ -9,6 +9,22 @@ export type TransationStatus =
   | "On Going"
   | "Cancelled";
 export type AppointmentStatus = "Pending" | "Approved" | "Declined";
+
+export const useAuthStore = create((set) => ({
+  user: null,
+  authenticate: async (request: any) => {
+    const { data } = await post(`users/authenticate`, {
+      ...request,
+    });
+    if (data.status == "success") {
+      return set(() => ({ user: data.data[0] }));
+    }
+  },
+  signOut: () => {
+    set(() => ({ user: null }));
+  },
+}));
+
 export const useDashboardStore = create((set) => ({
   transactions: [],
   getTransactions: async () => {
