@@ -1,15 +1,15 @@
 "use client";
-import { TableRow, Datatable, Sidenav, Button } from "@/components";
+import { TableRow, Datatable, Sidenav, Button, InputField } from "@/components";
 import trash from "@/public/trash.svg";
 import { useRiderStore } from "@/states";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import edit from "@/public/edit.svg";
 
 export default function Customers({}: any) {
   const router = useRouter();
-
+  const [search, setsearch] = useState("");
   const { riders, getRider, removeRider } = useRiderStore() as any;
   const header: any[] = [
     "Name",
@@ -20,10 +20,37 @@ export default function Customers({}: any) {
     "Action",
   ];
 
+  const filtered = useMemo(() => {
+    let temp = [];
+    if (search != "") {
+      riders.forEach((e: any) => {
+        if (
+          e.name.includes(search) ||
+          e.address.includes(search) ||
+          e.email.includes(search) ||
+          e.gcash.includes(search) ||
+          e.contactNumber.includes(search)
+        ) {
+          temp.push(e);
+        }
+      });
+    }
+
+    if (search == "") {
+      temp = riders;
+    }
+
+    return temp;
+  }, [riders, search]);
+
   useEffect(() => {
     getRider();
-    return () => {};
-  }, [riders]);
+  }, []);
+
+  const handleChange = (event: any) => {
+    const { name, value } = event.target;
+    setsearch(value);
+  };
 
   return (
     <>
@@ -38,8 +65,9 @@ export default function Customers({}: any) {
             Create Rider
           </Button>
         </div>
+        <InputField name="search" onChange={handleChange} />;
         <Datatable header={header}>
-          {riders.map((e: any) => (
+          {filtered.map((e: any) => (
             <TableRow key={e._id}>
               <td>{e.name}</td>
               <td>{e.email}</td>

@@ -23,8 +23,6 @@ export default function Customers({}: any) {
     "Action",
   ];
 
-  const filters: any[] = ["name", "contactNumber", "email", "address"];
-
   const unverified = useMemo(
     () => customers.filter((e: any) => !e.verified),
     [customers]
