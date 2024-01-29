@@ -20,7 +20,7 @@ export default function RootLayout({
   useEffect(() => {
     setrendered(true);
     if (!authStore.user && !pathName.includes("sign-in"))
-      router.push("sign-in");
+      router.push("/sign-in");
   }, [authStore.user]);
 
   return (

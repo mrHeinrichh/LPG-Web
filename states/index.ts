@@ -182,6 +182,22 @@ export const useCustomerStore = create((set) => ({
   },
 }));
 
+export const useFaqStore = create((set) => ({
+  faqs: [],
+  getFaqs: async () => {
+    const { data } = await get(`faqs`);
+    return set(() => ({ faqs: data.data }));
+  },
+  removeFaq: async (id: any) => {
+    const { data } = await remove(`faqs/${id}`);
+    if (data.status == "success") {
+      return set((state: any) => ({
+        faqs: [...state.faqs.filter((e: any) => e._id != id)],
+      }));
+    }
+  },
+}));
+
 export const useItemStore = create((set) => ({
   items: [],
   getItems: async () => {

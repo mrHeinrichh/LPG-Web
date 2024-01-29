@@ -40,4 +40,8 @@ export const links: ILink[] = [
     link: "/walk-in",
     title: "Walk In",
   },
+  {
+    link: "/faqs",
+    title: "FAQs",
+  },
 ];
