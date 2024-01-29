@@ -1,7 +1,7 @@
 "use client";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuthStore } from "@/states";
 
@@ -15,15 +15,17 @@ export default function RootLayout({
   const pathName = usePathname();
   const router = useRouter();
   const authStore = useAuthStore() as any;
+  const [rendered, setrendered] = useState(false);
 
   useEffect(() => {
+    setrendered(true);
     if (!authStore.user && !pathName.includes("sign-in"))
       router.push("sign-in");
   }, [authStore.user]);
 
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>{rendered ? children : <></>}</body>
     </html>
   );
 }
