@@ -1,16 +1,17 @@
 "use client";
-import { TableRow, Datatable, Sidenav, Button } from "@/components";
+import { TableRow, Datatable, Sidenav, Button, InputField } from "@/components";
 import trash from "@/public/trash.svg";
 import edit from "@/public/edit.svg";
 import { useItemStore } from "@/states";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { remove } from "@/config";
 
-export default function Transactions({}: any) {
+export default function Items({}: any) {
   const { items, getItems, removeItem } = useItemStore() as any;
   const router = useRouter();
+  const [search, setsearch] = useState("");
   const header: any[] = [
     "Name",
     "Category",
@@ -34,6 +35,34 @@ export default function Transactions({}: any) {
     }
   };
 
+  const filtered = useMemo(() => {
+    let temp = [];
+    if (search != "") {
+      items.forEach((e: any) => {
+        if (
+          e.category.includes(search) ||
+          e.name.includes(search) ||
+          e.weight.toString().includes(search) ||
+          e.retailerPrice.toString().includes(search) ||
+          e.customerPrice.toString().includes(search) ||
+          e.type.includes(search)
+        ) {
+          temp.push(e);
+        }
+      });
+    }
+
+    if (search == "") {
+      temp = items;
+    }
+
+    return temp;
+  }, [items, search]);
+
+  const handleChange = (event: any) => {
+    const { name, value } = event.target;
+    setsearch(value);
+  };
   return (
     <>
       <Sidenav>
@@ -47,9 +76,9 @@ export default function Transactions({}: any) {
             Create Items
           </Button>
         </div>
-
+        <InputField name="search" onChange={handleChange} />;
         <Datatable header={header}>
-          {items.map((e: any) => (
+          {filtered.map((e: any) => (
             <TableRow key={e._id}>
               <td>{e.name}</td>
               <td>{e.category}</td>
