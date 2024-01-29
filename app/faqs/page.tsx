@@ -66,7 +66,7 @@ export default function Faqs({}: any) {
               <td className="flex justify-evenly">
                 <div
                   onClick={() => {
-                    router.push(`/items/edit?id=${e._id}`);
+                    router.push(`/faqs/edit?id=${e._id}`);
                   }}
                 >
                   <Image src={edit} alt={"edit"}></Image>

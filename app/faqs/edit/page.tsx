@@ -1,5 +1,5 @@
 "use client";
-import { Sidenav, InputField, Button, SelectField } from "@/components";
+import { Sidenav, InputField, Button } from "@/components";
 import { useEffect, useState } from "react";
 import style from "./style.module.css";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -12,33 +12,21 @@ export default function Transactions({}: any) {
   const id = searchParams.get("id");
   const [image, setimage] = useState<null | string>(null);
   const [formData, setFormData] = useState<any>({
-    name: "",
-    category: "",
-    description: "",
-    weight: 0,
-    quantity: 1,
-    customerPrice: 0,
-    retailerPrice: 0,
-    type: "",
+    question: "",
+    answer: "",
   });
 
   useEffect(() => {
-    fetchItem();
-  }, [formData]);
+    fetchFaqs();
+  }, []);
 
-  const fetchItem = async () => {
+  const fetchFaqs = async () => {
     try {
-      const { data } = await get(`items/${id}`);
+      const { data } = await get(`faqs/${id}`);
       if (data.status === "success") {
         setFormData({
-          name: data.data[0].name ?? "",
-          category: data.data[0].category ?? "",
-          description: data.data[0].description ?? "",
-          weight: data.data[0].weight ?? 0,
-          quantity: data.data[0].quantity ?? 0,
-          customerPrice: data.data[0].customerPrice ?? 0,
-          retailerPrice: data.data[0].retailerPrice ?? 0,
-          type: data.data[0].type ?? "",
+          question: data.data[0].question ?? "",
+          answer: data.data[0].answer ?? "",
         });
         setimage(data.data[0].image ?? "");
       }
@@ -63,8 +51,8 @@ export default function Transactions({}: any) {
 
   const handleSubmit = async () => {
     try {
-      const { data } = await patch(`items/${id}`, { image, ...formData });
-      if (data.status === "success") router.push("/items");
+      const { data } = await patch(`faqs/${id}`, { image, ...formData });
+      if (data.status === "success") router.push("/faqs");
     } catch (error) {
       console.error("Error adding customers:", error);
     }
@@ -75,7 +63,7 @@ export default function Transactions({}: any) {
       <Sidenav>
         <form onSubmit={handleSubmit} className={style.form}>
           <div className="col-span-2">
-            <h3 className="font-bold text-lg">Edit Item Details</h3>
+            <h3 className="font-bold text-lg">Edit FAQs Details</h3>
           </div>
           <div className="col-span-2">
             {image ? (
@@ -92,62 +80,19 @@ export default function Transactions({}: any) {
           </div>
 
           <InputField
-            name="name"
-            placeholder="Name"
+            name="question"
+            placeholder="question"
             onChange={handleChange}
-            defaultValue={formData.name}
+            defaultValue={formData.question}
           />
 
           <InputField
-            name="category"
-            placeholder="Category"
+            name="answer"
+            placeholder="answer"
             onChange={handleChange}
-            defaultValue={formData.category}
+            defaultValue={formData.answer}
           />
-          <InputField
-            name="description"
-            placeholder="Description"
-            onChange={handleChange}
-            defaultValue={formData.description}
-          />
-          <InputField
-            type="number"
-            name="weight"
-            placeholder="Weight"
-            onChange={handleChange}
-            defaultValue={formData.weight}
-          />
-          <InputField
-            type="number"
-            name="quantity"
-            placeholder="Quantity"
-            onChange={handleChange}
-            defaultValue={formData.quantity}
-          />
-          <InputField
-            type="number"
-            name="customerPrice"
-            placeholder="Customer Price"
-            onChange={handleChange}
-            defaultValue={formData.customerPrice}
-          />
-          <InputField
-            type="number"
-            name="retailerPrice"
-            placeholder="Retailer Price"
-            onChange={handleChange}
-            defaultValue={formData.retailerPrice}
-          />
-          <SelectField
-            options={[
-              { title: "Accessory", value: "Accessory" },
-              { title: "Products", value: "Products" },
-            ]}
-            name="type"
-            title="Item Type"
-            defaultValue={formData.type}
-            onChange={handleChange}
-          />
+
           <div className="col-span-2">
             <Button type="button" onClick={handleSubmit}>
               Submit
