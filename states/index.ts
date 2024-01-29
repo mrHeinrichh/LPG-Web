@@ -75,6 +75,14 @@ export const useTransactionStore = create((set) => ({
       return set(() => ({ transactions: data.data }));
     }
   },
+  removeTransaction: async (id: any) => {
+    const { data } = await remove(`transactions/${id}`);
+    if (data.status == "success") {
+      return set((state: any) => ({
+        transactions: [...state.transactions.filter((e: any) => e._id != id)],
+      }));
+    }
+  },
   updateStatus: async (_id: string, status: TransationStatus) => {
     const { data } = await patch(`transactions/${_id}`, { status });
     if (data.status == "success") {
