@@ -28,7 +28,9 @@ export const useAuthStore = create((set) => ({
 export const useDashboardStore = create((set) => ({
   transactions: [],
   getTransactions: async () => {
-    const { data } = await get(`dashboard/transaction`);
+    const { data } = await get(
+      `dashboard/transaction?start=2023-01-26T06:02:27.923+00:00`
+    );
     if (data.status == "success") {
       return set(() => ({
         transactions: data.data[0].transactions,
@@ -84,7 +86,7 @@ export const useTransactionStore = create((set) => ({
     }
   },
   updateStatus: async (_id: string, status: TransationStatus) => {
-    const { data } = await patch(`transactions/${_id}`, { status });
+    const { data } = await patch(`transactions/${_id}`, { status: "On-Going" });
     if (data.status == "success") {
       const temp = data.data.map((e: any) => {
         if (e._id == _id) e.status = status;
@@ -157,6 +159,8 @@ export const useCustomerStore = create((set) => ({
   },
   removeCustomer: async (id: string) => {
     const { data } = await remove(`users/${id}`);
+    console.log(data);
+
     if (data.state == "success") {
       return set((state: any) => ({
         customers: [...state.customers.filter((e: any) => e._id != id)],
@@ -178,6 +182,22 @@ export const useCustomerStore = create((set) => ({
           customers: [...temp],
         };
       });
+    }
+  },
+}));
+
+export const useAnnouncementStore = create((set) => ({
+  announcements: [],
+  getAnnouncements: async () => {
+    const { data } = await get(`announcements`);
+    return set(() => ({ announcements: data.data }));
+  },
+  removeFaq: async (id: any) => {
+    const { data } = await remove(`faqs/${id}`);
+    if (data.status == "success") {
+      return set((state: any) => ({
+        faqs: [...state.faqs.filter((e: any) => e._id != id)],
+      }));
     }
   },
 }));
