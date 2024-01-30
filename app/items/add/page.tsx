@@ -111,7 +111,7 @@ export default function Transactions({}: any) {
           <SelectField
             options={[
               { title: "Accessory", value: "Accessory" },
-              { title: "Category", value: "Category" },
+              { title: "Product", value: "Product" },
             ]}
             name="type"
             title="Item Type"
