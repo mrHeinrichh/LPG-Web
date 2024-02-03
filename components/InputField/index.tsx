@@ -7,6 +7,7 @@ interface IInputField {
   type?: string;
   placeholder?: string;
   defaultValue?: string;
+  value?: string | number;
 }
 
 function InputField({
@@ -15,6 +16,7 @@ function InputField({
   type,
   placeholder,
   defaultValue,
+  value,
 }: IInputField) {
   return (
     <div className="flex flex-col gap-2">
@@ -22,8 +24,9 @@ function InputField({
       <input
         className={style.input}
         type={type ?? "text"}
-        name={name ?? "name"}
+        name={name ?? undefined}
         defaultValue={defaultValue ?? ""}
+        value={value ?? undefined}
         placeholder={placeholder ?? "placeholder"}
         onChange={onChange ?? (() => {})}
       ></input>
