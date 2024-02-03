@@ -17,29 +17,31 @@ export default function Transactions({}: any) {
     description: "",
     weight: 0,
     quantity: 1,
-    customerPrice: 0,
-    retailerPrice: 0,
     type: "",
   });
+  const [customerPrice, setcustomerPrice] = useState<number>(0);
+  const [retailerPrice, setretailerPrice] = useState<number>(0);
 
   useEffect(() => {
     fetchItem();
-  }, [formData]);
+  }, []);
 
   const fetchItem = async () => {
     try {
       const { data } = await get(`items/${id}`);
+      console.log(data);
+
       if (data.status === "success") {
         setFormData({
           name: data.data[0].name ?? "",
           category: data.data[0].category ?? "",
           description: data.data[0].description ?? "",
-          weight: data.data[0].weight ?? 0,
-          quantity: data.data[0].quantity ?? 0,
-          customerPrice: data.data[0].customerPrice ?? 0,
-          retailerPrice: data.data[0].retailerPrice ?? 0,
+          weight: data.data[0].weight.toString() ?? "0",
+          quantity: data.data[0].quantity.toString() ?? "0",
           type: data.data[0].type ?? "",
         });
+        setcustomerPrice(data.data[0].customerPrice.toString() ?? "0");
+        setretailerPrice(data.data[0].retailerPrice.toString() ?? "0");
         setimage(data.data[0].image ?? "");
       }
     } catch (error) {
@@ -49,6 +51,16 @@ export default function Transactions({}: any) {
 
   const handleChange = (event: any) => {
     const { name, value } = event.target;
+
+    if (name == "customerPrice") {
+      setcustomerPrice(value);
+      return;
+    }
+    if (name == "retailerPrice") {
+      setretailerPrice(value);
+      return;
+    }
+
     setFormData((prevFormData: any) => ({ ...prevFormData, [name]: value }));
   };
 
@@ -58,6 +70,30 @@ export default function Transactions({}: any) {
     const { data } = await post<FormData>("upload/image", form);
     if (data.status == "success") {
       setimage(data.data[0]?.path ?? "");
+    }
+  };
+
+  const handleCustomerPriceSubmit = async () => {
+    try {
+      const { data } = await patch(`items/${id}/price`, {
+        type: "Customer",
+        price: customerPrice,
+      });
+      if (data.status === "success") router.push("/items");
+    } catch (error) {
+      console.error("Error adding customers:", error);
+    }
+  };
+
+  const handleRetailerPriceSubmit = async () => {
+    try {
+      const { data } = await patch(`items/${id}/price`, {
+        type: "Retailer",
+        price: retailerPrice,
+      });
+      if (data.status === "success") router.push("/items");
+    } catch (error) {
+      console.error("Error adding customers:", error);
     }
   };
 
@@ -115,28 +151,14 @@ export default function Transactions({}: any) {
             name="weight"
             placeholder="Weight"
             onChange={handleChange}
-            defaultValue={formData.weight}
+            value={formData.weight}
           />
           <InputField
             type="number"
             name="quantity"
             placeholder="Quantity"
             onChange={handleChange}
-            defaultValue={formData.quantity}
-          />
-          <InputField
-            type="number"
-            name="customerPrice"
-            placeholder="Customer Price"
-            onChange={handleChange}
-            defaultValue={formData.customerPrice}
-          />
-          <InputField
-            type="number"
-            name="retailerPrice"
-            placeholder="Retailer Price"
-            onChange={handleChange}
-            defaultValue={formData.retailerPrice}
+            value={formData.quantity}
           />
           <SelectField
             options={[
@@ -148,9 +170,37 @@ export default function Transactions({}: any) {
             defaultValue={formData.type}
             onChange={handleChange}
           />
-          <div className="col-span-2">
+          <div className="col-span-2 flex justify-end">
             <Button type="button" onClick={handleSubmit}>
               Submit
+            </Button>
+          </div>
+
+          <div className="col-span-2">
+            <h3 className="font-bold text-lg">Item Prices</h3>
+          </div>
+          <div className="flex flex-col gap-2">
+            <InputField
+              type="number"
+              name="customerPrice"
+              placeholder="Customer Price"
+              onChange={handleChange}
+              value={customerPrice}
+            />
+            <Button type="button" onClick={handleCustomerPriceSubmit}>
+              Update
+            </Button>
+          </div>
+          <div className="flex flex-col gap-2">
+            <InputField
+              type="number"
+              name="retailerPrice"
+              placeholder="Retailer Price"
+              onChange={handleChange}
+              value={retailerPrice}
+            />
+            <Button type="button" onClick={handleRetailerPriceSubmit}>
+              Update
             </Button>
           </div>
         </form>
