@@ -15,6 +15,7 @@ export default function Items({}: any) {
   const header: any[] = [
     "Name",
     "Category",
+    "Quantity",
     "Weight",
     "Customer Price",
     "Retailer Price",
@@ -76,12 +77,13 @@ export default function Items({}: any) {
             Create Items
           </Button>
         </div>
-        <InputField name="search" onChange={handleChange} />;
+        <InputField name="search" onChange={handleChange} />
         <Datatable header={header}>
           {filtered.map((e: any) => (
             <TableRow key={e._id}>
               <td>{e.name}</td>
               <td>{e.category}</td>
+              <td>{e.quantity}</td>
               <td>{e.weight} kg</td>
               <td>₱{e.customerPrice}.00 </td>
               <td>₱{e.retailerPrice}.00 </td>
