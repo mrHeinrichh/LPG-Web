@@ -126,11 +126,18 @@ export const useRiderStore = create((set) => ({
 export const useMessageStore = create((set) => ({
   messages: [],
   getMessages: async (customer: string) => {
-    const { data } = await get(`messages?filter={"user": "${customer}"}`);
+    const { data } = await get(
+      `messages?filter={"$or": [{"from": "${customer}"}, {"to": "${customer}"}]}`
+    );
     return set(() => ({ messages: data.data }));
   },
-  addMessage: async (message: any) => {
-    return set((state: any) => ({ messages: [...state.messages, message] }));
+  addMessage: async (request: any) => {
+    const { data } = await post(`messages`, request);
+    if (data.status === "success") {
+      return set((state: any) => ({
+        messages: [...state.messages, data.data[0]],
+      }));
+    }
   },
 }));
 
