@@ -199,11 +199,11 @@ export const useAnnouncementStore = create((set) => ({
     const { data } = await get(`announcements`);
     return set(() => ({ announcements: data.data }));
   },
-  removeFaq: async (id: any) => {
-    const { data } = await remove(`faqs/${id}`);
+  removeAnnouncement: async (id: any) => {
+    const { data } = await remove(`announcements/${id}`);
     if (data.status == "success") {
       return set((state: any) => ({
-        faqs: [...state.faqs.filter((e: any) => e._id != id)],
+        announcements: [...state.announcements.filter((e: any) => e._id != id)],
       }));
     }
   },
