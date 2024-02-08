@@ -6,18 +6,23 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function WalkIn({}: any) {
-  const { messages, getMessages, addMessage } = useMessageStore() as any;
+  const { messages, getMessages, addMessage, addNewMessage } =
+    useMessageStore() as any;
   const { user } = useAuthStore() as any;
   const { customers, getCustomer } = useCustomerStore() as any;
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
   const [message, setmessage] = useState<string>("");
+
   useEffect(() => {
     getCustomer();
+  }, []);
+
+  useEffect(() => {
     if (id) getMessages(id);
     function onCreatedMssage(data: any) {
-      addMessage(data.data[0]);
+      addNewMessage(data.data[0]);
     }
 
     SOCKET.on(`createdMessage/${id}`, onCreatedMssage);
