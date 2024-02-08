@@ -139,6 +139,11 @@ export const useMessageStore = create((set) => ({
       }));
     }
   },
+  addNewMessage: (data: any) => {
+    return set((state: any) => ({
+      messages: [...state.messages, data],
+    }));
+  },
 }));
 
 export const useCustomerStore = create((set) => ({
