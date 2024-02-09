@@ -13,6 +13,8 @@ export default function Transactions() {
     "Name",
     "Contact Number",
     "Type",
+    "Total",
+    "Rider",
     "Date Created",
     "Action",
   ];
@@ -54,13 +56,15 @@ export default function Transactions() {
     <>
       <Sidenav>
         <h4>Transactions</h4>
-        <InputField name="search" onChange={handleChange} />;
+        <InputField name="search" onChange={handleChange} />
         <Datatable header={header}>
           {filtered.map((e: any) => (
             <TableRow key={e._id}>
               <td>{e.name}</td>
               <td>{e.contactNumber}</td>
               <td>{e.__t ? `${e.__t}` : "Walk In"}</td>
+              <td>₱{e.total.toFixed(2)}</td>
+              <td>{e.rider}</td>
               <td>{e.createdAt}</td>
               <td className="flex justify-evenly"></td>{" "}
               <td className="flex justify-evenly">

@@ -16,7 +16,7 @@ export default function Transactions({}: any) {
     category: "",
     description: "",
     weight: 0,
-    quantity: 1,
+    stock: 1,
     type: "",
   });
   const [customerPrice, setcustomerPrice] = useState<number>(0);
@@ -37,7 +37,7 @@ export default function Transactions({}: any) {
           category: data.data[0].category ?? "",
           description: data.data[0].description ?? "",
           weight: data.data[0].weight.toString() ?? "0",
-          quantity: data.data[0].quantity.toString() ?? "0",
+          stock: data.data[0].stock.toString() ?? "0",
           type: data.data[0].type ?? "",
         });
         setcustomerPrice(data.data[0].customerPrice.toString() ?? "0");
@@ -155,10 +155,10 @@ export default function Transactions({}: any) {
           />
           <InputField
             type="number"
-            name="quantity"
-            placeholder="Quantity"
+            name="stock"
+            placeholder="Stock"
             onChange={handleChange}
-            value={formData.quantity}
+            value={formData.stock}
           />
           <SelectField
             options={[

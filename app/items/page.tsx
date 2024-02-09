@@ -15,7 +15,7 @@ export default function Items({}: any) {
   const header: any[] = [
     "Name",
     "Category",
-    "Quantity",
+    "Stock",
     "Weight",
     "Customer Price",
     "Retailer Price",
@@ -83,7 +83,7 @@ export default function Items({}: any) {
             <TableRow key={e._id}>
               <td>{e.name}</td>
               <td>{e.category}</td>
-              <td>{e.quantity}</td>
+              <td>{e.stock ?? 0}</td>
               <td>{e.weight} kg</td>
               <td>₱{e.customerPrice}.00 </td>
               <td>₱{e.retailerPrice}.00 </td>

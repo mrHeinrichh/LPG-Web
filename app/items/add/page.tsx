@@ -20,7 +20,7 @@ export default function Transactions({}: any) {
     category: "",
     description: "",
     weight: 0,
-    quantity: 1,
+    stock: 1,
     customerPrice: 0,
     retailerPrice: 0,
   });
@@ -92,8 +92,8 @@ export default function Transactions({}: any) {
           />
           <InputField
             type="number"
-            name="quantity"
-            placeholder="Quantity"
+            name="stock"
+            placeholder="Stock"
             onChange={handleChange}
           />
           <InputField
