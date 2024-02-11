@@ -1,69 +1,37 @@
 "use client";
-import { TableRow, Datatable, Sidenav, Button, InputField } from "@/components";
+import {
+  TableRow,
+  Datatable,
+  Sidenav,
+  Button,
+  InputField,
+  SelectField,
+} from "@/components";
 import trash from "@/public/trash.svg";
 import edit from "@/public/edit.svg";
 import { useItemStore } from "@/states";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
-import { remove } from "@/config";
+import { useEffect, useState } from "react";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { getSearchFilterQuery } from "@/utils";
+import { SEARCH_FILTERS, TABLE_HEADERS } from "./data";
 
 export default function Items({}: any) {
   const { items, getItems, removeItem } = useItemStore() as any;
   const router = useRouter();
   const [search, setsearch] = useState("");
-  const header: any[] = [
-    "Name",
-    "Category",
-    "Stock",
-    "Weight",
-    "Customer Price",
-    "Retailer Price",
-    "Type",
-    "Action",
-  ];
+  const [page, setpage] = useState(1);
+  const [limit, setlimit] = useState(20);
 
   useEffect(() => {
-    getItems();
-  }, []);
-
-  const deleteItem = async (id: any) => {
-    try {
-      const { data } = await remove(`items/${id}`);
-      if (data.status == "success") removeItem(id);
-    } catch (error) {
-      console.error("Error fetching users:", error);
-    }
-  };
-
-  const filtered = useMemo(() => {
-    let temp = [];
     if (search != "") {
-      items.forEach((e: any) => {
-        if (
-          e.category.includes(search) ||
-          e.name.includes(search) ||
-          e.weight.toString().includes(search) ||
-          e.retailerPrice.toString().includes(search) ||
-          e.customerPrice.toString().includes(search) ||
-          e.type.includes(search)
-        ) {
-          temp.push(e);
-        }
-      });
+      getItems(page, limit, getSearchFilterQuery(SEARCH_FILTERS, search));
+    } else {
+      getItems(page, limit);
     }
+  }, [page, limit, search]);
 
-    if (search == "") {
-      temp = items;
-    }
-
-    return temp;
-  }, [items, search]);
-
-  const handleChange = (event: any) => {
-    const { name, value } = event.target;
-    setsearch(value);
-  };
   return (
     <>
       <Sidenav>
@@ -77,9 +45,15 @@ export default function Items({}: any) {
             Create Items
           </Button>
         </div>
-        <InputField name="search" onChange={handleChange} />
-        <Datatable header={header}>
-          {filtered.map((e: any) => (
+        <InputField
+          name="search"
+          onChange={(event: any) => {
+            const { value } = event.target;
+            setsearch(value);
+          }}
+        />
+        <Datatable header={TABLE_HEADERS}>
+          {items.map((e: any) => (
             <TableRow key={e._id}>
               <td>{e.name}</td>
               <td>{e.category}</td>
@@ -98,7 +72,7 @@ export default function Items({}: any) {
                 </div>
                 <div
                   onClick={() => {
-                    deleteItem(e._id);
+                    removeItem(e._id);
                   }}
                 >
                   <Image src={trash} alt={"trash"}></Image>
@@ -107,6 +81,36 @@ export default function Items({}: any) {
             </TableRow>
           ))}
         </Datatable>
+        <div className="w-full flex justify-between py-2">
+          <div className="flex items-center gap-4 ">
+            <SelectField
+              options={[
+                { title: "20", value: 20 },
+                { title: "10", value: 10 },
+                { title: "5", value: 5 },
+                { title: "1", value: 1 },
+              ]}
+              name={""}
+              title={""}
+              onChange={(e: any) => {
+                setlimit(e.target.value);
+              }}
+            />
+          </div>
+          <div className="flex items-center gap-4 ">
+            <FaChevronLeft
+              onClick={() => {
+                setpage((prev: number) => prev - 1);
+              }}
+            />
+            {page}
+            <FaChevronRight
+              onClick={() => {
+                setpage((prev: number) => prev + 1);
+              }}
+            />
+          </div>
+        </div>
       </Sidenav>
     </>
   );
