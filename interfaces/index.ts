@@ -12,3 +12,7 @@ export interface ISelectField {
   defaultValue?: string;
   onChange: (e: any) => void;
 }
+export interface ISearchFilter {
+  key: string;
+  type: "string" | "number";
+}
