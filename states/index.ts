@@ -184,8 +184,17 @@ export const useMessageStore = create((set) => ({
 export const useCustomerStore = create((set) => ({
   customers: [],
   appointments: [],
-  getCustomer: async () => {
-    const { data } = await get(`users?filter={"__t": "Customer"}`);
+  getCustomer: async (page: number = 1, limit: number = 5, filter = "") => {
+    const query =
+      filter != ""
+        ? `{ "$and": [{"__t": "Customer"}, ${filter} ] }`
+        : `{ "__t": "Customer" }`;
+
+    console.log(`users?page=${page}&limit=${limit}&filter=${query}`);
+
+    const { data } = await get(
+      `users?page=${page}&limit=${limit}&filter=${query}`
+    );
     return set(() => ({ customers: data.data }));
   },
   getAppointments: async () => {
