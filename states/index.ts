@@ -134,9 +134,17 @@ export const useTransactionStore = create((set) => ({
 
 export const useRiderStore = create((set) => ({
   riders: [],
-  getRider: async () => {
-    const { data } = await get(`users?filter={"__t": "Rider"}`);
-    return set(() => ({ riders: data.data }));
+  getRider: async (page: number = 1, limit: number = 5, filter = "") => {
+    const query =
+      filter != ""
+        ? `{ "$and": [{"__t": "Rider"}, ${filter} ] }`
+        : `{ "__t": "Rider" }`;
+    const { data } = await get(
+      `users?page=${page}&limit=${limit}&filter=${query}`
+    );
+    if (data.status == "success") {
+      return set(() => ({ riders: data.data }));
+    }
   },
   removeRider: async (id: string) => {
     const { data } = await remove(`users/${id}`);
@@ -189,13 +197,12 @@ export const useCustomerStore = create((set) => ({
       filter != ""
         ? `{ "$and": [{"__t": "Customer"}, ${filter} ] }`
         : `{ "__t": "Customer" }`;
-
-    console.log(`users?page=${page}&limit=${limit}&filter=${query}`);
-
     const { data } = await get(
       `users?page=${page}&limit=${limit}&filter=${query}`
     );
-    return set(() => ({ customers: data.data }));
+    if (data.status == "success") {
+      return set(() => ({ customers: data.data }));
+    }
   },
   getAppointments: async () => {
     const { data } = await get(
