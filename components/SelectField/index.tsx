@@ -1,18 +1,7 @@
 import React from "react";
 import style from "./style.module.css";
+import { FieldOption, ISelectField } from "@/interfaces";
 
-interface FieldOption {
-  value: string | number;
-  title: string;
-}
-
-interface ISelectField {
-  options: FieldOption[];
-  name: string;
-  title: string;
-  defaultValue?: string;
-  onChange: (e: any) => void;
-}
 function SelectField({
   options,
   name,
