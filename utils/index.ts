@@ -1,4 +1,9 @@
 import { MUTIPLIERS } from "@/constants";
+import { ISearchFilter, TimeFilter } from "@/interfaces";
+
+export function isNumber(string: string) {
+  return /^[0-9]*$/.test(string);
+}
 
 export function getSearchFilterQuery(
   searchFilters: ISearchFilter[],
