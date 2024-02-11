@@ -38,8 +38,10 @@ export const useDashboardStore = create((set) => ({
       }));
     }
   },
-  getPricesByDate: async (start: string, end: string) => {
-    const { data } = await get(`dashboard/prices?start=${start}&end=${end}`);
+  getPricesByDate: async (start: string, end: string, item: string) => {
+    const { data } = await get(
+      `dashboard/prices?start=${start}&end=${end}&item=${item}`
+    );
     if (data.status == "success") {
       return set(() => ({
         prices: data.data,
@@ -55,6 +57,7 @@ export const useDashboardStore = create((set) => ({
       }));
     }
   },
+
   updateStatus: async (_id: string, status: TransationStatus) => {
     const { data } = await patch(`transactions/${_id}`, {
       status,
@@ -76,6 +79,26 @@ export const useTransactionStore = create((set) => ({
     const { data } = await get(`transactions`);
     if (data.status == "success") {
       return set(() => ({ transactions: data.data }));
+    }
+  },
+  approve: async (_id: string) => {
+    const { data } = await patch(`transactions/${_id}/approve`, {});
+    if (data.status == "success") {
+      const temp = data.data.map((e: any) => {
+        if (e._id == _id) e.status = "Approved";
+        return e;
+      });
+      return set(() => ({ transactions: temp }));
+    }
+  },
+  decline: async (_id: string) => {
+    const { data } = await patch(`transactions/${_id}/decline`, {});
+    if (data.status == "success") {
+      const temp = data.data.map((e: any) => {
+        if (e._id == _id) e.status = "Declined";
+        return e;
+      });
+      return set(() => ({ transactions: temp }));
     }
   },
   getRiderTransactions: async (rider: string) => {
@@ -244,14 +267,22 @@ export const useFaqStore = create((set) => ({
 
 export const useItemStore = create((set) => ({
   items: [],
-  getItems: async () => {
-    const { data } = await get(`items`);
-    return set(() => ({ items: data.data }));
+  getItems: async (page: number = 1, limit: number = 5, filter = "{}") => {
+    const { data } = await get(
+      `items?page=${page}&limit=${limit}&filter=${filter}`
+    );
+
+    if (data.status == "success") {
+      return set(() => ({ items: data.data }));
+    }
   },
-  removeItem: (id: any) => {
-    set((state: any) => ({
-      items: [...state.items.filter((e: any) => e._id != id)],
-    }));
+  removeItem: async (id: any) => {
+    const { data } = await remove(`items/${id}`);
+    if (data.status == "success") {
+      return set((state: any) => ({
+        items: [...state.items.filter((e: any) => e._id != id)],
+      }));
+    }
   },
 }));
 
