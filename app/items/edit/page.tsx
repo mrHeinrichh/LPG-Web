@@ -97,8 +97,8 @@ export default function Transactions({}: any) {
     const startDate = new Date();
     const endDate = new Date();
     startDate.setDate(startDate.getDate() - units * getMutiplier(timeFilter));
-    getPricesByDate(startDate.toISOString(), endDate.toISOString());
-  }, [timeFilter, units]);
+    getPricesByDate(startDate.toISOString(), endDate.toISOString(), id);
+  }, [timeFilter, units, id]);
 
   useEffect(() => {
     fetchItem();
@@ -302,30 +302,6 @@ export default function Transactions({}: any) {
 
           <div className="col-span-2">
             <h3 className="font-bold text-lg">Item Prices</h3>
-          </div>
-          <div className="flex flex-col gap-2">
-            <InputField
-              type="number"
-              name="customerPrice"
-              placeholder="Customer Price"
-              onChange={handleChange}
-              value={customerPrice}
-            />
-            <Button type="button" onClick={handleCustomerPriceSubmit}>
-              Update
-            </Button>
-          </div>
-          <div className="flex flex-col gap-2">
-            <InputField
-              type="number"
-              name="retailerPrice"
-              placeholder="Retailer Price"
-              onChange={handleChange}
-              value={retailerPrice}
-            />
-            <Button type="button" onClick={handleRetailerPriceSubmit}>
-              Update
-            </Button>
           </div>
         </form>
       </Sidenav>
