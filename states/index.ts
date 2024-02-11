@@ -75,8 +75,14 @@ export const useDashboardStore = create((set) => ({
 
 export const useTransactionStore = create((set) => ({
   transactions: [],
-  getTransactions: async () => {
-    const { data } = await get(`transactions`);
+  getTransactions: async (
+    page: number = 1,
+    limit: number = 5,
+    filter = "{}"
+  ) => {
+    const { data } = await get(
+      `transactions?page=${page}&limit=${limit}&filter=${filter}`
+    );
     if (data.status == "success") {
       return set(() => ({ transactions: data.data }));
     }
