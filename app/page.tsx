@@ -65,19 +65,19 @@ export default function Home() {
       <Sidenav>
         <div className="grid grid-cols-3 gap-2 w-full mb-4">
           <Card>
-            <div className="flex flex-col justify-evenly h-full">
+            <div className="flex flex-col justify-evenly h-full p-4">
               <p className="text-2xl font-bold">Total Revenue Today</p>
               <p className="text-2xl">{total}.00</p>
             </div>
           </Card>
           <Card>
-            <div className="flex flex-col justify-evenly h-full">
+            <div className="flex flex-col justify-evenly h-full p-4">
               <p className="text-2xl font-bold">Pending Deliveries</p>
               <p className="text-2xl">{pendingDeliveries.length}</p>
             </div>
           </Card>
           <Card>
-            <div className="flex flex-col justify-evenly h-full">
+            <div className="flex flex-col justify-evenly h-full p-4">
               <p className="text-2xl font-bold">Completed Deliveries</p>
               <p className="text-2xl">{completedDeliveries.length}</p>
             </div>
