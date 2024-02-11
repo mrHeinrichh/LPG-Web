@@ -3,5 +3,5 @@
 }
 
 .input {
-  @apply rounded-md px-5 py-3 bg-slate-900 text-white-500 w-full;
+  @apply rounded-md px-5 py-3 bg-white-100 text-slate-700 w-full;
 }

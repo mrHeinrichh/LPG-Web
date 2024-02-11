@@ -4,7 +4,7 @@ import { useTransactionStore } from "@/states";
 import { useEffect, useMemo } from "react";
 
 export default function Transactions() {
-  const { getTransactions, transactions, updateStatus } =
+  const { getTransactions, transactions, updateStatus, approve, decline } =
     useTransactionStore() as any;
 
   const pendings = useMemo(
@@ -15,9 +15,10 @@ export default function Transactions() {
     () => transactions.filter((e: any) => e.status == "Approved"),
     [transactions]
   );
+
   useEffect(() => {
     getTransactions();
-  }, [transactions]);
+  }, []);
 
   return (
     <>
@@ -36,14 +37,14 @@ export default function Transactions() {
 
                   <Button
                     onClick={() => {
-                      updateStatus(e._id, "Approved");
+                      approve(e._id);
                     }}
                   >
                     <p className="text-white-100">Approve</p>
                   </Button>
                   <Button
                     onClick={() => {
-                      updateStatus(e._id, "Declined");
+                      decline(e._id);
                     }}
                   >
                     <p className="text-white-100">Decline</p>
