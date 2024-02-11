@@ -7,8 +7,9 @@ import Datatable from "./Datatable";
 import TableRow from "./TableRow";
 import InputField from "./InputField";
 import SelectField from "./SelectField";
-
+import ApprovalsList from "./ApprovalsList";
 export {
+  ApprovalsList,
   SelectField,
   InputField,
   TableRow,
