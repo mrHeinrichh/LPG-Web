@@ -1,56 +1,37 @@
 "use client";
-import { TableRow, Datatable, Sidenav, Button, InputField } from "@/components";
+import {
+  TableRow,
+  Datatable,
+  Sidenav,
+  Button,
+  InputField,
+  SelectField,
+} from "@/components";
 import trash from "@/public/trash.svg";
 import { useRiderStore } from "@/states";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import edit from "@/public/edit.svg";
+import { SEARCH_FILTERS, TABLE_HEADERS } from "./data";
+import { getSearchFilterQuery } from "@/utils";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 export default function Customers({}: any) {
   const router = useRouter();
-  const [search, setsearch] = useState("");
   const { riders, getRider, removeRider } = useRiderStore() as any;
-  const header: any[] = [
-    "Name",
-    "Email",
-    "Contact Number",
-    "Address",
-    "GCASH NO.",
-    "Action",
-  ];
 
-  const filtered = useMemo(() => {
-    let temp = [];
-    if (search != "") {
-      riders.forEach((e: any) => {
-        if (
-          e.name.includes(search) ||
-          e.address.includes(search) ||
-          e.email.includes(search) ||
-          e.gcash.includes(search) ||
-          e.contactNumber.includes(search)
-        ) {
-          temp.push(e);
-        }
-      });
-    }
-
-    if (search == "") {
-      temp = riders;
-    }
-
-    return temp;
-  }, [riders, search]);
+  const [search, setsearch] = useState("");
+  const [page, setpage] = useState(1);
+  const [limit, setlimit] = useState(20);
 
   useEffect(() => {
-    getRider();
-  }, []);
-
-  const handleChange = (event: any) => {
-    const { name, value } = event.target;
-    setsearch(value);
-  };
+    if (search != "") {
+      getRider(page, limit, getSearchFilterQuery(SEARCH_FILTERS, search));
+    } else {
+      getRider(page, limit);
+    }
+  }, [page, limit, search]);
 
   return (
     <>
@@ -65,16 +46,21 @@ export default function Customers({}: any) {
             Create Rider
           </Button>
         </div>
-        <InputField name="search" onChange={handleChange} />;
-        <Datatable header={header}>
-          {filtered.map((e: any) => (
+        <InputField
+          name="search"
+          onChange={(event: any) => {
+            const { value } = event.target;
+            setsearch(value);
+          }}
+        />
+        <Datatable header={TABLE_HEADERS}>
+          {riders.map((e: any) => (
             <TableRow key={e._id}>
               <td>{e.name}</td>
               <td>{e.email}</td>
               <td>{e.contactNumber}</td>
               <td>{e.address}</td>
               <td>{e.gcash}</td>
-
               <td className="flex justify-evenly">
                 <div
                   onClick={() => {
@@ -94,6 +80,36 @@ export default function Customers({}: any) {
             </TableRow>
           ))}
         </Datatable>
+        <div className="w-full flex justify-between py-2">
+          <div className="flex items-center gap-4 ">
+            <SelectField
+              options={[
+                { title: "20", value: 20 },
+                { title: "10", value: 10 },
+                { title: "5", value: 5 },
+                { title: "1", value: 1 },
+              ]}
+              name={""}
+              title={""}
+              onChange={(e: any) => {
+                setlimit(e.target.value);
+              }}
+            />
+          </div>
+          <div className="flex items-center gap-4 ">
+            <FaChevronLeft
+              onClick={() => {
+                setpage((prev: number) => prev - 1);
+              }}
+            />
+            {page}
+            <FaChevronRight
+              onClick={() => {
+                setpage((prev: number) => prev + 1);
+              }}
+            />
+          </div>
+        </div>
       </Sidenav>
     </>
   );
