@@ -1,10 +1,23 @@
 "use client";
 import { Sidenav, InputField, Button, SelectField } from "@/components";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import style from "./style.module.css";
 import { useRouter, useSearchParams } from "next/navigation";
 import { get, patch, post } from "@/config";
 import Image from "next/image";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+} from "recharts";
+import timeFilterOption from "./timeFilter";
+import { useDashboardStore } from "@/states";
+import { getDates, getMutiplier, getStartDayDate } from "@/utils";
+import { TimeFilter } from "@/interfaces";
 
 export default function Transactions({}: any) {
   const router = useRouter();
@@ -19,8 +32,73 @@ export default function Transactions({}: any) {
     stock: 1,
     type: "",
   });
+  const { getPricesByDate, prices } = useDashboardStore() as any;
   const [customerPrice, setcustomerPrice] = useState<number>(0);
   const [retailerPrice, setretailerPrice] = useState<number>(0);
+  const [units, setunits] = useState(5);
+  const [timeFilter, settimeFilter] = useState<TimeFilter>("Daily");
+
+  const data = useMemo(() => {
+    let temp: any = [];
+
+    const parsedStartDay = getDates(timeFilter, units).map((e: Date) =>
+      getStartDayDate(e)
+    );
+
+    const multiplier = getMutiplier(timeFilter);
+    let curentCustomerValue = 0;
+    let curentRetailerValue = 0;
+    parsedStartDay.forEach((element) => {
+      const customerPrices = prices
+        .filter((e: any) => {
+          return (
+            element.getTime() <=
+              getStartDayDate(new Date(e.createdAt)).getTime() &&
+            element.getTime() + 86399999 * multiplier >=
+              getStartDayDate(new Date(e.createdAt)).getTime() &&
+            e.type === "Customer"
+          );
+        })
+        .map((e: any) => e.price);
+
+      const retailerPrices = prices
+        .filter((e: any) => {
+          return (
+            element.getTime() <=
+              getStartDayDate(new Date(e.createdAt)).getTime() &&
+            element.getTime() + 86399999 * multiplier >=
+              getStartDayDate(new Date(e.createdAt)).getTime() &&
+            e.type === "Retailer"
+          );
+        })
+        .map((e: any) => e.price);
+
+      curentCustomerValue =
+        customerPrices.length == 0
+          ? curentCustomerValue
+          : Math.max(...customerPrices);
+
+      curentRetailerValue =
+        retailerPrices.length == 0
+          ? curentRetailerValue
+          : Math.max(...retailerPrices);
+
+      temp.push({
+        name: `${element.toDateString()}`,
+        customer: curentCustomerValue,
+        retailer: curentRetailerValue,
+      });
+    });
+
+    return temp;
+  }, [prices]);
+
+  useEffect(() => {
+    const startDate = new Date();
+    const endDate = new Date();
+    startDate.setDate(startDate.getDate() - units * getMutiplier(timeFilter));
+    getPricesByDate(startDate.toISOString(), endDate.toISOString());
+  }, [timeFilter, units]);
 
   useEffect(() => {
     fetchItem();
@@ -29,7 +107,6 @@ export default function Transactions({}: any) {
   const fetchItem = async () => {
     try {
       const { data } = await get(`items/${id}`);
-      console.log(data);
 
       if (data.status === "success") {
         setFormData({
@@ -51,11 +128,11 @@ export default function Transactions({}: any) {
 
   const handleChange = (event: any) => {
     const { name, value } = event.target;
-
     if (name == "customerPrice") {
       setcustomerPrice(value);
       return;
     }
+
     if (name == "retailerPrice") {
       setretailerPrice(value);
       return;
@@ -109,6 +186,53 @@ export default function Transactions({}: any) {
   return (
     <>
       <Sidenav>
+        <SelectField
+          options={timeFilterOption}
+          name={"Time Filter"}
+          title={"Time Filter"}
+          onChange={function (e: any): void {
+            const { name, value } = e.target;
+            settimeFilter(value);
+          }}
+        />
+        <InputField
+          type="number"
+          placeholder="Units"
+          value={units}
+          onChange={function (e: any): void {
+            const { name, value } = e.target;
+            setunits(value);
+          }}
+        ></InputField>
+        <LineChart
+          width={1300}
+          height={300}
+          data={data}
+          margin={{
+            top: 5,
+            right: 30,
+            left: 20,
+            bottom: 5,
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Line
+            type="monotone"
+            dataKey="customer"
+            stroke="#8884d8"
+            activeDot={{ r: 8 }}
+          />
+          <Line
+            type="monotone"
+            dataKey="retailer"
+            stroke="#82ca9d"
+            activeDot={{ r: 8 }}
+          />
+        </LineChart>
         <form onSubmit={handleSubmit} className={style.form}>
           <div className="col-span-2">
             <h3 className="font-bold text-lg">Edit Item Details</h3>
