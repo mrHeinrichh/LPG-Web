@@ -1,19 +1,8 @@
 "use client";
-import {
-  StatsCard,
-  Sidenav,
-  Button,
-  InputField,
-  Card,
-  ApprovalsList,
-} from "@/components";
-import {
-  useCustomerStore,
-  useDashboardStore,
-  useTransactionStore,
-} from "@/states";
+import { Sidenav, Button, Card, ApprovalsList } from "@/components";
+import { useCustomerStore, useDashboardStore } from "@/states";
 import { useEffect, useMemo, useState } from "react";
-import Image from "next/image";
+
 import {
   PieChart,
   Pie,
@@ -26,6 +15,7 @@ import {
   Rectangle,
 } from "recharts";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { PendingCustomerList, PendingDeliveryList } from "./components";
 
 export default function Home() {
   const dashboardStore = useDashboardStore() as any;
@@ -128,88 +118,8 @@ export default function Home() {
           })}
         </ApprovalsList>
         <div className="grid grid-cols-2 gap-2 w-full my-5">
-          <ApprovalsList
-            header={
-              <div className="flex items-center justify-between">
-                <p className="text-xl font-semibold">
-                  Pending Customer Verification
-                </p>
-                <div className="flex items-center gap-4 ">
-                  <FaChevronLeft onClick={() => {}} />
-                  <FaChevronRight onClick={() => {}} />
-                </div>
-              </div>
-            }
-          >
-            {unverified.map((e: any) => {
-              return (
-                <Card key={e._id}>
-                  <div className="w-full flex items-center justify-between p-3">
-                    <div className="flex items-center gap-2">
-                      <Image src={e.image} alt="" height={100} width={100} />
-                      <div className="flex flex-col">
-                        <p className="text-lg font-semibold">{e.name}</p>
-                        <p className="">{e.email}</p>
-                      </div>
-                    </div>
-
-                    <Button
-                      onClick={() => {
-                        toggleVerify(e._id, true);
-                      }}
-                    >
-                      <p className="">Verify</p>
-                    </Button>
-                  </div>
-                </Card>
-              );
-            })}
-          </ApprovalsList>
-          <ApprovalsList
-            header={
-              <div className="flex items-center justify-between">
-                <p className="text-xl font-semibold">
-                  Pending Delivery Approvals
-                </p>
-                <div className="flex items-center gap-4 ">
-                  <FaChevronLeft onClick={() => {}} />
-                  <FaChevronRight onClick={() => {}} />
-                </div>
-              </div>
-            }
-          >
-            {pendingDeliveries.map((e: any) => {
-              return (
-                <Card key={e._id}>
-                  <div className="flex justify-between items-center w-full p-2">
-                    <div className="flex flex-col">
-                      <p className="text-lg font-semibold">{e.name}</p>
-                      <p className="">{e.status}</p>
-                      <p className="">No. of Items: {e.items.length}</p>
-                      <p className="">₱ {e.total}.00</p>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <Button
-                        onClick={() => {
-                          dashboardStore.updateStatus(e._id, "Approved");
-                        }}
-                      >
-                        <p className="">Approve</p>
-                      </Button>
-                      <Button
-                        onClick={() => {
-                          dashboardStore.updateStatus(e._id, "Declined");
-                        }}
-                      >
-                        <p className="text-white-100">Decline</p>
-                      </Button>
-                    </div>
-                  </div>
-                </Card>
-              );
-            })}
-          </ApprovalsList>
+          <PendingCustomerList />
+          <PendingDeliveryList />
         </div>
       </Sidenav>
     </main>

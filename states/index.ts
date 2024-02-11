@@ -100,11 +100,15 @@ export const useTransactionStore = create((set) => ({
   decline: async (_id: string) => {
     const { data } = await patch(`transactions/${_id}/decline`, {});
     if (data.status == "success") {
-      const temp = data.data.map((e: any) => {
-        if (e._id == _id) e.status = "Declined";
-        return e;
+      return set((prev: any) => {
+        const temp = prev.transactions.map((e: any) => {
+          console.log(e);
+
+          if (e._id == _id) e = data.data[0];
+          return e;
+        });
+        return { transactions: temp };
       });
-      return set(() => ({ transactions: temp }));
     }
   },
   getRiderTransactions: async (rider: string) => {
