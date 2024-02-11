@@ -55,7 +55,7 @@ export default function Home() {
   return (
     <main>
       <Sidenav>
-        <div className="grid grid-cols-3 gap-2 w-full my-5">
+        <div className="grid grid-cols-3 gap-2 w-full mb-4">
           <Card>
             <div className="flex flex-col justify-evenly h-full">
               <p className="text-2xl font-bold">Total Revenue Today</p>
@@ -75,75 +75,73 @@ export default function Home() {
             </div>
           </Card>
         </div>
-        <div className="flex flex-col gap-2 my-4">
-          <p className="text-xl font-semibold">Pending Customer Verification</p>
-          {unverified.map((e: any) => {
-            return (
-              <Card key={e._id}>
-                <div className="w-full flex items-center justify-between p-3">
-                  <div className="flex items-center gap-2">
-                    <Image src={e.image} alt="" height={100} width={100} />
-                    <div className="flex flex-col">
-                      <p className="text-lg font-semibold">{e.name}</p>
-                      <p className="">{e.email}</p>
-                    </div>
-                  </div>
-
-                  <Button
-                    onClick={() => {
-                      toggleVerify(e._id, true);
-                    }}
-                  >
-                    <p className="">Verify</p>
-                  </Button>
-                </div>
-              </Card>
-            );
-          })}
-        </div>
-        <div className="flex flex-col gap-2 my-4">
-          <p className="text-xl font-semibold">Pending Delivery Approvals</p>
-
-          {pendingDeliveries.map((e: any) => {
-            return (
-              <Card key={e._id}>
-                <div className="flex justify-between items-center w-full p-2">
-                  <div className="flex flex-col">
-                    <p className="text-lg font-semibold">{e.name}</p>
-                    <p className="">{e.status}</p>
-                    <p className="">No. of Items: {e.items.length}</p>
-                    <p className="">₱ {e.total}.00</p>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <Button
-                      onClick={() => {
-                        dashboardStore.updateStatus(e._id, "Approved");
-                      }}
-                    >
-                      <p className="">Approve</p>
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        dashboardStore.updateStatus(e._id, "Declined");
-                      }}
-                    >
-                      <p className="text-white-100">Decline</p>
-                    </Button>
-                  </div>
-                </div>
-              </Card>
-            );
-          })}
-        </div>
-        <div className="grid grid-cols-3 gap-2 w-full"></div>
-        {/* <Card>
-          
-        </Card> */}
-
         <Stats />
 
-        <div className="flex gap-2"></div>
+        <div className="grid grid-cols-2 gap-2 w-full my-5">
+          <div className="flex flex-col gap-2 my-4">
+            <p className="text-xl font-semibold">
+              Pending Customer Verification
+            </p>
+            {unverified.map((e: any) => {
+              return (
+                <Card key={e._id}>
+                  <div className="w-full flex items-center justify-between p-3">
+                    <div className="flex items-center gap-2">
+                      <Image src={e.image} alt="" height={100} width={100} />
+                      <div className="flex flex-col">
+                        <p className="text-lg font-semibold">{e.name}</p>
+                        <p className="">{e.email}</p>
+                      </div>
+                    </div>
+
+                    <Button
+                      onClick={() => {
+                        toggleVerify(e._id, true);
+                      }}
+                    >
+                      <p className="">Verify</p>
+                    </Button>
+                  </div>
+                </Card>
+              );
+            })}
+          </div>
+          <div className="flex flex-col gap-2 my-4">
+            <p className="text-xl font-semibold">Pending Delivery Approvals</p>
+
+            {pendingDeliveries.map((e: any) => {
+              return (
+                <Card key={e._id}>
+                  <div className="flex justify-between items-center w-full p-2">
+                    <div className="flex flex-col">
+                      <p className="text-lg font-semibold">{e.name}</p>
+                      <p className="">{e.status}</p>
+                      <p className="">No. of Items: {e.items.length}</p>
+                      <p className="">₱ {e.total}.00</p>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <Button
+                        onClick={() => {
+                          dashboardStore.updateStatus(e._id, "Approved");
+                        }}
+                      >
+                        <p className="">Approve</p>
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          dashboardStore.updateStatus(e._id, "Declined");
+                        }}
+                      >
+                        <p className="text-white-100">Decline</p>
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
       </Sidenav>
     </main>
   );
@@ -246,7 +244,6 @@ function Stats() {
       <Card>
         <div className="flex flex-col items-center">
           <p>Walkins and Online</p>
-
           <BarChart
             width={400}
             height={200}
@@ -270,40 +267,54 @@ function Stats() {
           </BarChart>
         </div>
       </Card>
-      <Card>
+      {/* <Card>
         <div className="flex flex-col items-center">
           <p>Item Types</p>
           <PieChart width={200} height={200}>
+           
+
+            <Tooltip />
+          </PieChart>
+        </div>
+      </Card> */}
+      <Card>
+        <div className="flex flex-col items-center">
+          <p>Products Sold</p>
+          <PieChart width={300} height={300}>
+            <Tooltip />
+            <Legend />
             <Pie
               dataKey="value"
               isAnimationActive={false}
               data={itemTypeCounts}
               cx="50%"
               cy="50%"
-              outerRadius={50}
-              fill="#8884d8"
+              innerRadius={100}
+              outerRadius={110}
+              fill="#123534"
               label
             />
-
-            <Tooltip />
-          </PieChart>
-        </div>
-      </Card>
-      <Card>
-        <div className="flex flex-col items-center">
-          <p>Products Sold</p>
-          <PieChart width={200} height={200}>
             <Pie
               dataKey="value"
               isAnimationActive={false}
               data={itemCounts}
               cx="50%"
               cy="50%"
-              outerRadius={50}
+              outerRadius={60}
               fill="#8884d8"
               label
             />
-
+            <Pie
+              dataKey="value"
+              isAnimationActive={false}
+              data={itemCounts}
+              cx="50%"
+              cy="50%"
+              innerRadius={70}
+              outerRadius={90}
+              fill="#8884d8"
+              label
+            />
             <Tooltip />
           </PieChart>
         </div>
