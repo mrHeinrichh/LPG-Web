@@ -27,6 +27,7 @@ export const useAuthStore = create((set) => ({
 
 export const useDashboardStore = create((set) => ({
   transactions: [],
+  prices: [],
   getTransactions: async () => {
     const { data } = await get(
       `dashboard/transaction?start=2023-01-26T06:02:27.923+00:00`
@@ -34,6 +35,14 @@ export const useDashboardStore = create((set) => ({
     if (data.status == "success") {
       return set(() => ({
         transactions: data.data[0].transactions,
+      }));
+    }
+  },
+  getPricesByDate: async (start: string, end: string) => {
+    const { data } = await get(`dashboard/prices?start=${start}&end=${end}`);
+    if (data.status == "success") {
+      return set(() => ({
+        prices: data.data,
       }));
     }
   },
@@ -86,7 +95,10 @@ export const useTransactionStore = create((set) => ({
     }
   },
   updateStatus: async (_id: string, status: TransationStatus) => {
-    const { data } = await patch(`transactions/${_id}`, { status: "On-Going" });
+    const { data } = await patch(`transactions/${_id}`, {
+      status,
+      __t: "Delivery",
+    });
     if (data.status == "success") {
       const temp = data.data.map((e: any) => {
         if (e._id == _id) e.status = status;
@@ -185,7 +197,7 @@ export const useCustomerStore = create((set) => ({
       type: "Customer",
     });
     if (data.state == "success") {
-      set((state: any) => {
+      return set((state: any) => {
         const temp = state.customers.map((e: any) => {
           if (e._id == id) e.verified = status;
           return e;
