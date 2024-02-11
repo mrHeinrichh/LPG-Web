@@ -240,19 +240,16 @@ export const useCustomerStore = create((set) => ({
       }));
     }
   },
-  toggleVerify: async (id: string, status: boolean) => {
-    const { data } = await patch(`users/${id}`, {
-      verified: status,
-      type: "Customer",
-    });
-    if (data.state == "success") {
+  verifyCustomer: async (id: string) => {
+    const { data } = await patch(`users/${id}/verify`, {});
+    if (data.status == "success") {
       return set((state: any) => {
-        const temp = state.customers.map((e: any) => {
-          if (e._id == id) e.verified = status;
+        const customers = state.customers.map((e: any) => {
+          if (e._id == id) e = data.data[0];
           return e;
         });
         return {
-          customers: [...temp],
+          customers,
         };
       });
     }
