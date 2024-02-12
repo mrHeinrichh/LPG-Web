@@ -1,78 +1,41 @@
 "use client";
-import { Sidenav, Button } from "@/components";
+import { Sidenav } from "@/components";
 import { useTransactionStore } from "@/states";
 import { useEffect, useMemo } from "react";
+import {
+  ApprovedDeliveryList,
+  OnGoingDeliveryList,
+  PendingDeliveryList,
+} from "./components";
 
 export default function Transactions() {
-  const { getTransactions, transactions, updateStatus, approve, decline } =
-    useTransactionStore() as any;
-
-  const pendings = useMemo(
-    () => transactions.filter((e: any) => e.status == "Pending"),
-    [transactions]
-  );
-  const approved = useMemo(
-    () => transactions.filter((e: any) => e.status == "Approved"),
-    [transactions]
-  );
+  const { getTransactions, transactions } = useTransactionStore() as any;
 
   useEffect(() => {
-    getTransactions();
+    getTransactions(0, 0);
   }, []);
+
+  const data = useMemo(
+    () =>
+      transactions.filter(
+        (e: any) =>
+          e.status == "Approved" ||
+          e.status == "Pending" ||
+          e.status == "On Going"
+      ),
+    [transactions]
+  );
 
   return (
     <>
       <Sidenav>
-        <h4>Deliveries</h4>
-        <div className="flex gap-2">
-          <div className="flex flex-col gap-2 w-1/2">
-            <p>Pending</p>
-            {pendings.map((e: any) => {
-              return (
-                <div key={e._id} className=" bg-slate-800 p-3 rounded">
-                  <p className="text-white-100">{e.name}</p>
-                  <p className="text-white-100">{e.status}</p>
-                  <p className="text-white-100">Items: {e.items.length}</p>
-                  <p className="text-white-100">Total: {e.total}PHP</p>
-
-                  <Button
-                    onClick={() => {
-                      approve(e._id);
-                    }}
-                  >
-                    <p className="text-white-100">Approve</p>
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      decline(e._id);
-                    }}
-                  >
-                    <p className="text-white-100">Decline</p>
-                  </Button>
-                </div>
-              );
-            })}
-          </div>
-          <div className="flex flex-col gap-2 w-1/2">
-            <p>Approved</p>
-            {approved.map((e: any) => {
-              return (
-                <div key={e._id} className=" bg-slate-800 p-3 rounded">
-                  <p className="text-white-100">{e.name}</p>
-                  <p className="text-white-100">{e.status}</p>
-                  <p className="text-white-100">Items: {e.items.length}</p>
-                  <p className="text-white-100">Total: {e.total}PHP</p>
-
-                  <Button>
-                    <p className="text-white-100">Approve</p>
-                  </Button>
-                  <Button>
-                    <p className="text-white-100">Decline</p>
-                  </Button>
-                </div>
-              );
-            })}
-          </div>
+        <p className="text-4xl font-bold">
+          Deliveries <span className="font-light">({data.length})</span>
+        </p>
+        <div className="grid grid-cols-3 gap-2 w-full my-5">
+          <PendingDeliveryList />
+          <ApprovedDeliveryList />
+          <OnGoingDeliveryList />
         </div>
       </Sidenav>
     </>

@@ -293,6 +293,8 @@ export const useFaqStore = create((set) => ({
 
 export const useItemStore = create((set) => ({
   items: [],
+  noOfProducts: 0,
+  noOfAccessories: 0,
   getItems: async (page: number = 1, limit: number = 5, filter = "{}") => {
     const { data } = await get(
       `items?page=${page}&limit=${limit}&filter=${filter}`
@@ -300,6 +302,20 @@ export const useItemStore = create((set) => ({
 
     if (data.status == "success") {
       return set(() => ({ items: data.data }));
+    }
+  },
+  getNumbers: async () => {
+    const { data } = await get(`items?page=${0}&limit=${0}`);
+    if (data.status == "success") {
+      const noOfProducts = data.data.reduce(
+        (acc: number, curr: any) => (curr.type === "Product" ? acc + 1 : acc),
+        0
+      );
+      const noOfAccessories = data.data.reduce(
+        (acc: number, curr: any) => (curr.type === "Accessory" ? acc + 1 : acc),
+        0
+      );
+      return set(() => ({ noOfProducts, noOfAccessories }));
     }
   },
   removeItem: async (id: any) => {

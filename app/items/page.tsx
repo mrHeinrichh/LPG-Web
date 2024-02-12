@@ -18,7 +18,14 @@ import { FaChevronLeft, FaChevronRight, FaPlus } from "react-icons/fa";
 import { getSearchFilterQuery } from "@/utils";
 import { SEARCH_FILTERS, TABLE_HEADERS } from "./data";
 export default function Items({}: any) {
-  const { items, getItems, removeItem } = useItemStore() as any;
+  const {
+    items,
+    getItems,
+    removeItem,
+    getNumbers,
+    noOfProducts,
+    noOfAccessories,
+  } = useItemStore() as any;
   const router = useRouter();
   const [search, setsearch] = useState("");
   const [page, setpage] = useState(1);
@@ -31,6 +38,9 @@ export default function Items({}: any) {
       getItems(page, limit);
     }
   }, [page, limit, search]);
+  useEffect(() => {
+    getNumbers();
+  }, []);
 
   return (
     <>
@@ -39,13 +49,13 @@ export default function Items({}: any) {
           <Card>
             <div className="flex flex-col justify-evenly h-full p-4">
               <p className="text-2xl font-bold">Products</p>
-              <p className="text-2xl">90</p>
+              <p className="text-2xl">{noOfProducts}</p>
             </div>
           </Card>{" "}
           <Card>
             <div className="flex flex-col justify-evenly h-full p-4">
               <p className="text-2xl font-bold">Accesories</p>
-              <p className="text-2xl">20</p>
+              <p className="text-2xl">{noOfAccessories}</p>
             </div>
           </Card>
         </div>
