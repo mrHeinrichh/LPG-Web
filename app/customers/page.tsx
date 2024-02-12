@@ -5,6 +5,7 @@ import {
   Datatable,
   InputField,
   Sidenav,
+  Card,
 } from "@/components";
 import edit from "@/public/edit.svg";
 import trash from "@/public/trash.svg";
@@ -18,6 +19,7 @@ import {
   FaChevronRight,
   FaCheck,
   FaTimes,
+  FaPlus,
 } from "react-icons/fa";
 import { SEARCH_FILTERS, TABLE_HEADERS } from "./data";
 export default function Customers({}: any) {
@@ -25,39 +27,20 @@ export default function Customers({}: any) {
   const [search, setsearch] = useState("");
   const [page, setpage] = useState(1);
   const [limit, setlimit] = useState(20);
-  const { getCustomer, customers, removeCustomer, toggleVerify } =
-    useCustomerStore() as any;
+  const {
+    getCustomer,
+    customers,
+    removeCustomer,
+    toggleVerify,
+    noOfCustomer,
+    noOfVerifiedCustomer,
+    getNoOfCustomer,
+  } = useCustomerStore() as any;
 
   const unverified = useMemo(
     () => customers.filter((e: any) => !e.verified),
     [customers]
   );
-
-  const filtered = useMemo(() => {
-    let temp = [];
-    if (search != "") {
-      customers.forEach((e: any) => {
-        if (
-          e.name.includes(search) ||
-          e.address.includes(search) ||
-          e.email.includes(search) ||
-          e.contactNumber.includes(search)
-        ) {
-          temp.push(e);
-        }
-      });
-    }
-
-    if (search == "") {
-      temp = customers;
-    }
-    return temp;
-  }, [customers, search]);
-
-  const handleChange = (event: any) => {
-    const { name, value } = event.target;
-    setsearch(value);
-  };
 
   useEffect(() => {
     if (search != "") {
@@ -67,21 +50,45 @@ export default function Customers({}: any) {
     }
   }, [page, limit, search]);
 
+  useEffect(() => {
+    getNoOfCustomer();
+  }, [unverified]);
   return (
     <>
       <Sidenav>
-        <div className="flex justify-between items-center w-full">
-          <h4>Customers</h4>
-          <Button
-            onClick={() => {
-              router.push("/customers/add");
-            }}
-          >
-            Create Customer
-          </Button>
+        <div className="grid grid-cols-2 gap-2 w-full mb-4">
+          <Card>
+            <div className="flex flex-col justify-evenly h-full p-4">
+              <p className="text-2xl font-bold">Overall Customers</p>
+              <p className="text-2xl">{noOfCustomer}</p>
+            </div>
+          </Card>
+          <Card>
+            <div className="flex flex-col justify-evenly h-full p-4">
+              <p className="text-2xl font-bold">Verified Customers</p>
+              <p className="text-2xl">{noOfVerifiedCustomer}</p>
+            </div>
+          </Card>
+        </div>
+        <div className="flex justify-between items-center w-full mt-5 mb-2 bg-white-100 rounded-md px-4 py-2">
+          <div className="">
+            <InputField
+              name="search"
+              onChange={(event: any) => {
+                const { value } = event.target;
+                setsearch(value);
+              }}
+            />
+          </div>
+          <div className="rounded-lg bg-black-50 p-2">
+            <FaPlus
+              onClick={() => {
+                router.push("/customers/add");
+              }}
+            />
+          </div>
         </div>
 
-        <InputField name="search" onChange={handleChange} />
         <Datatable header={TABLE_HEADERS}>
           {customers.map((e: any) => (
             <tr key={e._id}>
