@@ -214,26 +214,29 @@ export const useCustomerStore = create((set) => ({
       return set(() => ({ customers: data.data }));
     }
   },
-  getAppointments: async () => {
+  getAppointments: async (page: number = 1, limit: number = 5) => {
     const { data } = await get(
-      `users?filter={"__t": "Customer", "appointmentStatus": "Pending"}`
+      `users??page=${page}&limit=${limit}&filter={"__t": "Customer", "appointmentStatus": "Pending"}`
     );
     return set(() => ({ appointments: data.data }));
   },
   updateAppointmentStatus: async (_id: string, status: AppointmentStatus) => {
-    const { data } = await patch(`users/${_id}`, { status, type: "Customer" });
+    const { data } = await patch(`users/${_id}`, {
+      appointmentStatus: status,
+      __t: "Customer",
+    });
     if (data.status == "success") {
-      const temp = data.data.map((e: any) => {
-        if (e._id == _id) e.appointmentStatus = status;
-        return e;
+      return set((prev: any) => {
+        const temp = prev.appointments.map((e: any) => {
+          if (e._id == _id) e = data.data[0];
+          return e;
+        });
+        return { appointments: temp };
       });
-      return set(() => ({ appointments: temp }));
     }
   },
   removeCustomer: async (id: string) => {
     const { data } = await remove(`users/${id}`);
-    console.log(data);
-
     if (data.state == "success") {
       return set((state: any) => ({
         customers: [...state.customers.filter((e: any) => e._id != id)],

@@ -1,6 +1,10 @@
 import { MUTIPLIERS } from "@/constants";
 import { ISearchFilter, TimeFilter } from "@/interfaces";
 
+export function getDateToString(date: string) {
+  return new Date(date).toDateString();
+}
+
 export function isNumber(string: string) {
   return /^[0-9]*$/.test(string);
 }

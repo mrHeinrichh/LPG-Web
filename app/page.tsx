@@ -1,6 +1,10 @@
 "use client";
-import { Sidenav, Button, Card, ApprovalsList } from "@/components";
-import { useCustomerStore, useDashboardStore } from "@/states";
+import { Sidenav, Card } from "@/components";
+import {
+  useCustomerStore,
+  useDashboardStore,
+  useTransactionStore,
+} from "@/states";
 import { useEffect, useMemo, useState } from "react";
 
 import {
@@ -15,40 +19,16 @@ import {
   Rectangle,
 } from "recharts";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { PendingCustomerList, PendingDeliveryList } from "./components";
+import {
+  PendingCustomerList,
+  PendingDeliveryList,
+  RiderAppointmentsList,
+} from "./components";
 
 export default function Home() {
   const dashboardStore = useDashboardStore() as any;
-  const { getCustomer, customers, toggleVerify } = useCustomerStore() as any;
-  const [startDate, setstartDate] = useState("01/22/2023");
-  const unverified = useMemo(
-    () => customers.filter((e: any) => !e.verified),
-    [customers]
-  );
 
-  const pendingDeliveries = useMemo(
-    () => dashboardStore.transactions.filter((e: any) => e.status == "Pending"),
-    [dashboardStore.transactions]
-  );
-
-  const completedDeliveries = useMemo(
-    () =>
-      dashboardStore.transactions.filter((e: any) => e.status == "Completed"),
-    [dashboardStore.transactions]
-  );
-
-  const total = useMemo(() => {
-    return completedDeliveries.reduce(
-      (acc: any, curr: any) => acc + curr.total,
-      0
-    );
-  }, [completedDeliveries]);
-
-  useEffect(() => {
-    getCustomer();
-    // dashboardStore.getTransactionsByStatus(["Pending", "Completed"]);
-    dashboardStore.getTransactions();
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <main>
@@ -57,66 +37,24 @@ export default function Home() {
           <Card>
             <div className="flex flex-col justify-evenly h-full p-4">
               <p className="text-2xl font-bold">Total Revenue Today</p>
-              <p className="text-2xl">{total}.00</p>
+              <p className="text-2xl">{20000}.00</p>
             </div>
           </Card>
           <Card>
             <div className="flex flex-col justify-evenly h-full p-4">
               <p className="text-2xl font-bold">Pending Deliveries</p>
-              <p className="text-2xl">{pendingDeliveries.length}</p>
+              <p className="text-2xl">{1}</p>
             </div>
           </Card>
           <Card>
             <div className="flex flex-col justify-evenly h-full p-4">
               <p className="text-2xl font-bold">Completed Deliveries</p>
-              <p className="text-2xl">{completedDeliveries.length}</p>
+              <p className="text-2xl">{1}</p>
             </div>
           </Card>
         </div>
         {/* <Stats /> */}
-        <ApprovalsList
-          header={
-            <div className="flex items-center justify-between">
-              <p className="text-xl font-semibold">Rider Appointments</p>
-              <div className="flex items-center gap-4 ">
-                <FaChevronLeft onClick={() => {}} />
-                <FaChevronRight onClick={() => {}} />
-              </div>
-            </div>
-          }
-        >
-          {pendingDeliveries.map((e: any) => {
-            return (
-              <Card key={e._id}>
-                <div className="flex justify-between items-center w-full p-2">
-                  <div className="flex flex-col">
-                    <p className="text-lg font-semibold">{e.name}</p>
-                    <p className="">{e.status}</p>
-                    <p className="">No. of Items: {e.items.length}</p>
-                    <p className="">₱ {e.total}.00</p>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <Button
-                      onClick={() => {
-                        dashboardStore.updateStatus(e._id, "Approved");
-                      }}
-                    >
-                      <p className="">Approve</p>
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        dashboardStore.updateStatus(e._id, "Declined");
-                      }}
-                    >
-                      <p className="text-white-100">Decline</p>
-                    </Button>
-                  </div>
-                </div>
-              </Card>
-            );
-          })}
-        </ApprovalsList>
+        <RiderAppointmentsList />
         <div className="grid grid-cols-2 gap-2 w-full my-5">
           <PendingCustomerList />
           <PendingDeliveryList />
