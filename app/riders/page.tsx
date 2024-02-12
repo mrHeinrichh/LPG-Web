@@ -3,19 +3,19 @@ import {
   TableRow,
   Datatable,
   Sidenav,
-  Button,
   InputField,
   SelectField,
+  Card,
 } from "@/components";
 import trash from "@/public/trash.svg";
 import { useRiderStore } from "@/states";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import edit from "@/public/edit.svg";
 import { SEARCH_FILTERS, TABLE_HEADERS } from "./data";
 import { getSearchFilterQuery } from "@/utils";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight, FaPlus } from "react-icons/fa";
 
 export default function Customers({}: any) {
   const router = useRouter();
@@ -36,23 +36,39 @@ export default function Customers({}: any) {
   return (
     <>
       <Sidenav>
-        <div className="flex justify-between items-center w-full">
-          <h4>Riders</h4>
-          <Button
-            onClick={() => {
-              router.push("/riders/create");
-            }}
-          >
-            Create Rider
-          </Button>
+        <div className="grid grid-cols-2 gap-2 w-full mb-4">
+          <Card>
+            <div className="flex flex-col justify-evenly h-full p-4">
+              <p className="text-2xl font-bold">Overall Riders</p>
+              <p className="text-2xl">{1}</p>
+            </div>
+          </Card>
+          <Card>
+            <div className="flex flex-col justify-evenly h-full p-4">
+              <p className="text-2xl font-bold">Riders Available</p>
+              <p className="text-2xl">1</p>
+            </div>
+          </Card>
         </div>
-        <InputField
-          name="search"
-          onChange={(event: any) => {
-            const { value } = event.target;
-            setsearch(value);
-          }}
-        />
+        <div className="flex justify-between items-center w-full mt-5 mb-2 bg-white-100 rounded-md px-4 py-2">
+          <div className="">
+            <InputField
+              name="search"
+              onChange={(event: any) => {
+                const { value } = event.target;
+                setsearch(value);
+              }}
+            />
+          </div>
+          <div className="rounded-lg bg-black-50 p-2">
+            <FaPlus
+              onClick={() => {
+                router.push("/riders/add");
+              }}
+            />
+          </div>
+        </div>
+
         <Datatable header={TABLE_HEADERS}>
           {riders.map((e: any) => (
             <TableRow key={e._id}>
