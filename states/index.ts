@@ -201,6 +201,8 @@ export const useMessageStore = create((set) => ({
 
 export const useCustomerStore = create((set) => ({
   customers: [],
+  noOfCustomer: 0,
+  noOfVerifiedCustomer: 0,
   appointments: [],
   getCustomer: async (page: number = 1, limit: number = 5, filter = "") => {
     const query =
@@ -212,6 +214,23 @@ export const useCustomerStore = create((set) => ({
     );
     if (data.status == "success") {
       return set(() => ({ customers: data.data }));
+    }
+  },
+  getNoOfCustomer: async () => {
+    const { data } = await get(
+      `users?page=${0}&limit=${0}&filter={"__t": "Customer"}`
+    );
+
+    if (data.status == "success") {
+      const noOfVerifiedCustomer = data.data.reduce(
+        (acc: number, curr: any) => (curr.verified ? acc + 1 : acc),
+        0
+      );
+      const noOfCustomer = data.data.reduce(
+        (acc: number, curr: any) => acc + 1,
+        0
+      );
+      return set(() => ({ noOfVerifiedCustomer, noOfCustomer }));
     }
   },
   getAppointments: async (page: number = 1, limit: number = 5) => {
