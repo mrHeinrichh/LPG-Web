@@ -1,6 +1,6 @@
 import { FieldOption } from "@/interfaces";
 
-const data: FieldOption[] = [
+export const TIME_FILTERS: FieldOption[] = [
   {
     value: "Daily",
     title: "Daily",
@@ -18,4 +18,3 @@ const data: FieldOption[] = [
     title: "Yearly",
   },
 ];
-export default data;
