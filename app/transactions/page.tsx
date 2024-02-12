@@ -5,21 +5,32 @@ import {
   Sidenav,
   InputField,
   SelectField,
+  Card,
 } from "@/components";
 import { useTransactionStore } from "@/states";
 import { useEffect, useState } from "react";
 import trash from "@/public/trash.svg";
 import Image from "next/image";
 import { SEARCH_FILTERS, TABLE_HEADERS } from "./data";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight, FaPlus } from "react-icons/fa";
 import { getSearchFilterQuery } from "@/utils";
 
 export default function Transactions() {
-  const { getTransactions, transactions, removeTransaction } =
-    useTransactionStore() as any;
+  const {
+    getTransactions,
+    transactions,
+    removeTransaction,
+    noOfTransactions,
+    getNoOfTransactions,
+    totalRevenue,
+  } = useTransactionStore() as any;
   const [search, setsearch] = useState("");
   const [page, setpage] = useState(1);
   const [limit, setlimit] = useState(20);
+
+  useEffect(() => {
+    getNoOfTransactions(page, limit);
+  }, []);
 
   useEffect(() => {
     if (search != "") {
@@ -32,18 +43,42 @@ export default function Transactions() {
       getTransactions(page, limit);
     }
   }, [page, limit, search]);
-
   return (
     <>
       <Sidenav>
-        <h4>Transactions</h4>
-        <InputField
-          name="search"
-          onChange={(event: any) => {
-            const { value } = event.target;
-            setsearch(value);
-          }}
-        />
+        <div className="grid grid-cols-2 gap-2 w-full mb-4">
+          <Card>
+            <div className="flex flex-col justify-evenly h-full p-4">
+              <p className="text-2xl font-bold">Overall Transactions</p>
+              <p className="text-2xl">{noOfTransactions}</p>
+            </div>
+          </Card>
+          <Card>
+            <div className="flex flex-col justify-evenly h-full p-4">
+              <p className="text-2xl font-bold">Total Revenue</p>
+              <p className="text-2xl">₱ {totalRevenue}.00</p>
+            </div>
+          </Card>
+        </div>
+        <div className="flex justify-between items-center w-full mt-5 mb-2 bg-white-100 rounded-md px-4 py-2">
+          <div className="">
+            <InputField
+              name="search"
+              onChange={(event: any) => {
+                const { value } = event.target;
+                setsearch(value);
+              }}
+            />
+          </div>
+          {/* <div className="rounded-lg bg-black-50 p-2">
+            <FaPlus
+              onClick={() => {
+                router.push("/customers/add");
+              }}
+            />
+          </div> */}
+        </div>
+
         <Datatable header={TABLE_HEADERS}>
           {transactions.map((e: any) => (
             <TableRow key={e._id}>
