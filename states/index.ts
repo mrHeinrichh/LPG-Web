@@ -28,13 +28,13 @@ export const useAuthStore = create((set) => ({
 export const useDashboardStore = create((set) => ({
   transactions: [],
   prices: [],
-  getTransactions: async () => {
+  getTransactions: async (start: string, end: string) => {
     const { data } = await get(
-      `dashboard/transaction?start=2023-01-26T06:02:27.923+00:00`
+      `dashboard/transaction?start=${end}&end=${start}`
     );
     if (data.status == "success") {
       return set(() => ({
-        transactions: data.data[0].transactions,
+        transactions: data.data,
       }));
     }
   },

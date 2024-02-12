@@ -13,10 +13,6 @@ export const links: ILink[] = [
     title: "Inbox",
   },
   {
-    link: "/appointments",
-    title: "Appointments",
-  },
-  {
     link: "/transactions",
     title: "Transactions",
   },

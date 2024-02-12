@@ -24,11 +24,24 @@ import {
   PendingDeliveryList,
   RiderAppointmentsList,
 } from "./components";
+import { getEndDayDate, getStartDayDate } from "@/utils";
 
 export default function Home() {
   const dashboardStore = useDashboardStore() as any;
-
-  useEffect(() => {}, []);
+  const total = useMemo(
+    () =>
+      dashboardStore.transactions.reduce(
+        (acc: number, curr: any) => acc + curr.total,
+        0
+      ),
+    [dashboardStore.transactions]
+  );
+  useEffect(() => {
+    dashboardStore.getTransactions(
+      getStartDayDate(new Date()).toISOString(),
+      getEndDayDate(new Date()).toISOString()
+    );
+  }, []);
 
   return (
     <main>
@@ -37,7 +50,7 @@ export default function Home() {
           <Card>
             <div className="flex flex-col justify-evenly h-full p-4">
               <p className="text-2xl font-bold">Total Revenue Today</p>
-              <p className="text-2xl">{20000}.00</p>
+              <p className="text-2xl">₱ {total}.00</p>
             </div>
           </Card>
           <Card>

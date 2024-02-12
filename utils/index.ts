@@ -28,6 +28,11 @@ export function getSearchFilterQuery(
   return `{ "$or": [ ${joined} ] }`;
 }
 
+export function getEndDayDate(date: Date): Date {
+  const start = getStartDayDate(date).getTime();
+  return new Date(start + 86399999);
+}
+
 export function getStartDayDate(date: Date): Date {
   const now = date.getTime();
   return new Date(now - (now % 86400000));
