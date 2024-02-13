@@ -9,7 +9,7 @@ import Image from "next/image";
 import { useDashboardStore } from "@/states";
 import { getDates, getMutiplier, getStartDayDate } from "@/utils";
 import { TimeFilter } from "@/interfaces";
-import { PriceChangesChart } from "./components";
+import { PriceChangesChart, PricesTable } from "./components";
 export default function Transactions({}: any) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -130,6 +130,7 @@ export default function Transactions({}: any) {
     <>
       <Sidenav>
         <PriceChangesChart />
+        <PricesTable />
         <form onSubmit={handleSubmit} className={style.form}>
           <div className="col-span-2">
             <h3 className="font-bold text-lg">Edit Item Details</h3>

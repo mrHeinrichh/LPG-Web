@@ -1,3 +1,4 @@
 import PriceChangesChart from "./PriceChangesChart";
+import PricesTable from "./PricesTable";
 
-export { PriceChangesChart };
+export { PricesTable, PriceChangesChart };
