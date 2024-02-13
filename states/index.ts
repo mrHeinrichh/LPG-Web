@@ -38,39 +38,6 @@ export const useDashboardStore = create((set) => ({
       }));
     }
   },
-  getPricesByDate: async (start: string, end: string, item: string) => {
-    const { data } = await get(
-      `dashboard/prices?start=${start}&end=${end}&item=${item}`
-    );
-    if (data.status == "success") {
-      return set(() => ({
-        prices: data.data,
-      }));
-    }
-  },
-  getTransactionsByStatus: async (statuses = ["Pending"]) => {
-    const query = statuses.map((e: any) => `statuses[]=${e}`).join("&");
-    const { data } = await get(`dashboard/transaction?${query}`);
-    if (data.status == "success") {
-      return set(() => ({
-        transactions: data.data[0].transactions,
-      }));
-    }
-  },
-
-  updateStatus: async (_id: string, status: TransationStatus) => {
-    const { data } = await patch(`transactions/${_id}`, {
-      status,
-      type: "Delivery",
-    });
-    if (data.status == "success") {
-      const temp = data.data.map((e: any) => {
-        if (e._id == _id) e.status = status;
-        return e;
-      });
-      return set(() => ({ transactions: temp }));
-    }
-  },
 }));
 
 export const useTransactionStore = create((set) => ({
@@ -143,19 +110,6 @@ export const useTransactionStore = create((set) => ({
       }));
     }
   },
-  updateStatus: async (_id: string, status: TransationStatus) => {
-    const { data } = await patch(`transactions/${_id}`, {
-      status,
-      __t: "Delivery",
-    });
-    if (data.status == "success") {
-      const temp = data.data.map((e: any) => {
-        if (e._id == _id) e.status = status;
-        return e;
-      });
-      return set(() => ({ transactions: temp }));
-    }
-  },
 }));
 
 export const useRiderStore = create((set) => ({
@@ -178,16 +132,6 @@ export const useRiderStore = create((set) => ({
       return set((state: any) => ({
         items: [...state.riders.filter((e: any) => e._id != id)],
       }));
-    }
-  },
-  updateStatus: async (_id: string, status: TransationStatus) => {
-    const { data } = await patch(`transactions/${_id}`, { status });
-    if (data.status == "success") {
-      const temp = data.data.map((e: any) => {
-        if (e._id == _id) e.status = status;
-        return e;
-      });
-      return set(() => ({ transactions: temp }));
     }
   },
 }));
