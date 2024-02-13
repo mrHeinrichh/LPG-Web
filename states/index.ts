@@ -25,25 +25,12 @@ export const useAuthStore = create((set) => ({
   },
 }));
 
-export const useDashboardStore = create((set) => ({
-  transactions: [],
-  prices: [],
-  getTransactions: async (start: string, end: string) => {
-    const { data } = await get(
-      `dashboard/transaction?start=${end}&end=${start}`
-    );
-    if (data.status == "success") {
-      return set(() => ({
-        transactions: data.data,
-      }));
-    }
-  },
-}));
-
 export const useTransactionStore = create((set) => ({
   transactions: [],
+  deliveries: [],
   noOfTransactions: 0,
   totalRevenue: 0,
+  total: 0,
   getNoOfTransactions: async () => {
     const { data } = await get(`transactions?page=${0}&limit=${0}`);
     if (data.status == "success") {
@@ -67,7 +54,35 @@ export const useTransactionStore = create((set) => ({
       `transactions?page=${page}&limit=${limit}&filter=${filter}`
     );
     if (data.status == "success") {
-      return set(() => ({ transactions: data.data }));
+      return set(() => ({
+        transactions: data.data,
+      }));
+    }
+  },
+  getTotal: async (page: number = 1, limit: number = 5, filter = "{}") => {
+    const { data } = await get(
+      `transactions?page=${page}&limit=${limit}&filter=${filter}`
+    );
+    if (data.status == "success") {
+      return set(() => ({
+        total: data.data.reduce(
+          (acc: number, curr: any) => acc + curr.total,
+          0
+        ),
+      }));
+    }
+  },
+  getDeliveriesByStatuses: async (
+    page: number = 1,
+    limit: number = 5,
+    statuses = []
+  ) => {
+    const query = statuses.map((e: string) => `{"status": "${e}"}`).join(", ");
+    const { data } = await get(
+      `transactions?page=${page}&limit=${limit}&filter={"$or": [${query}]}`
+    );
+    if (data.status == "success") {
+      return set(() => ({ deliveries: data.data }));
     }
   },
   approve: async (_id: string) => {

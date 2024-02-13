@@ -1,19 +1,7 @@
 "use client";
 import { Sidenav, Card } from "@/components";
-import { useDashboardStore, useTransactionStore } from "@/states";
+import { useTransactionStore } from "@/states";
 import { useEffect, useMemo } from "react";
-
-import {
-  PieChart,
-  Pie,
-  Legend,
-  Tooltip,
-  BarChart,
-  CartesianGrid,
-  XAxis,
-  Bar,
-  Rectangle,
-} from "recharts";
 import {
   PendingCustomerList,
   PendingDeliveryList,
@@ -22,36 +10,27 @@ import {
 import { getEndDayDate, getStartDayDate } from "@/utils";
 
 export default function Home() {
-  const dashboardStore = useDashboardStore() as any;
-  const { getTransactions, transactions } = useTransactionStore() as any;
-  const total = useMemo(
-    () =>
-      dashboardStore.transactions.reduce(
-        (acc: number, curr: any) => acc + curr.total,
-        0
-      ),
-    [dashboardStore.transactions]
-  );
+  const { getDeliveriesByStatuses, deliveries, total, getTotal } =
+    useTransactionStore() as any;
 
   const pending = useMemo(
-    () => transactions.filter((e: any) => e.status == "Pending").length,
-    [transactions]
+    () => deliveries.filter((e: any) => e.status == "Pending").length,
+    [deliveries]
   );
 
   const completed = useMemo(
-    () => transactions.filter((e: any) => e.status == "Completed").length,
-    [transactions]
+    () => deliveries.filter((e: any) => e.status == "Completed").length,
+    [deliveries]
   );
   useEffect(() => {
-    dashboardStore.getTransactions(
-      getStartDayDate(new Date()).toISOString(),
-      getEndDayDate(new Date()).toISOString()
-    );
-    getTransactions(
+    getTotal(
       0,
       0,
-      `{"$or": [{"status": "Pending"}, {"status": "Completed"}]}`
+      `{"createdAt": {"$gte": "${getStartDayDate(
+        new Date()
+      ).toISOString()}", "$lte": "${getEndDayDate(new Date()).toISOString()}"}}`
     );
+    getDeliveriesByStatuses(0, 0, ["Pending", "Completed"]);
   }, []);
 
   return (

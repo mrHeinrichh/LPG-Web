@@ -1,16 +1,13 @@
 "use client";
 import { Sidenav, InputField, Button, SelectField } from "@/components";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import style from "./style.module.css";
 import { useRouter, useSearchParams } from "next/navigation";
 import { get, patch, post } from "@/config";
 import Image from "next/image";
-
-import { useDashboardStore } from "@/states";
-import { getDates, getMutiplier, getStartDayDate } from "@/utils";
-import { TimeFilter } from "@/interfaces";
 import { PriceChangesChart, PricesTable } from "./components";
-export default function Transactions({}: any) {
+
+export default function EditItems({}: any) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
