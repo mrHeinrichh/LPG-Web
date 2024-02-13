@@ -23,7 +23,6 @@ export default function Transactions({}: any) {
     stock: 1,
     type: "",
   });
-  const { getPricesByDate, prices } = useDashboardStore() as any;
   const [customerPrice, setcustomerPrice] = useState<number>(0);
   const [retailerPrice, setretailerPrice] = useState<number>(0);
   const [retailerReason, setretailerReason] = useState<string>("");

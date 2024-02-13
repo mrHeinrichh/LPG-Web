@@ -11,23 +11,27 @@ import {
 } from "recharts";
 import { TIME_FILTERS } from "./data";
 import { TimeFilter } from "@/interfaces";
-import { useDashboardStore } from "@/states";
+import { usePriceStore } from "@/states";
 import { getDates, getStartDayDate, getMutiplier } from "@/utils";
 import { useSearchParams } from "next/navigation";
 
 function PriceChangesChart() {
   const searchParams = useSearchParams();
-  const [units, setunits] = useState(5);
-  const { getPricesByDate, prices } = useDashboardStore() as any;
+  const [units, setunits] = useState(20);
+  const { getPrices, prices } = usePriceStore() as any;
   const [timeFilter, settimeFilter] = useState<TimeFilter>("Daily");
   const id = searchParams.get("id");
-
   useEffect(() => {
     const startDate = new Date();
     const endDate = new Date();
     startDate.setDate(startDate.getDate() - units * getMutiplier(timeFilter));
-    getPricesByDate(startDate.toISOString(), endDate.toISOString(), id);
+    getPrices(
+      0,
+      0,
+      `{"$and": [{"createdAt": {"$gte": "${startDate.toISOString()}", "$lte": "${endDate.toISOString()}"}}, {"item": "${id}"}]}`
+    );
   }, [timeFilter, units, id]);
+
   const data = useMemo(() => {
     let temp: any = [];
 
