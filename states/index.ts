@@ -363,6 +363,31 @@ export const useItemStore = create((set) => ({
   },
 }));
 
+export const usePriceStore = create((set) => ({
+  prices: [],
+  reasons: [],
+  getPrices: async (page: number = 1, limit: number = 5, filter = "{}") => {
+    const { data } = await get(
+      `prices?page=${page}&limit=${limit}&filter=${filter}`
+    );
+    if (data.status == "success") {
+      return set(() => ({ prices: data.data }));
+    }
+  },
+  getReasons: async (page: number = 1, limit: number = 5, filter = "{}") => {
+    console.log(`prices?page=${page}&limit=${limit}&filter=${filter}`);
+
+    const { data } = await get(
+      `prices?page=${page}&limit=${limit}&filter=${filter}`
+    );
+    console.log(data);
+
+    if (data.status == "success") {
+      return set(() => ({ reasons: data.data }));
+    }
+  },
+}));
+
 export const useWalkInStore = create((set) => ({
   items: [],
   increment: (item: any) => {
