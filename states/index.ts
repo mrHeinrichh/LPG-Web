@@ -28,6 +28,7 @@ export const useAuthStore = create((set) => ({
 export const useTransactionStore = create((set) => ({
   transactions: [],
   deliveries: [],
+  feedbacks: [],
   noOfTransactions: 0,
   totalRevenue: 0,
   total: 0,
@@ -43,6 +44,14 @@ export const useTransactionStore = create((set) => ({
         0
       );
       return set(() => ({ noOfTransactions, totalRevenue }));
+    }
+  },
+  getFeedbacks: async (page = 1, limit = 5) => {
+    const { data } = await get(
+      `transactions?page=${page}&limit=${limit}&filter={"__t": "Delivery", "feedback": { "$ne": null }}`
+    );
+    if (data.status == "success") {
+      return set(() => ({ feedbacks: data.data }));
     }
   },
   getTransactions: async (
@@ -381,3 +390,17 @@ export const useWalkInStore = create((set) => ({
     });
   },
 }));
+// getNoOfTransactions: async () => {
+//   const { data } = await get(`transactions?page=${0}&limit=${0}`);
+//   if (data.status == "success") {
+//     const noOfTransactions = data.data.reduce(
+//       (acc: number, curr: any) => acc + 1,
+//       0
+//     );
+//     const totalRevenue = data.data.reduce(
+//       (acc: number, curr: any) => acc + curr.total,
+//       0
+//     );
+//     return set(() => ({ noOfTransactions, totalRevenue }));
+//   }
+// },
