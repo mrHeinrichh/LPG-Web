@@ -226,8 +226,6 @@ export const useCustomerStore = create((set) => ({
     );
 
     if (data.status == "success") {
-      console.log(data.data);
-
       return set(() => ({ verifiedCustomers: data.data }));
     }
   },

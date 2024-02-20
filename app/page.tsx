@@ -27,8 +27,8 @@ import {
   Line,
   LineChart,
 } from "recharts";
-import { TimeFilter } from "@/interfaces";
-import { TIME_FILTERS } from "@/constants";
+import { FieldOption, TimeFilter } from "@/interfaces";
+import { BARANGGAYS, TIME_FILTERS } from "@/constants";
 
 export default function Home() {
   const {
@@ -42,6 +42,12 @@ export default function Home() {
   const { getVerifiedCustomer, verifiedCustomers } = useCustomerStore() as any;
   const [units, setunits] = useState(20);
   const [timeFilter, settimeFilter] = useState<TimeFilter>("Daily");
+  const [baranggay, setbaranggay] = useState<String>("All");
+
+  const BARANGGAY_FILTERS = BARANGGAYS.map((e: any) => ({
+    value: e,
+    title: e,
+  }));
 
   const pending = useMemo(
     () => deliveries.filter((e: any) => e.status == "Pending").length,
@@ -59,13 +65,20 @@ export default function Home() {
     );
     const multiplier = getMutiplier(timeFilter);
     return parsedStartDay.map((e: Date) => {
-      const transactionsTemp = solds.filter((sold: any) => {
+      let transactionsTemp: any[] = [];
+      transactionsTemp = solds.filter((sold: any) => {
         return (
           e.getTime() <= getStartDayDate(new Date(sold.createdAt)).getTime() &&
           e.getTime() + 86399999 * multiplier >=
             getStartDayDate(new Date(sold.createdAt)).getTime()
         );
       });
+
+      if (baranggay != "All") {
+        transactionsTemp = transactionsTemp.filter((sold: any) => {
+          return sold.__t == "Delivery" && sold.barangay == baranggay;
+        });
+      }
 
       const completed = transactionsTemp.reduce((acc: any, curr: any) => {
         return curr.__t == "Delivery" && curr.status == "Completed"
@@ -136,14 +149,21 @@ export default function Home() {
         customers: customersTemp.length,
       };
     });
-  }, [verifiedCustomers, units, timeFilter]);
+  }, [verifiedCustomers, units, timeFilter, baranggay]);
+
+  useEffect(() => {
+    const startDate = new Date();
+    const endDate = new Date();
+    startDate.setDate(startDate.getDate() - units * getMutiplier(timeFilter));
+    getVerifiedCustomer(startDate, endDate);
+  }, [units, timeFilter]);
+
   useEffect(() => {
     const startDate = new Date();
     const endDate = new Date();
     startDate.setDate(startDate.getDate() - units * getMutiplier(timeFilter));
     getSolds(0, 0, startDate, endDate);
-    getVerifiedCustomer(startDate, endDate);
-  }, []);
+  }, [units, timeFilter, baranggay]);
 
   useEffect(() => {
     getTotal(
@@ -187,6 +207,15 @@ export default function Home() {
           onChange={function (e: any): void {
             const { name, value } = e.target;
             settimeFilter(value);
+          }}
+        />
+        <SelectField
+          options={BARANGGAY_FILTERS}
+          name={"Time Filter"}
+          title={"Time Filter"}
+          onChange={function (e: any): void {
+            const { name, value } = e.target;
+            setbaranggay(value);
           }}
         />
         <InputField
