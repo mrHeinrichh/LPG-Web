@@ -80,33 +80,39 @@ export default function Items({}: any) {
         </div>
 
         <Datatable header={TABLE_HEADERS}>
-          {items.map((e: any) => (
-            <TableRow key={e._id}>
-              <td>{e.name}</td>
-              <td>{e.category}</td>
-              <td>{e.stock ?? 0}</td>
-              <td>{e.weight} kg</td>
-              <td>₱{e.customerPrice}.00 </td>
-              <td>₱{e.retailerPrice}.00 </td>
-              <td>{e.type} </td>
-              <td className="flex justify-evenly">
-                <div
-                  onClick={() => {
-                    router.push(`/items/edit?id=${e._id}`);
-                  }}
-                >
-                  <Image src={edit} alt={"edit"}></Image>
-                </div>
-                <div
-                  onClick={() => {
-                    removeItem(e._id);
-                  }}
-                >
-                  <Image src={trash} alt={"trash"}></Image>
-                </div>
-              </td>
-            </TableRow>
-          ))}
+          {items.map((e: any) => {
+            let color = "bg-red-600";
+            if (e.stock <= 3 || e.stock >= 10) {
+              color = "bg-green-600";
+            }
+            return (
+              <TableRow key={e._id}>
+                <td>{e.name}</td>
+                <td>{e.category}</td>
+                <td className={`${color}`}>{e.stock ?? 0}</td>
+                <td>{e.weight} kg</td>
+                <td>₱{e.customerPrice}.00 </td>
+                <td>₱{e.retailerPrice}.00 </td>
+                <td>{e.type} </td>
+                <td className="flex justify-evenly">
+                  <div
+                    onClick={() => {
+                      router.push(`/items/edit?id=${e._id}`);
+                    }}
+                  >
+                    <Image src={edit} alt={"edit"}></Image>
+                  </div>
+                  <div
+                    onClick={() => {
+                      removeItem(e._id);
+                    }}
+                  >
+                    <Image src={trash} alt={"trash"}></Image>
+                  </div>
+                </td>
+              </TableRow>
+            );
+          })}
         </Datatable>
         <div className="w-full flex justify-between py-2">
           <div className="flex items-center gap-4 ">
