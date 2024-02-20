@@ -17,36 +17,102 @@ export default function WalkIn({}: any) {
       ),
     [walkInStore.items]
   );
-
+  const brandNewTanks = useMemo(
+    () => items.filter((e: any) => e.category == "Brand New Tanks"),
+    [items]
+  );
+  const refillTanks = useMemo(
+    () => items.filter((e: any) => e.category == "Refill Tanks"),
+    [items]
+  );
+  const accessories = useMemo(
+    () => items.filter((e: any) => e.category == "Accessories"),
+    [items]
+  );
   useEffect(() => {
     getItems();
   }, [items]);
-
+  // { title: "Brand New Tanks", value: "Brand New Tanks" },
+  //         { title: "Refill Tanks", value: "Refill Tanks" },
+  //         { title: "Accessories", value: "Accessories" },
   return (
     <>
       <Sidenav>
         <div className="flex gap-2 ">
-          <div className="flex w-2/3 flex-wrap gap-4 justify-between h-fit">
-            {items.map((e: any) => {
-              return (
-                <div
-                  className="w-fit h-fit"
-                  key={e._id}
-                  onClick={() => {
-                    walkInStore.increment(e);
-                  }}
-                >
-                  <Image
-                    src={e.image}
-                    width={140}
-                    height={140}
-                    alt={e.image}
-                  ></Image>
-                  <p>{e.name}</p>
-                </div>
-              );
-            })}
-          </div>
+          <div className="flex w-2/3 flex-col gap-4">
+            <div className="flex flex-col gap-2">
+              <p className="font-bold">Brand New Tanks</p>
+              <div className="flex items-center gap-4">
+                {brandNewTanks.map((e: any) => {
+                  return (
+                    <div
+                      className="w-fit h-fit"
+                      key={e._id}
+                      onClick={() => {
+                        walkInStore.increment(e);
+                      }}
+                    >
+                      <Image
+                        src={e.image}
+                        width={140}
+                        height={140}
+                        alt={e.image}
+                      ></Image>
+                      <p>{e.name}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="flex flex-col gap-2">
+              <p className="font-bold">Refill Tanks</p>
+              <div className="flex items-center gap-4">
+                {refillTanks.map((e: any) => {
+                  return (
+                    <div
+                      className="w-fit h-fit"
+                      key={e._id}
+                      onClick={() => {
+                        walkInStore.increment(e);
+                      }}
+                    >
+                      <Image
+                        src={e.image}
+                        width={140}
+                        height={140}
+                        alt={e.image}
+                      ></Image>
+                      <p>{e.name}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="flex flex-col gap-2">
+              <p className="font-bold">Accessories</p>
+              <div className="flex items-center gap-4">
+                {accessories.map((e: any) => {
+                  return (
+                    <div
+                      className="w-fit h-fit"
+                      key={e._id}
+                      onClick={() => {
+                        walkInStore.increment(e);
+                      }}
+                    >
+                      <Image
+                        src={e.image}
+                        width={140}
+                        height={140}
+                        alt={e.image}
+                      ></Image>
+                      <p>{e.name}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>{" "}
           <div className="w-1/3">
             {walkInStore.items.map((e: any) => {
               return (
