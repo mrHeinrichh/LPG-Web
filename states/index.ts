@@ -1,4 +1,5 @@
 import { get, patch, post, remove } from "@/config";
+import { getEndDayDate, getStartDayDate } from "@/utils";
 import { create } from "zustand";
 
 export type TransationStatus =
@@ -29,6 +30,7 @@ export const useTransactionStore = create((set) => ({
   transactions: [],
   deliveries: [],
   feedbacks: [],
+  solds: [],
   noOfTransactions: 0,
   totalRevenue: 0,
   total: 0,
@@ -44,6 +46,18 @@ export const useTransactionStore = create((set) => ({
         0
       );
       return set(() => ({ noOfTransactions, totalRevenue }));
+    }
+  },
+  getSolds: async (
+    page = 1,
+    limit = 5,
+    start = getStartDayDate(new Date()),
+    end = getEndDayDate(new Date())
+  ) => {
+    const temp = `transactions?page=${page}&limit=${limit}&filter={"$and": [{ "createdAt": { "$gte": "${start.toISOString()}", "$lte": "${end.toISOString()}" }}, {"$or": [{"$and": [{"__t": "Delivery"}, {"status": "Completed"}]}, {"__t": {"$eq": null}}]}]} `;
+    const { data } = await get(temp);
+    if (data.status == "success") {
+      return set(() => ({ solds: data.data }));
     }
   },
   getFeedbacks: async (page = 1, limit = 5) => {
@@ -96,7 +110,6 @@ export const useTransactionStore = create((set) => ({
   },
   approve: async (_id: string) => {
     const { data } = await patch(`transactions/${_id}/approve`, {});
-
     if (data.status == "success") {
       return set((state: any) => {
         const temp = state.transactions.map((e: any) => {
@@ -188,6 +201,7 @@ export const useMessageStore = create((set) => ({
 
 export const useCustomerStore = create((set) => ({
   customers: [],
+  verifiedCustomers: [],
   noOfCustomer: 0,
   noOfVerifiedCustomer: 0,
   appointments: [],
@@ -201,6 +215,20 @@ export const useCustomerStore = create((set) => ({
     );
     if (data.status == "success") {
       return set(() => ({ customers: data.data }));
+    }
+  },
+  getVerifiedCustomer: async (
+    start = getStartDayDate(new Date()),
+    end = getEndDayDate(new Date())
+  ) => {
+    const { data } = await get(
+      `users?page=${0}&limit=${0}&filter={"__t": "Customer", "$and": [{"verified": true}, { "createdAt": { "$gte": "${start.toISOString()}", "$lte": "${end.toISOString()}" }}]} `
+    );
+
+    if (data.status == "success") {
+      console.log(data.data);
+
+      return set(() => ({ verifiedCustomers: data.data }));
     }
   },
   getNoOfCustomer: async () => {

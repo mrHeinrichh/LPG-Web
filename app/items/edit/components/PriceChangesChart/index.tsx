@@ -9,11 +9,11 @@ import {
   Legend,
   Line,
 } from "recharts";
-import { TIME_FILTERS } from "./data";
 import { TimeFilter } from "@/interfaces";
 import { usePriceStore } from "@/states";
 import { getDates, getStartDayDate, getMutiplier } from "@/utils";
 import { useSearchParams } from "next/navigation";
+import { TIME_FILTERS } from "@/constants";
 
 function PriceChangesChart() {
   const searchParams = useSearchParams();

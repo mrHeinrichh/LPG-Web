@@ -44,7 +44,7 @@ export function getDates(filter: TimeFilter, units: number): Date[] {
   if (filter == "Daily") {
     for (let i: number = units; i > 0; i--) {
       const todayDate = new Date();
-      todayDate.setDate(todayDate.getDate() - (i + MUTIPLIERS.DAILY) + 1);
+      todayDate.setDate(todayDate.getDate() - i * MUTIPLIERS.DAILY + 1);
       temp.push(todayDate);
     }
   }

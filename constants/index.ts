@@ -1,2 +1,3 @@
 import MUTIPLIERS from "./multipliers";
-export { MUTIPLIERS };
+import { TIME_FILTERS } from "./timeFilters";
+export { MUTIPLIERS, TIME_FILTERS };
