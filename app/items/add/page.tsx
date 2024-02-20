@@ -74,9 +74,14 @@ export default function Transactions({}: any) {
           </div>
 
           <InputField name="name" placeholder="Name" onChange={handleChange} />
-          <InputField
+          <SelectField
+            options={[
+              { title: "Brand New Tanks", value: "Brand New Tanks" },
+              { title: "Refill Tanks", value: "Refill Tanks" },
+              { title: "Accessories", value: "Accessories" },
+            ]}
             name="category"
-            placeholder="Category"
+            title="Category"
             onChange={handleChange}
           />
           <InputField

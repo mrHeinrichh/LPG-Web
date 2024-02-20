@@ -152,11 +152,16 @@ export default function EditItems({}: any) {
             defaultValue={formData.name}
           />
 
-          <InputField
+          <SelectField
+            options={[
+              { title: "Brand New Tanks", value: "Brand New Tanks" },
+              { title: "Refill Tanks", value: "Refill Tanks" },
+              { title: "Accessories", value: "Accessories" },
+            ]}
             name="category"
-            placeholder="Category"
-            onChange={handleChange}
+            title="Category"
             defaultValue={formData.category}
+            onChange={handleChange}
           />
           <InputField
             name="description"
@@ -178,6 +183,7 @@ export default function EditItems({}: any) {
             onChange={handleChange}
             value={formData.stock}
           />
+
           <SelectField
             options={[
               { title: "Accessory", value: "Accessory" },
