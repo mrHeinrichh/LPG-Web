@@ -202,9 +202,6 @@ export default function Home() {
             </div>
           </Card>
         </div>
-        <BrandNewTanksChart />
-        <RefillTanksChart />
-        <AccessoriesChart />
 
         {/* <Stats /> */}
         <SelectField
@@ -234,6 +231,9 @@ export default function Home() {
             setunits(value);
           }}
         ></InputField>
+        <BrandNewTanksChart />
+        <RefillTanksChart />
+        <AccessoriesChart />
         <LineChart
           width={1000}
           height={300}
