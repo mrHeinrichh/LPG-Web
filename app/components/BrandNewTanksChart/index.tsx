@@ -1,6 +1,12 @@
 "use client";
 import { ITEM_CATEGORIES } from "@/constants";
 import { useTransactionStore } from "@/states";
+import {
+  generateRandomColor,
+  getDates,
+  getMutiplier,
+  getStartDayDate,
+} from "@/utils";
 import { useMemo } from "react";
 import {
   BarChart,
@@ -13,7 +19,11 @@ import {
   Rectangle,
 } from "recharts";
 
-export default function BrandNewTanksChart() {
+export default function BrandNewTanksChart({
+  timeFilter,
+  units,
+  baranggay,
+}: any) {
   const { solds } = useTransactionStore() as any;
 
   const keywords = useMemo(() => {
@@ -31,30 +41,55 @@ export default function BrandNewTanksChart() {
     });
 
     return [...temp];
-  }, [solds]);
+  }, [solds, timeFilter, units, baranggay]);
 
   const data = useMemo(() => {
-    console.log(solds);
+    const parsedStartDay = getDates(timeFilter, units).map((e: Date) =>
+      getStartDayDate(e)
+    );
 
-    const itemsList = solds.map((sold: any) => sold.items);
+    const multiplier = getMutiplier(timeFilter);
 
-    return keywords.map((keyword: any) => {
-      let temp: any = { name: keyword };
-      itemsList.forEach((items: any[]) => {
-        if (!temp[keyword]) {
-          temp[keyword] = items.filter(
-            (item: any) => item.name == keyword
-          ).length;
-          return;
-        }
-        temp[keyword] =
-          temp[keyword] +
-          items.filter((item: any) => item.name == keyword).length;
+    return parsedStartDay.map((e: Date) => {
+      let temp: any = {};
+      keywords.forEach((keyword: any) => {
+        temp[keyword] = 0;
       });
 
-      return temp;
+      let transactionsTemp = solds.filter((sold: any) => {
+        return (
+          e.getTime() <= getStartDayDate(new Date(sold.createdAt)).getTime() &&
+          e.getTime() + 86399999 * multiplier >=
+            getStartDayDate(new Date(sold.createdAt)).getTime()
+        );
+      });
+
+      if (baranggay != "All") {
+        transactionsTemp = transactionsTemp.filter((sold: any) => {
+          return sold.__t == "Delivery" && sold.barangay == baranggay;
+        });
+      }
+
+      const itemsList = transactionsTemp.map((sold: any) => sold.items);
+
+      itemsList.forEach((items: any[]) => {
+        keywords.forEach((keyword: string) => {
+          temp[keyword] =
+            temp[keyword] +
+            items.filter(
+              (item: any) =>
+                item.name == keyword &&
+                item.category == ITEM_CATEGORIES.BRAND_NEW_TANKS
+            ).length;
+        });
+      });
+
+      return {
+        name: e.toDateString(),
+        ...temp,
+      };
     });
-  }, [solds]);
+  }, [solds, timeFilter, units, baranggay]);
 
   return (
     <div>
@@ -79,16 +114,15 @@ export default function BrandNewTanksChart() {
           <Bar
             key={e}
             dataKey={e}
-            fill="#8884d8"
-            activeBar={<Rectangle fill="pink" stroke="blue" />}
+            fill={generateRandomColor()}
+            activeBar={
+              <Rectangle
+                fill={generateRandomColor()}
+                stroke={generateRandomColor()}
+              />
+            }
           />
         ))}
-
-        {/* <Bar
-          dataKey="products"
-          fill="#82ca9d"
-          activeBar={<Rectangle fill="gold" stroke="purple" />}
-        /> */}
       </BarChart>
     </div>
   );

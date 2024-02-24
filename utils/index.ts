@@ -1,6 +1,10 @@
 import { MUTIPLIERS } from "@/constants";
 import { ISearchFilter, TimeFilter } from "@/interfaces";
 
+export function generateRandomColor() {
+  return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+}
+
 export function getDateToString(date: string) {
   return new Date(date).toDateString();
 }

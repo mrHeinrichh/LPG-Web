@@ -231,9 +231,21 @@ export default function Home() {
             setunits(value);
           }}
         ></InputField>
-        <BrandNewTanksChart />
-        <RefillTanksChart />
-        <AccessoriesChart />
+        <BrandNewTanksChart
+          baranggay={baranggay}
+          timeFilter={timeFilter}
+          units={units}
+        />
+        <RefillTanksChart
+          baranggay={baranggay}
+          timeFilter={timeFilter}
+          units={units}
+        />
+        <AccessoriesChart
+          baranggay={baranggay}
+          timeFilter={timeFilter}
+          units={units}
+        />
         <LineChart
           width={1000}
           height={300}
