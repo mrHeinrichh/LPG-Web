@@ -3,6 +3,7 @@ import { Sidenav, Card, SelectField, InputField } from "@/components";
 import { useCustomerStore, useTransactionStore } from "@/states";
 import { useEffect, useMemo, useState } from "react";
 import {
+  AccessoriesChart,
   BrandNewTanksChart,
   PendingCustomerList,
   PendingDeliveryList,
@@ -203,6 +204,8 @@ export default function Home() {
         </div>
         <BrandNewTanksChart />
         <RefillTanksChart />
+        <AccessoriesChart />
+
         {/* <Stats /> */}
         <SelectField
           options={TIME_FILTERS}
