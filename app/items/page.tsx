@@ -85,14 +85,18 @@ export default function Items({}: any) {
             if (e.stock <= 3 || e.stock >= 10) {
               color = "bg-green-600";
             }
+
+            if (e.stock == 0) {
+              color = "bg-gray-600";
+            }
             return (
               <TableRow key={e._id}>
                 <td>{e.name}</td>
                 <td>{e.category}</td>
                 <td className={`${color}`}>{e.stock ?? 0}</td>
                 <td>{e.weight} kg</td>
-                <td>₱{e.customerPrice}.00 </td>
-                <td>₱{e.retailerPrice}.00 </td>
+                <td>₱{e.customerPrice} </td>
+                <td>₱{e.retailerPrice} </td>
                 <td>{e.type} </td>
                 <td className="flex justify-evenly">
                   <div

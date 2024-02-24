@@ -16,3 +16,5 @@ export interface ISearchFilter {
   key: string;
   type: "string" | "number";
 }
+
+export type ItemCategory = "Brand New Tanks" | "Refill Tanks" | "Accessories";

@@ -1,5 +1,11 @@
 import PendingCustomerList from "./PendingCustomerList";
 import PendingDeliveryList from "./PendingDeliveryList";
 import RiderAppointmentsList from "./RiderAppointmentsList";
+import BrandNewTanksChart from "./BrandNewTanksChart";
 
-export { RiderAppointmentsList, PendingDeliveryList, PendingCustomerList };
+export {
+  BrandNewTanksChart,
+  RiderAppointmentsList,
+  PendingDeliveryList,
+  PendingCustomerList,
+};
