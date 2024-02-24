@@ -32,9 +32,7 @@ export default function WalkIn({}: any) {
   useEffect(() => {
     getItems();
   }, [items]);
-  // { title: "Brand New Tanks", value: "Brand New Tanks" },
-  //         { title: "Refill Tanks", value: "Refill Tanks" },
-  //         { title: "Accessories", value: "Accessories" },
+
   return (
     <>
       <Sidenav>

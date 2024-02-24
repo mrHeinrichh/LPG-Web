@@ -1,6 +1,7 @@
 "use client";
 import { Sidenav, Button, InputField } from "@/components";
 import { post } from "@/config";
+import { DISCOUNT } from "@/constants";
 import { useItemStore, useWalkInStore } from "@/states";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
@@ -14,31 +15,36 @@ export default function WalkIn({}: any) {
     name: "",
     contactNumber: "",
   });
-
+  const [discounted, setdiscounted] = useState<boolean>(false);
   const handleChange = (event: any) => {
     const { name, value } = event.target;
     setFormData((prevFormData: any) => ({ ...prevFormData, [name]: value }));
   };
 
   const handleSubmit = async () => {
-    const { data } = await post("transactions", {
+    let temp: any = {
       ...formData,
       items: walkInStore.items,
-    });
+    };
+
+    if (discounted) {
+      temp.discountIdImage = "";
+    }
+
+    const { data } = await post("transactions", temp);
 
     console.log(data);
 
     if (data.status == "success") router.push("/");
   };
 
-  const total = useMemo(
-    () =>
-      walkInStore.items.reduce(
-        (acc: any, curr: any) => acc + curr.customerPrice * curr.quantity,
-        0
-      ),
-    [walkInStore.items]
-  );
+  const total = useMemo(() => {
+    const temp = walkInStore.items.reduce(
+      (acc: any, curr: any) => acc + curr.customerPrice * curr.quantity,
+      0
+    );
+    return discounted ? temp * DISCOUNT : temp;
+  }, [walkInStore.items, discounted]);
 
   useEffect(() => {
     getItems();
@@ -94,6 +100,12 @@ export default function WalkIn({}: any) {
               placeholder="Contact Number"
               onChange={handleChange}
             />
+            <div className="w-full flex justify-end">
+              <label className="flex items-center gap-2">
+                <input type="checkbox" />
+                <p>Discounted? </p>
+              </label>
+            </div>
           </div>
         </div>
         <Button
