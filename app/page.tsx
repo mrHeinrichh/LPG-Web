@@ -6,6 +6,7 @@ import {
   BrandNewTanksChart,
   PendingCustomerList,
   PendingDeliveryList,
+  RefillTanksChart,
   RiderAppointmentsList,
 } from "./components";
 import {
@@ -201,6 +202,7 @@ export default function Home() {
           </Card>
         </div>
         <BrandNewTanksChart />
+        <RefillTanksChart />
         {/* <Stats /> */}
         <SelectField
           options={TIME_FILTERS}
