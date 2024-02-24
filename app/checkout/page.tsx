@@ -5,11 +5,12 @@ import { DISCOUNT } from "@/constants";
 import { useItemStore, useWalkInStore } from "@/states";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { ReceiptModal } from "./components";
 
 export default function WalkIn({}: any) {
-  const { getItems, items } = useItemStore() as any;
   const walkInStore = useWalkInStore() as any;
   const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
 
   const [formData, setFormData] = useState<any>({
     name: "",
@@ -33,8 +34,6 @@ export default function WalkIn({}: any) {
 
     const { data } = await post("transactions", temp);
 
-    console.log(data);
-
     if (data.status == "success") router.push("/");
   };
 
@@ -46,12 +45,9 @@ export default function WalkIn({}: any) {
     return discounted ? temp * DISCOUNT : temp;
   }, [walkInStore.items, discounted]);
 
-  useEffect(() => {
-    getItems();
-  }, [items]);
-
   return (
     <>
+      <ReceiptModal isOpen={isOpen} setIsOpen={setIsOpen} />
       <Sidenav>
         <div className="flex gap-2 ">
           <div className="w-1/2">
@@ -102,7 +98,12 @@ export default function WalkIn({}: any) {
             />
             <div className="w-full flex justify-end">
               <label className="flex items-center gap-2">
-                <input type="checkbox" />
+                <input
+                  type="checkbox"
+                  onClick={(e: any) => {
+                    setdiscounted(e.target.checked);
+                  }}
+                />
                 <p>Discounted? </p>
               </label>
             </div>
@@ -110,7 +111,13 @@ export default function WalkIn({}: any) {
         </div>
         <Button
           onClick={() => {
-            handleSubmit();
+            walkInStore.setData(
+              formData.name,
+              formData.contactNumber,
+              discounted
+            );
+            // handleSubmit();
+            setIsOpen(true);
           }}
         >
           <p>Complete Order</p>

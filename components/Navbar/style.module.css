@@ -4,5 +4,5 @@
 
 .container {
   height: 10vh;
-  @apply bg-white-100 z-40 fixed top-0 w-full p-2 flex justify-center items-center;
+  @apply bg-white-100 z-20 fixed top-0 w-full p-2 flex justify-center items-center;
 }

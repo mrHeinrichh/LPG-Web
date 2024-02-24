@@ -4,7 +4,7 @@ import { TIME_FILTERS } from "./timeFilters";
 import { BARANGGAYS } from "./baranggays";
 import ITEM_CATEGORIES from "./itemCategories";
 
-const DISCOUNT: number = 0.2;
+const DISCOUNT: number = 0.8;
 export {
   DISCOUNT,
   ITEM_CATEGORIES,

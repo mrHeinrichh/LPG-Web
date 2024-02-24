@@ -387,6 +387,14 @@ export const usePriceStore = create((set) => ({
 
 export const useWalkInStore = create((set) => ({
   items: [],
+  name: "",
+  contactNumber: "",
+  discounted: false,
+  setData: (name: string, contactNumber: string, discounted: boolean) => {
+    set(() => {
+      return { name, contactNumber, discounted };
+    });
+  },
   increment: (item: any) => {
     set((state: any) => {
       const temp = state.items.find((e: any) => e._id == item._id);
