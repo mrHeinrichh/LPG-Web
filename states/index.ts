@@ -363,13 +363,15 @@ export const useItemStore = create((set) => ({
 export const usePriceStore = create((set) => ({
   prices: [],
   reasons: [],
-  getPrices: async (page: number = 1, limit: number = 5, filter = "{}") => {
-    console.log(`prices?page=${page}&limit=${limit}&filter=${filter}`);
-
+  getPrices: async (
+    page: number = 1,
+    limit: number = 5,
+    filter = "{}",
+    populate = ""
+  ) => {
     const { data } = await get(
-      `prices?page=${page}&limit=${limit}&filter=${filter}`
+      `prices?page=${page}&limit=${limit}&filter=${filter}&populate=${populate}`
     );
-    console.log(data);
 
     if (data.status == "success") {
       return set(() => ({ prices: data.data }));
