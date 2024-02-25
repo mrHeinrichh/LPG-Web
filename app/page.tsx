@@ -1,13 +1,15 @@
 "use client";
 import { Sidenav, Card, SelectField, InputField } from "@/components";
-import { useCustomerStore, useTransactionStore } from "@/states";
+import { useCustomerStore, usePriceStore, useTransactionStore } from "@/states";
 import { useEffect, useMemo, useState } from "react";
 import {
   AccessoriesChart,
   BrandNewTanksChart,
+  CustomerPriceChangesChart,
   PendingCustomerList,
   PendingDeliveryList,
   RefillTanksChart,
+  RetailerPriceChangesChart,
   RiderAppointmentsList,
 } from "./components";
 import {
@@ -46,6 +48,7 @@ export default function Home() {
   const [units, setunits] = useState(20);
   const [timeFilter, settimeFilter] = useState<TimeFilter>("Daily");
   const [baranggay, setbaranggay] = useState<String>("All");
+  const { getPrices } = usePriceStore() as any;
 
   const BARANGGAY_FILTERS = BARANGGAYS.map((e: any) => ({
     value: e,
@@ -159,6 +162,14 @@ export default function Home() {
     const endDate = new Date();
     startDate.setDate(startDate.getDate() - units * getMutiplier(timeFilter));
     getVerifiedCustomer(startDate, endDate);
+
+    startDate.setDate(startDate.getDate() - units * getMutiplier(timeFilter));
+    getPrices(
+      0,
+      0,
+      `{"$and": [{"createdAt": {"$gte": "${startDate.toISOString()}", "$lte": "${endDate.toISOString()}"}}]}`,
+      "item"
+    );
   }, [units, timeFilter]);
 
   useEffect(() => {
@@ -202,7 +213,6 @@ export default function Home() {
             </div>
           </Card>
         </div>
-
         {/* <Stats /> */}
         <SelectField
           options={TIME_FILTERS}
@@ -231,6 +241,9 @@ export default function Home() {
             setunits(value);
           }}
         ></InputField>
+
+        <RetailerPriceChangesChart timeFilter={timeFilter} units={units} />
+        <CustomerPriceChangesChart timeFilter={timeFilter} units={units} />
         <BrandNewTanksChart
           baranggay={baranggay}
           timeFilter={timeFilter}
