@@ -6,7 +6,9 @@ import RefillTanksChart from "./RefillTanksChart";
 import AccessoriesChart from "./AccessoriesChart";
 import CustomerPriceChangesChart from "./CustomerPriceChangesChart";
 import RetailerPriceChangesChart from "./RetailerPriceChangesChart";
+import PricesTable from "./PricesTable";
 export {
+  PricesTable,
   RetailerPriceChangesChart,
   CustomerPriceChangesChart,
   AccessoriesChart,
