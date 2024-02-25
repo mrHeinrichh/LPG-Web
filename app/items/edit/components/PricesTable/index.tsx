@@ -50,6 +50,7 @@ function PricesTable() {
       <Datatable header={TABLE_HEADERS}>
         {reasons.map((e: any) => (
           <TableRow key={e._id}>
+            <td>{e.item.name}</td>
             <td>{e.price}</td>
             <td>{e.type}</td>
             <td>{e.reason}</td>
