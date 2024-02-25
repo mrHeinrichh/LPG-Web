@@ -249,8 +249,9 @@ export const useCustomerStore = create((set) => ({
   },
   getAppointments: async (page: number = 1, limit: number = 5) => {
     const { data } = await get(
-      `users??page=${page}&limit=${limit}&filter={"__t": "Customer", "appointmentStatus": "Pending"}`
+      `users?page=${page}&limit=${limit}&filter={"__t": "Customer", "appointmentStatus": "Pending"}`
     );
+
     return set(() => ({ appointments: data.data }));
   },
   updateAppointmentStatus: async (_id: string, status: AppointmentStatus) => {
@@ -437,17 +438,3 @@ export const useWalkInStore = create((set) => ({
     });
   },
 }));
-// getNoOfTransactions: async () => {
-//   const { data } = await get(`transactions?page=${0}&limit=${0}`);
-//   if (data.status == "success") {
-//     const noOfTransactions = data.data.reduce(
-//       (acc: number, curr: any) => acc + 1,
-//       0
-//     );
-//     const totalRevenue = data.data.reduce(
-//       (acc: number, curr: any) => acc + curr.total,
-//       0
-//     );
-//     return set(() => ({ noOfTransactions, totalRevenue }));
-//   }
-// },
