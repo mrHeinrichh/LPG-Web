@@ -27,7 +27,12 @@ export default function OnGoingDeliveryList() {
                 <p className="text-lg font-semibold">{e.name}</p>
                 <p className="">{e.status}</p>
                 <p className="">No. of Items: {e.items.length}</p>
-                <p className="">₱ {e.total}.00</p>
+                <p className="">₱ {e.total}</p>
+                {e.discountIdImage != null ? (
+                  <p className="">Discounted</p>
+                ) : (
+                  <></>
+                )}
               </div>
 
               <div className=""></div>
