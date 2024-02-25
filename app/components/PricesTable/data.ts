@@ -1,6 +1,7 @@
 import { ISearchFilter } from "@/interfaces";
 
 export const TABLE_HEADERS: string[] = [
+  "Item Name",
   "Price",
   "Type",
   "Reason",
