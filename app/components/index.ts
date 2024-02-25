@@ -4,7 +4,11 @@ import RiderAppointmentsList from "./RiderAppointmentsList";
 import BrandNewTanksChart from "./BrandNewTanksChart";
 import RefillTanksChart from "./RefillTanksChart";
 import AccessoriesChart from "./AccessoriesChart";
+import CustomerPriceChangesChart from "./CustomerPriceChangesChart";
+import RetailerPriceChangesChart from "./RetailerPriceChangesChart";
 export {
+  RetailerPriceChangesChart,
+  CustomerPriceChangesChart,
   AccessoriesChart,
   RefillTanksChart,
   BrandNewTanksChart,
