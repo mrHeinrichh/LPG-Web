@@ -202,9 +202,11 @@ export const useMessageStore = create((set) => ({
 
 export const useCustomerStore = create((set) => ({
   customers: [],
+  pendingCustomers: [],
   verifiedCustomers: [],
   noOfCustomer: 0,
   maxAppointments: 0,
+  maxPendingCustomers: 0,
   noOfVerifiedCustomer: 0,
   appointments: [],
   getCustomer: async (page: number = 1, limit: number = 5, filter = "") => {
@@ -217,6 +219,17 @@ export const useCustomerStore = create((set) => ({
     );
     if (data.status == "success") {
       return set(() => ({ customers: data.data }));
+    }
+  },
+  getPendingCustomer: async (page: number = 1, limit: number = 5) => {
+    const { data } = await get(
+      `users?page=${page}&limit=${limit}&filter={ "$and": [{"__t": "Customer"}, {"verified": false} ] }`
+    );
+    if (data.status == "success") {
+      return set(() => ({
+        pendingCustomers: data.data,
+        maxPendingCustomers: data.meta.max,
+      }));
     }
   },
   getVerifiedCustomer: async (
@@ -288,14 +301,16 @@ export const useCustomerStore = create((set) => ({
   },
   verifyCustomer: async (id: string) => {
     const { data } = await patch(`users/${id}/verify`, {});
+
     if (data.status == "success") {
       return set((state: any) => {
-        const customers = state.customers.map((e: any) => {
+        const pendingCustomers = state.pendingCustomers.map((e: any) => {
           if (e._id == id) e = data.data[0];
           return e;
         });
         return {
-          customers,
+          pendingCustomers,
+          maxPendingCustomers: state.maxPendingCustomers - 1,
         };
       });
     }

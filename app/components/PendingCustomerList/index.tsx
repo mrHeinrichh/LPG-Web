@@ -5,17 +5,22 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import Image from "next/image";
 
 export default function PendingCustomerList() {
-  const { getCustomer, customers, verifyCustomer } = useCustomerStore() as any;
+  const {
+    getPendingCustomer,
+    pendingCustomers,
+    verifyCustomer,
+    maxPendingCustomers,
+  } = useCustomerStore() as any;
   const [page, setpage] = useState(1);
   const [limit, setlimit] = useState(3);
 
   useEffect(() => {
-    getCustomer(page, limit, `{"verified": false}`);
+    getPendingCustomer(page, limit);
   }, [page, limit]);
 
   const pendings = useMemo(
-    () => customers.filter((e: any) => e.verified == false),
-    [customers]
+    () => pendingCustomers.filter((e: any) => e.verified == false),
+    [pendingCustomers]
   );
 
   return (
@@ -23,7 +28,7 @@ export default function PendingCustomerList() {
       header={
         <div className="flex items-center justify-between">
           <p className="text-xl font-semibold">
-            Pending Customer Verification ({pendings.length})
+            Pending Customer Verification ({maxPendingCustomers})
           </p>
           <div className="flex items-center gap-4 ">
             <div className="cursor-pointer">
