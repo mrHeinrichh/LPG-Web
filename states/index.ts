@@ -204,6 +204,7 @@ export const useCustomerStore = create((set) => ({
   customers: [],
   verifiedCustomers: [],
   noOfCustomer: 0,
+  maxAppointments: 0,
   noOfVerifiedCustomer: 0,
   appointments: [],
   getCustomer: async (page: number = 1, limit: number = 5, filter = "") => {
@@ -252,7 +253,12 @@ export const useCustomerStore = create((set) => ({
       `users?page=${page}&limit=${limit}&filter={"__t": "Customer", "appointmentStatus": "Pending"}`
     );
 
-    return set(() => ({ appointments: data.data }));
+    if (data.status == "success") {
+      return set(() => ({
+        appointments: data.data,
+        maxAppointments: data.meta.max,
+      }));
+    }
   },
   updateAppointmentStatus: async (_id: string, status: AppointmentStatus) => {
     const { data } = await patch(`users/${_id}`, {
@@ -265,7 +271,10 @@ export const useCustomerStore = create((set) => ({
           if (e._id == _id) e = data.data[0];
           return e;
         });
-        return { appointments: temp };
+        return {
+          appointments: temp,
+          maxAppointments: prev.maxAppointments - 1,
+        };
       });
     }
   },

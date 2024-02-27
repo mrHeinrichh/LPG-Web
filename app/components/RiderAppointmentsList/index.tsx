@@ -6,8 +6,12 @@ import Image from "next/image";
 import { getDateToString } from "@/utils";
 
 export default function RiderAppointmentsList() {
-  const { getAppointments, appointments, updateAppointmentStatus } =
-    useCustomerStore() as any;
+  const {
+    getAppointments,
+    appointments,
+    updateAppointmentStatus,
+    maxAppointments,
+  } = useCustomerStore() as any;
   const [page, setpage] = useState(1);
   const [limit, setlimit] = useState(3);
 
@@ -25,7 +29,7 @@ export default function RiderAppointmentsList() {
       header={
         <div className="flex items-center justify-between">
           <p className="text-xl font-semibold">
-            Rider Appointments ({pendings.length})
+            Rider Appointments ({maxAppointments})
           </p>
           <div className="flex items-center gap-4 ">
             <div className="cursor-pointer">
