@@ -8,7 +8,10 @@ import TableRow from "./TableRow";
 import InputField from "./InputField";
 import SelectField from "./SelectField";
 import ApprovalsList from "./ApprovalsList";
+import DeliveryDetailsModal from "./DeliveryDetailsModal";
+
 export {
+  DeliveryDetailsModal,
   ApprovalsList,
   SelectField,
   InputField,

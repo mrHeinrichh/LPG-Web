@@ -1,11 +1,11 @@
 import React from "react";
 import style from "./style.module.css";
 
-function Card({ children }: any) {
+function Card({ children, onClick }: any) {
   return (
-    <>
-      <div className={style.container}>{children}</div>
-    </>
+    <div className={style.container} onClick={onClick}>
+      {children}
+    </div>
   );
 }
 
