@@ -1,4 +1,4 @@
-import { ApprovalsList, Card, Button } from "@/components";
+import { ApprovalsList, Card, Button, DeliveryCard } from "@/components";
 import { useTransactionStore } from "@/states";
 import { useMemo } from "react";
 
@@ -28,36 +28,7 @@ export default function PendingCustomerList({ setcurrent, setopen }: any) {
               setopen(true);
             }}
           >
-            <div className="flex justify-between items-center w-full p-2">
-              <div className="flex flex-col">
-                <p className="text-lg font-semibold">{e.name}</p>
-                <p className="">{e.status}</p>
-                <p className="">No. of Items: {e.items.length}</p>
-                <p className="">₱ {e.total}</p>
-                {e.discountIdImage != null ? (
-                  <p className="">Discounted</p>
-                ) : (
-                  <></>
-                )}
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <Button
-                  onClick={() => {
-                    approve(e._id);
-                  }}
-                >
-                  <p className="">Approve</p>
-                </Button>
-                <Button
-                  onClick={() => {
-                    decline(e._id);
-                  }}
-                >
-                  <p className="text-white-100">Decline</p>
-                </Button>
-              </div>
-            </div>
+            <DeliveryCard data={e} />
           </Card>
         );
       })}

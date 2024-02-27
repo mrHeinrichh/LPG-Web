@@ -9,8 +9,9 @@ import InputField from "./InputField";
 import SelectField from "./SelectField";
 import ApprovalsList from "./ApprovalsList";
 import DeliveryDetailsModal from "./DeliveryDetailsModal";
-
+import DeliveryCard from "./DeliveryCard";
 export {
+  DeliveryCard,
   DeliveryDetailsModal,
   ApprovalsList,
   SelectField,
