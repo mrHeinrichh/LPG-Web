@@ -104,7 +104,7 @@ export default function Transactions() {
           <div className="flex items-center gap-4 ">
             <FaChevronLeft
               onClick={() => {
-                setpage((prev: number) => prev - 1);
+                if (page > 0) if (page > 1) setpage((prev: number) => prev - 1);
               }}
             />
             {page}

@@ -31,7 +31,8 @@ export default function RiderAppointmentsList() {
             <div className="cursor-pointer">
               <FaChevronLeft
                 onClick={() => {
-                  setpage((prev: number) => prev - 1);
+                  if (page > 0)
+                    if (page > 1) setpage((prev: number) => prev - 1);
                 }}
               />
             </div>
