@@ -3,19 +3,24 @@ import { useTransactionStore } from "@/states";
 import { useState, useMemo, useEffect } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
-export default function PendingCustomerList() {
-  const { getTransactions, transactions, approve, decline } =
-    useTransactionStore() as any;
+export default function PendingDeliveryList() {
+  const {
+    getPendingDeliveries,
+    pendingDeliveries,
+    approve,
+    decline,
+    maxPendingDeliveries,
+  } = useTransactionStore() as any;
   const [page, setpage] = useState(1);
   const [limit, setlimit] = useState(3);
 
   const pendings = useMemo(
-    () => transactions.filter((e: any) => e.status == "Pending"),
-    [transactions]
+    () => pendingDeliveries.filter((e: any) => e.status == "Pending"),
+    [pendingDeliveries]
   );
 
   useEffect(() => {
-    getTransactions(page, limit, `{"__t": "Delivery", "status": "Pending"}`);
+    getPendingDeliveries(page, limit);
   }, [page, limit]);
 
   return (
@@ -23,14 +28,13 @@ export default function PendingCustomerList() {
       header={
         <div className="flex items-center justify-between">
           <p className="text-xl font-semibold">
-            Pending Delivery Approvals ({pendings.length})
+            Pending Delivery Approvals ({maxPendingDeliveries})
           </p>
           <div className="flex items-center gap-4 ">
             <div className="cursor-pointer">
               <FaChevronLeft
                 onClick={() => {
-                  if (page > 0)
-                    if (page > 1) setpage((prev: number) => prev - 1);
+                  if (page > 1) setpage((prev: number) => prev - 1);
                 }}
               />
             </div>

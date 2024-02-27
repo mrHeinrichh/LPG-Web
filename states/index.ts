@@ -29,6 +29,8 @@ export const useAuthStore = create((set) => ({
 
 export const useTransactionStore = create((set) => ({
   transactions: [],
+  pendingDeliveries: [],
+  maxPendingDeliveries: 0,
   deliveries: [],
   feedbacks: [],
   solds: [],
@@ -83,6 +85,17 @@ export const useTransactionStore = create((set) => ({
       }));
     }
   },
+  getPendingDeliveries: async (page: number = 1, limit: number = 5) => {
+    const { data } = await get(
+      `transactions?page=${page}&limit=${limit}&filter={"__t": "Delivery", "status": "Pending"}`
+    );
+    if (data.status == "success") {
+      return set(() => ({
+        pendingDeliveries: data.data,
+        maxPendingDeliveries: data.meta.max,
+      }));
+    }
+  },
   getTotal: async (page: number = 1, limit: number = 5, filter = "{}") => {
     const { data } = await get(
       `transactions?page=${page}&limit=${limit}&filter=${filter}`
@@ -113,25 +126,29 @@ export const useTransactionStore = create((set) => ({
     const { data } = await patch(`transactions/${_id}/approve`, {});
     if (data.status == "success") {
       return set((state: any) => {
-        const temp = state.transactions.map((e: any) => {
+        const temp = state.pendingDeliveries.map((e: any) => {
           if (e._id == _id) e.status = "Approved";
           return e;
         });
-        return { transactions: temp };
+        return {
+          pendingDeliveries: temp,
+          maxPendingDeliveries: state.maxPendingDeliveries - 1,
+        };
       });
     }
   },
   decline: async (_id: string) => {
     const { data } = await patch(`transactions/${_id}/decline`, {});
     if (data.status == "success") {
-      return set((prev: any) => {
-        const temp = prev.transactions.map((e: any) => {
-          console.log(e);
-
+      return set((state: any) => {
+        const temp = state.pendingDeliveries.map((e: any) => {
           if (e._id == _id) e = data.data[0];
           return e;
         });
-        return { transactions: temp };
+        return {
+          pendingDeliveries: temp,
+          maxPendingDeliveries: state.maxPendingDeliveries - 1,
+        };
       });
     }
   },
