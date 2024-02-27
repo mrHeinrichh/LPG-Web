@@ -21,15 +21,14 @@ export default function OnGoingDeliveryList({ setcurrent, setopen }: any) {
     >
       {data.map((e: any) => {
         return (
-          <Card
+          <DeliveryCard
             key={e._id}
+            data={e}
             onClick={() => {
               setcurrent(e);
               setopen(true);
             }}
-          >
-            <DeliveryCard data={e} />
-          </Card>
+          />
         );
       })}
     </ApprovalsList>

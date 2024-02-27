@@ -1,0 +1,5 @@
+.card_container {
+  min-width: 90vw;
+  min-height: 90vh;
+  @apply bg-white-100 z-40 p-10 flex flex-col gap-5 rounded-lg;
+}
