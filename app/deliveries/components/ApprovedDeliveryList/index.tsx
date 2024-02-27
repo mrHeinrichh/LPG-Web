@@ -2,7 +2,7 @@ import { ApprovalsList, Card } from "@/components";
 import { useTransactionStore } from "@/states";
 import { useMemo } from "react";
 
-export default function ApprovedDeliveryList() {
+export default function ApprovedDeliveryList({ setcurrent, setopen }: any) {
   const { transactions } = useTransactionStore() as any;
 
   const data = useMemo(
@@ -21,7 +21,13 @@ export default function ApprovedDeliveryList() {
     >
       {data.map((e: any) => {
         return (
-          <Card key={e._id}>
+          <Card
+            key={e._id}
+            onClick={() => {
+              setcurrent(e);
+              setopen(true);
+            }}
+          >
             <div className="flex justify-between items-center w-full p-2">
               <div className="flex flex-col">
                 <p className="text-lg font-semibold">{e.name}</p>

@@ -1,5 +1,10 @@
 "use client";
-import { Datatable, SelectField, Sidenav } from "@/components";
+import {
+  Datatable,
+  DeliveryDetailsModal,
+  SelectField,
+  Sidenav,
+} from "@/components";
 import { useTransactionStore } from "@/states";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -14,6 +19,8 @@ import CsvDownloadButton from "react-json-to-csv";
 export default function Transactions() {
   const { getTransactions, transactions, getFeedbacks, feedbacks } =
     useTransactionStore() as any;
+  const [current, setcurrent] = useState<any>({});
+  const [open, setopen] = useState<boolean>(false);
   const [page, setpage] = useState(1);
   const [limit, setlimit] = useState(100);
 
@@ -63,17 +70,17 @@ export default function Transactions() {
 
   return (
     <>
+      <DeliveryDetailsModal isOpen={open} setIsOpen={setopen} data={current} />
+
       <Sidenav>
         <p className="text-4xl font-bold">
           Deliveries <span className="font-light">({data.length})</span>
         </p>
-
         <div className="grid grid-cols-3 gap-2 w-full my-5">
-          <PendingDeliveryList />
-          <ApprovedDeliveryList />
-          <OnGoingDeliveryList />
+          <PendingDeliveryList setcurrent={setcurrent} setopen={setopen} />
+          <ApprovedDeliveryList setcurrent={setcurrent} setopen={setopen} />
+          <OnGoingDeliveryList setcurrent={setcurrent} setopen={setopen} />
         </div>
-
         <p className="text-2xl font-bold">Delivery Feedbacks</p>
         <div className="flex justify-between items-center w-full mt-5 mb-2 bg-white-100 rounded-md px-4 py-2">
           <div className=""></div>
