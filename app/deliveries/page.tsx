@@ -25,7 +25,7 @@ export default function Transactions() {
   const [limit, setlimit] = useState(100);
 
   useEffect(() => {
-    getTransactions(0, 0);
+    getTransactions(0, 0, `{"__t": "Delivery"}`);
   }, []);
 
   useEffect(() => {

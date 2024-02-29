@@ -23,17 +23,39 @@ function DeliveryDetailsModal({ isOpen, setIsOpen, data }: any) {
         <div className="grid grid-cols-2 gap-20">
           <div className="flex flex-col gap-4">
             <div className="w-full flex items-center justify-between">
-              <p>Ordered By: {data.name}</p>
-              <p>Delivery Date: {getDateToString(data.createdAt)}</p>
+              <p>Ordered By: {data.to.name}</p>
+              <div className="flex items-center gap-2">
+                <p>
+                  Receiver: {data.name} ({data.contactNumber})
+                </p>
+              </div>
             </div>
+
+            <p>Delivery Date: {getDateToString(data.createdAt)}</p>
+            <p>Payment Method: {data.paymentMethod}</p>
+
             <p>
               Location: {data.deliveryLocation} {data.houseLotBlk}
             </p>
+
             <p>
               {data.discountIdImage != null
                 ? "Applying for Discount"
                 : "Not applying for Discount"}
             </p>
+            {data.discountIdImage != null ? (
+              <div className="">
+                <p>Discount ID</p>
+                <Image
+                  src={data.discountIdImage}
+                  alt=""
+                  height={300}
+                  width={300}
+                ></Image>
+              </div>
+            ) : (
+              <></>
+            )}
           </div>
           <div className="flex flex-col gap-2">
             <div className="flex flex-col gap-4">
@@ -55,11 +77,6 @@ function DeliveryDetailsModal({ isOpen, setIsOpen, data }: any) {
               <p>Total</p>
               <p>{data.total} PHP</p>
             </div>
-            {data.discountIdImage != null ? (
-              <Image src={data.discountIdImage} alt=""></Image>
-            ) : (
-              <></>
-            )}
           </div>
         </div>
 

@@ -7,10 +7,11 @@ function DeliveryCard({ data, onClick }: any) {
     <Card onClick={onClick}>
       <div className="flex flex-col gap-4 p-3">
         <div className="flex flex-col">
-          <p className="">Ordered By: {data.name}</p>
+          <p className="">Ordered By: {data.to.name}</p>
           <p className="font-light">
             {data.deliveryLocation} {data.houseLotBlk}
           </p>
+          <p className="font-light">{data.createdAt}</p>
           {data.discountIdImage != null ? (
             <p className="">Discount</p>
           ) : (
