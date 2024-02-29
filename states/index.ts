@@ -126,12 +126,17 @@ export const useTransactionStore = create((set) => ({
     const { data } = await patch(`transactions/${_id}/approve`, {});
     if (data.status == "success") {
       return set((state: any) => {
-        const temp = state.pendingDeliveries.map((e: any) => {
+        const pendingDeliveries = state.pendingDeliveries.map((e: any) => {
+          if (e._id == _id) e.status = "Approved";
+          return e;
+        });
+        const transactions = state.transactions.map((e: any) => {
           if (e._id == _id) e.status = "Approved";
           return e;
         });
         return {
-          pendingDeliveries: temp,
+          pendingDeliveries,
+          transactions,
           maxPendingDeliveries: state.maxPendingDeliveries - 1,
         };
       });

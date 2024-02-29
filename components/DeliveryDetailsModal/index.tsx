@@ -3,7 +3,10 @@ import { getDateToString } from "@/utils";
 import React from "react";
 import Image from "next/image";
 import style from "./style.module.css";
+import Button from "../Button";
+import { useTransactionStore } from "@/states";
 function DeliveryDetailsModal({ isOpen, setIsOpen, data }: any) {
+  const { approve, decline } = useTransactionStore() as any;
   if (!isOpen) {
     return <></>;
   }
@@ -80,9 +83,28 @@ function DeliveryDetailsModal({ isOpen, setIsOpen, data }: any) {
           </div>
         </div>
 
-        {/* <Button>
-          <p>Confirm</p>
-        </Button> */}
+        {data.status == "Pending" ? (
+          <div className="w-full flex justify-between items-center">
+            <Button
+              onClick={() => {
+                approve(data._id);
+                setIsOpen(false);
+              }}
+            >
+              <p>Approve</p>
+            </Button>
+            <Button
+              onClick={() => {
+                decline(data._id);
+                setIsOpen(false);
+              }}
+            >
+              <p>Decline</p>
+            </Button>
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );
