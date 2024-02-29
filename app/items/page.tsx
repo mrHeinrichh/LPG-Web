@@ -81,14 +81,19 @@ export default function Items({}: any) {
 
         <Datatable header={TABLE_HEADERS}>
           {items.map((e: any) => {
-            let color = "bg-red-600";
-            if (e.stock <= 3 || e.stock >= 10) {
-              color = "bg-green-600";
+            let color = "";
+            if (e.stock <= 3 || e.stock >= 0) {
+              color = "bg-red-600";
             }
 
-            if (e.stock == 0) {
-              color = "bg-gray-600";
+            if (e.stock <= 6 || e.stock >= 4) {
+              color = "bg-orange-600";
             }
+
+            if (e.stock >= 7) {
+              color = "";
+            }
+
             return (
               <TableRow key={e._id}>
                 <td>{e.name}</td>
@@ -137,7 +142,7 @@ export default function Items({}: any) {
           <div className="flex items-center gap-4 ">
             <FaChevronLeft
               onClick={() => {
-                if (page > 0) if (page > 1) setpage((prev: number) => prev - 1);
+                if (page > 1) setpage((prev: number) => prev - 1);
               }}
             />
             {page}
