@@ -1,0 +1,7 @@
+.container {
+  @apply flex flex-col gap-2;
+}
+
+.input {
+  @apply rounded-md px-5 py-3 bg-white-100 text-slate-700 w-full;
+}

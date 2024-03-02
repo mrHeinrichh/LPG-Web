@@ -2,25 +2,27 @@
 import { TableRow, Datatable, Sidenav, Button, InputField } from "@/components";
 import trash from "@/public/trash.svg";
 import edit from "@/public/edit.svg";
-import { useAnnouncementStore, useFaqStore, useItemStore } from "@/states";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { remove } from "@/config";
+import { useAnnouncementStore } from "@/states/announcement";
+import { DatatableFooter } from "../shared";
 
 export default function Announcements({}: any) {
   const { announcements, getAnnouncements, removeAnnouncement } =
-    useAnnouncementStore() as any;
+    useAnnouncementStore();
   const router = useRouter();
   const [search, setsearch] = useState("");
+  const [page, setpage] = useState(1);
+  const [limit, setlimit] = useState(10);
   const header: any[] = ["Content", "Start", "End", "Action"];
 
   useEffect(() => {
-    getAnnouncements();
-  });
+    getAnnouncements({ page, limit });
+  }, [getAnnouncements, page, limit]);
 
   const filtered = useMemo(() => {
-    let temp = [];
+    let temp: any[] = [];
     if (search != "") {
       announcements.forEach((e: any) => {
         if (e?.text?.includes(search)) {
@@ -40,6 +42,7 @@ export default function Announcements({}: any) {
     const { name, value } = event.target;
     setsearch(value);
   };
+
   return (
     <>
       <Sidenav>
@@ -53,9 +56,9 @@ export default function Announcements({}: any) {
             Create Announcement
           </Button>
         </div>
-        <InputField name="search" onChange={handleChange} />;
+        <InputField name="search" onChange={handleChange} />
         <Datatable header={header}>
-          {filtered.map((e: any) => (
+          {announcements.map((e: any) => (
             <TableRow key={e._id}>
               <td>
                 <p>{e.text}</p>
@@ -85,6 +88,18 @@ export default function Announcements({}: any) {
             </TableRow>
           ))}
         </Datatable>
+        <DatatableFooter
+          page={page}
+          onLeft={() => {
+            setpage((state) => state - 1);
+          }}
+          onRight={() => {
+            setpage((state) => state + 1);
+          }}
+          onSetLimit={(value) => {
+            setlimit(value);
+          }}
+        />
       </Sidenav>
     </>
   );

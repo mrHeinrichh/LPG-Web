@@ -1,4 +1,6 @@
 import { get, patch, post, remove } from "@/config";
+import { IAnnouncementModel } from "@/models";
+import { deleteAnnouncement, getAnnouncements } from "@/repositories";
 import { getEndDayDate, getStartDayDate } from "@/utils";
 import { emit } from "process";
 import { create } from "zustand";
@@ -335,22 +337,6 @@ export const useCustomerStore = create((set) => ({
           maxPendingCustomers: state.maxPendingCustomers - 1,
         };
       });
-    }
-  },
-}));
-
-export const useAnnouncementStore = create((set) => ({
-  announcements: [],
-  getAnnouncements: async () => {
-    const { data } = await get(`announcements`);
-    return set(() => ({ announcements: data.data }));
-  },
-  removeAnnouncement: async (id: any) => {
-    const { data } = await remove(`announcements/${id}`);
-    if (data.status == "success") {
-      return set((state: any) => ({
-        announcements: [...state.announcements.filter((e: any) => e._id != id)],
-      }));
     }
   },
 }));
