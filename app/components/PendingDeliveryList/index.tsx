@@ -21,7 +21,7 @@ export default function PendingDeliveryList() {
 
   useEffect(() => {
     getPendingDeliveries(page, limit);
-  }, [page, limit]);
+  }, [page, limit, getPendingDeliveries]);
 
   return (
     <ApprovalsList

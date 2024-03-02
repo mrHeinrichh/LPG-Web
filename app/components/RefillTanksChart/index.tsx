@@ -41,7 +41,7 @@ export default function RefillTanksChart({
     });
 
     return [...temp];
-  }, [solds, timeFilter, units, baranggay]);
+  }, [solds]);
 
   const data = useMemo(() => {
     const parsedStartDay = getDates(timeFilter, units).map((e: Date) =>
@@ -89,7 +89,7 @@ export default function RefillTanksChart({
         ...temp,
       };
     });
-  }, [solds, timeFilter, units, baranggay]);
+  }, [solds, timeFilter, units, baranggay, keywords]);
 
   return (
     <div>

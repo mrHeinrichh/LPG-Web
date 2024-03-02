@@ -133,7 +133,7 @@ export default function Home() {
         declined,
       };
     });
-  }, [solds, units, timeFilter]);
+  }, [solds, units, timeFilter, baranggay]);
 
   const parsedCustomers = useMemo(() => {
     const parsedStartDay = getDates(timeFilter, units).map((e: Date) =>
@@ -155,7 +155,7 @@ export default function Home() {
         customers: customersTemp.length,
       };
     });
-  }, [verifiedCustomers, units, timeFilter, baranggay]);
+  }, [verifiedCustomers, units, timeFilter]);
 
   useEffect(() => {
     const startDate = new Date();
@@ -170,14 +170,14 @@ export default function Home() {
       `{"$and": [{"createdAt": {"$gte": "${startDate.toISOString()}", "$lte": "${endDate.toISOString()}"}}]}`,
       "item"
     );
-  }, [units, timeFilter]);
+  }, [units, timeFilter, getPrices, getVerifiedCustomer]);
 
   useEffect(() => {
     const startDate = new Date();
     const endDate = new Date();
     startDate.setDate(startDate.getDate() - units * getMutiplier(timeFilter));
     getSolds(0, 0, startDate, endDate);
-  }, [units, timeFilter, baranggay]);
+  }, [units, timeFilter, baranggay, getSolds]);
 
   useEffect(() => {
     getTotal(
@@ -188,7 +188,7 @@ export default function Home() {
       ).toISOString()}", "$lte": "${getEndDayDate(new Date()).toISOString()}"}}`
     );
     getDeliveriesByStatuses(0, 0, ["Pending", "Completed"]);
-  }, []);
+  }, [getDeliveriesByStatuses, getTotal]);
 
   return (
     <main>

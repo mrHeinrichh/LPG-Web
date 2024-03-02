@@ -17,7 +17,7 @@ export default function Announcements({}: any) {
 
   useEffect(() => {
     getAnnouncements();
-  }, []);
+  });
 
   const filtered = useMemo(() => {
     let temp = [];

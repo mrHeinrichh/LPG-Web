@@ -31,7 +31,7 @@ function PricesTable() {
         `{ "$and": [{"reason": {"$ne": null}}, {"item": "${id}"}]}`
       );
     }
-  }, [page, limit, search, id]);
+  }, [page, limit, search, id, getReasons]);
 
   return (
     <>

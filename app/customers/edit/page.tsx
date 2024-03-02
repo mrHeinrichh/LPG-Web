@@ -26,7 +26,7 @@ export default function Transactions({}: any) {
 
   useEffect(() => {
     fetchItem();
-  }, []);
+  });
 
   const fetchItem = async () => {
     try {

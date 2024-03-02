@@ -21,7 +21,7 @@ export default function RootLayout({
     setrendered(true);
     if (!authStore.user && !pathName.includes("sign-in"))
       router.push("/sign-in");
-  }, [authStore.user]);
+  }, [authStore.user, pathName, router]);
 
   return (
     <html lang="en">

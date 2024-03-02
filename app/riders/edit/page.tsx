@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import style from "./style.module.css";
 import { useRouter, useSearchParams } from "next/navigation";
 import { get, patch, post } from "@/config";
+
 export default function Transactions({}: any) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -27,11 +28,11 @@ export default function Transactions({}: any) {
 
   useEffect(() => {
     fetchRider();
-  }, []);
+  });
 
   useEffect(() => {
     getRiderTransactions(id);
-  }, [transactions]);
+  }, [transactions, getRiderTransactions, id]);
 
   const fetchRider = async () => {
     try {

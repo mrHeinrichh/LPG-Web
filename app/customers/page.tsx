@@ -48,11 +48,11 @@ export default function Customers({}: any) {
     } else {
       getCustomer(page, limit);
     }
-  }, [page, limit, search]);
+  }, [page, limit, search, getCustomer]);
 
   useEffect(() => {
     getNoOfCustomer();
-  }, [unverified]);
+  }, [unverified, getNoOfCustomer]);
   return (
     <>
       <Sidenav>

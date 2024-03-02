@@ -30,7 +30,7 @@ function PriceChangesChart() {
       0,
       `{"$and": [{"createdAt": {"$gte": "${startDate.toISOString()}", "$lte": "${endDate.toISOString()}"}}, {"item": "${id}"}]}`
     );
-  }, [timeFilter, units, id]);
+  }, [timeFilter, units, id, getPrices]);
 
   const data = useMemo(() => {
     let temp: any = [];
@@ -85,7 +85,7 @@ function PriceChangesChart() {
     });
 
     return temp;
-  }, [prices]);
+  }, [prices, timeFilter, units]);
   return (
     <div>
       <SelectField

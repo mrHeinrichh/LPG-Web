@@ -15,7 +15,7 @@ function SignIn() {
 
   useEffect(() => {
     if (authStore.user) router.push("/");
-  }, [authStore.user]);
+  }, [authStore.user, router]);
 
   const handleChange = (event: any) => {
     const { name, value } = event.target;

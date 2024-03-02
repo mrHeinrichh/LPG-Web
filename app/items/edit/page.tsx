@@ -27,7 +27,7 @@ export default function EditItems({}: any) {
 
   useEffect(() => {
     fetchItem();
-  }, []);
+  });
 
   const fetchItem = async () => {
     try {

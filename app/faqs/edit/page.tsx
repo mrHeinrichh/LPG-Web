@@ -18,7 +18,7 @@ export default function Transactions({}: any) {
 
   useEffect(() => {
     fetchFaqs();
-  }, []);
+  });
 
   const fetchFaqs = async () => {
     try {

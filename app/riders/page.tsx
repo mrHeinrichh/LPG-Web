@@ -31,7 +31,7 @@ export default function Customers({}: any) {
     } else {
       getRider(page, limit);
     }
-  }, [page, limit, search]);
+  }, [page, limit, search, getRider]);
 
   return (
     <>

@@ -16,7 +16,7 @@ export default function PendingCustomerList() {
 
   useEffect(() => {
     getPendingCustomer(page, limit);
-  }, [page, limit]);
+  }, [page, limit, getPendingCustomer]);
 
   const pendings = useMemo(
     () => pendingCustomers.filter((e: any) => e.verified == false),

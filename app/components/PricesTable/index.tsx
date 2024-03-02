@@ -28,7 +28,7 @@ function PricesTable() {
     } else {
       getReasons(page, limit, `{ "$and": [{"reason": {"$ne": null}}]}`, "item");
     }
-  }, [page, limit, search, id]);
+  }, [page, limit, search, id, getReasons]);
 
   return (
     <div>

@@ -26,11 +26,11 @@ export default function Transactions() {
 
   useEffect(() => {
     getTransactions(0, 0, `{"__t": "Delivery"}`);
-  }, []);
+  });
 
   useEffect(() => {
     getFeedbacks(page, limit);
-  }, [page, limit]);
+  }, [page, limit, getFeedbacks]);
 
   const data = useMemo(
     () =>
@@ -66,7 +66,7 @@ export default function Transactions() {
     });
 
     return mockData;
-  }, [feedbackHeaders]);
+  }, [feedbacks]);
 
   return (
     <>

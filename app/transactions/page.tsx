@@ -30,7 +30,7 @@ export default function Transactions() {
 
   useEffect(() => {
     getNoOfTransactions(page, limit);
-  }, []);
+  });
 
   useEffect(() => {
     if (search != "") {
@@ -42,7 +42,8 @@ export default function Transactions() {
     } else {
       getTransactions(page, limit);
     }
-  }, [page, limit, search]);
+  }, [page, limit, search, getTransactions]);
+
   return (
     <>
       <Sidenav>

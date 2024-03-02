@@ -37,10 +37,11 @@ export default function Items({}: any) {
     } else {
       getItems(page, limit);
     }
-  }, [page, limit, search]);
+  }, [page, limit, search, getItems]);
+
   useEffect(() => {
     getNumbers();
-  }, []);
+  });
 
   return (
     <>

@@ -22,7 +22,7 @@ export default function RiderAppointmentsList() {
 
   useEffect(() => {
     getAppointments(page, limit);
-  }, [page, limit]);
+  }, [page, limit, getAppointments]);
 
   return (
     <ApprovalsList

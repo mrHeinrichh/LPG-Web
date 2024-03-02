@@ -16,7 +16,7 @@ export default function Faqs({}: any) {
 
   useEffect(() => {
     getFaqs();
-  }, []);
+  });
 
   const deleteFaq = async (id: any) => {
     removeFaq(id);

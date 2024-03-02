@@ -17,7 +17,7 @@ export default function WalkIn({}: any) {
 
   useEffect(() => {
     getCustomer();
-  }, []);
+  });
 
   useEffect(() => {
     if (id) getMessages(id);
@@ -29,7 +29,7 @@ export default function WalkIn({}: any) {
     return () => {
       SOCKET.off(`createdMessage/${id}`, onCreatedMssage);
     };
-  }, [id]);
+  }, [id, addNewMessage, getMessages]);
 
   const handleChange = (event: any) => {
     const { name, value } = event.target;

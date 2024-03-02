@@ -57,7 +57,7 @@ function PriceChangesChart({ timeFilter, units }: any) {
 
       return temp;
     });
-  }, [prices]);
+  }, [prices, keywords, timeFilter, units]);
   return (
     <div>
       <p className="text-2xl font-black">Customer Price Changes</p>
@@ -79,6 +79,7 @@ function PriceChangesChart({ timeFilter, units }: any) {
         <Legend />
         {keywords.map((keyword: string) => (
           <Line
+            key={keyword}
             type="monotone"
             dataKey={keyword}
             stroke={generateRandomColor()}

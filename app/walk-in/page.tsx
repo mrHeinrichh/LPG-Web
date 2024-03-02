@@ -29,9 +29,10 @@ export default function WalkIn({}: any) {
     () => items.filter((e: any) => e.category == "Accessories"),
     [items]
   );
+
   useEffect(() => {
     getItems();
-  }, [items]);
+  });
 
   return (
     <>
