@@ -4,39 +4,30 @@ import trash from "@/public/trash.svg";
 import edit from "@/public/edit.svg";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
-import { useAnnouncementStore } from "@/states/announcement";
+import { useEffect, useState } from "react";
+import { useAnnouncementStore } from "@/states";
 import { DatatableFooter } from "../shared";
+import { HEADERS } from "./data";
 
 export default function Announcements({}: any) {
-  const { announcements, getAnnouncements, removeAnnouncement } =
-    useAnnouncementStore();
+  const {
+    page,
+    nextPage,
+    previousPage,
+    setLimit,
+    limit,
+    announcements,
+    getAnnouncements,
+    removeAnnouncement,
+  } = useAnnouncementStore();
   const router = useRouter();
+
+  // TODO: Add search filter
   const [search, setsearch] = useState("");
-  const [page, setpage] = useState(1);
-  const [limit, setlimit] = useState(10);
-  const header: any[] = ["Content", "Start", "End", "Action"];
 
   useEffect(() => {
     getAnnouncements({ page, limit });
   }, [getAnnouncements, page, limit]);
-
-  const filtered = useMemo(() => {
-    let temp: any[] = [];
-    if (search != "") {
-      announcements.forEach((e: any) => {
-        if (e?.text?.includes(search)) {
-          temp.push(e);
-        }
-      });
-    }
-
-    if (search == "") {
-      temp = announcements;
-    }
-
-    return temp;
-  }, [announcements, search]);
 
   const handleChange = (event: any) => {
     const { name, value } = event.target;
@@ -57,7 +48,7 @@ export default function Announcements({}: any) {
           </Button>
         </div>
         <InputField name="search" onChange={handleChange} />
-        <Datatable header={header}>
+        <Datatable header={HEADERS}>
           {announcements.map((e: any) => (
             <TableRow key={e._id}>
               <td>
@@ -91,13 +82,13 @@ export default function Announcements({}: any) {
         <DatatableFooter
           page={page}
           onLeft={() => {
-            setpage((state) => state - 1);
+            previousPage();
           }}
           onRight={() => {
-            setpage((state) => state + 1);
+            nextPage();
           }}
-          onSetLimit={(value) => {
-            setlimit(value);
+          onSetLimit={(event) => {
+            setLimit(Number(event.target.value));
           }}
         />
       </Sidenav>

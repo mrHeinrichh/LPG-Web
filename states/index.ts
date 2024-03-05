@@ -1,18 +1,10 @@
 import { get, patch, post, remove } from "@/config";
-import { IAnnouncementModel } from "@/models";
-import { deleteAnnouncement, getAnnouncements } from "@/repositories";
 import { getEndDayDate, getStartDayDate } from "@/utils";
-import { emit } from "process";
 import { create } from "zustand";
+import useAnnouncementStore from "./announcement";
+import { AppointmentStatus } from "@/interfaces";
 
-export type TransationStatus =
-  | "Pending"
-  | "Approved"
-  | "Declined"
-  | "Completed"
-  | "On Going"
-  | "Cancelled";
-export type AppointmentStatus = "Pending" | "Approved" | "Declined";
+export { useAnnouncementStore };
 
 export const useAuthStore = create((set) => ({
   user: null,

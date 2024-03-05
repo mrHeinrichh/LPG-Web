@@ -6,7 +6,7 @@ interface IDatatableFooter {
   page: number;
   onLeft: () => void;
   onRight: () => void;
-  onSetLimit: (value: number) => void;
+  onSetLimit: (value: any) => void;
 }
 
 function DatatableFooter({
