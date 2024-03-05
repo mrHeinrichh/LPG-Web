@@ -41,7 +41,6 @@ export default create<AnnouncementStore>((set) => {
       return { ...state };
     });
   };
-
   return {
     getAnnouncements,
     removeAnnouncement,

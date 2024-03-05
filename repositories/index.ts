@@ -1,3 +1,3 @@
 import announcementRepository from "./announcement";
-
-export { announcementRepository };
+import uploadRepository from "./upload";
+export { uploadRepository, announcementRepository };

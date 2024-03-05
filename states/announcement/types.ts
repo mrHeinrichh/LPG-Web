@@ -1,12 +1,14 @@
 import { IQuery } from "@/interfaces";
 import { IAnnouncementModel } from "@/models";
 
+// Types & Interfaces
 export type GetAnnouncements = (query: IQuery) => void;
 export type RemoveAnnouncement = (id: string) => void;
 export type SetLimit = (value: number) => void;
 export type NextPage = () => void;
 export type PreviousPage = () => void;
 
+// Actions
 export interface IAnnouncementActions {
   getAnnouncements: GetAnnouncements;
   removeAnnouncement: RemoveAnnouncement;
@@ -15,6 +17,7 @@ export interface IAnnouncementActions {
   previousPage: PreviousPage;
 }
 
+// States
 export interface IAnnouncementState {
   announcements: IAnnouncementModel[];
   page: number;
