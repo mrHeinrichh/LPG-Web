@@ -41,6 +41,10 @@ export const links: ILink[] = [
     title: "FAQs",
   },
   {
+    link: "/sentiment",
+    title: "Sentiment Analysis",
+  },
+  {
     link: "/announcements",
     title: "Announcements",
   },
