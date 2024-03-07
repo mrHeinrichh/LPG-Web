@@ -1,5 +1,5 @@
 import { IHttpResponse, IQuery } from "@/interfaces";
-import { ITransactionModel } from "@/models";
+import { ITransactionModel, PaymentMethod } from "@/models";
 
 export type TransactionResponse = IHttpResponse<ITransactionModel>;
 export type PromiseTransactionResponse = Promise<TransactionResponse>;
@@ -29,6 +29,17 @@ export interface AddFeedbackArgs {
 export type AddFeedback = (
   id: string,
   body: AddFeedbackArgs
+) => PromiseTransactionResponse;
+
+export interface CompleteDeliveryArgs {
+  // TODO: Add types
+  completionImages: string[];
+  paymentMethod: PaymentMethod;
+}
+
+export type CompleteDelivery = (
+  id: string,
+  body: CompleteDeliveryArgs
 ) => PromiseTransactionResponse;
 
 export type DeleteTransaction = (id: string) => PromiseTransactionResponse;
