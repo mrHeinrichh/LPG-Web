@@ -1,4 +1,10 @@
 import announcementRepository from "./announcement";
 import uploadRepository from "./upload";
 import faqRepository from "./faq";
-export { faqRepository, uploadRepository, announcementRepository };
+import feedbackRepository from "./feedback";
+export {
+  feedbackRepository,
+  faqRepository,
+  uploadRepository,
+  announcementRepository,
+};
