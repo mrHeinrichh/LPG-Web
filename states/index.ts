@@ -8,8 +8,10 @@ import useEditAnnouncementStore from "./editAnnouncement";
 import useFaqStore from "./faq";
 import useCreateFaqStore from "./createFaq";
 import useWalkinStore from "./walkin";
+import useRiderStore from "./rider";
 
 export {
+  useRiderStore,
   useWalkinStore,
   useCreateFaqStore,
   useFaqStore,
@@ -181,29 +183,29 @@ export const useTransactionStore = create((set) => ({
   },
 }));
 
-export const useRiderStore = create((set) => ({
-  riders: [],
-  getRider: async (page: number = 1, limit: number = 5, filter = "") => {
-    const query =
-      filter != ""
-        ? `{ "$and": [{"__t": "Rider"}, ${filter} ] }`
-        : `{ "__t": "Rider" }`;
-    const { data } = await get(
-      `users?page=${page}&limit=${limit}&filter=${query}`
-    );
-    if (data.status == "success") {
-      return set(() => ({ riders: data.data }));
-    }
-  },
-  removeRider: async (id: string) => {
-    const { data } = await remove(`users/${id}`);
-    if (data.state == "success") {
-      return set((state: any) => ({
-        items: [...state.riders.filter((e: any) => e._id != id)],
-      }));
-    }
-  },
-}));
+// export const useRiderStore = create((set) => ({
+//   riders: [],
+//   getRider: async (page: number = 1, limit: number = 5, filter = "") => {
+//     const query =
+//       filter != ""
+//         ? `{ "$and": [{"__t": "Rider"}, ${filter} ] }`
+//         : `{ "__t": "Rider" }`;
+//     const { data } = await get(
+//       `users?page=${page}&limit=${limit}&filter=${query}`
+//     );
+//     if (data.status == "success") {
+//       return set(() => ({ riders: data.data }));
+//     }
+//   },
+//   removeRider: async (id: string) => {
+//     const { data } = await remove(`users/${id}`);
+//     if (data.state == "success") {
+//       return set((state: any) => ({
+//         items: [...state.riders.filter((e: any) => e._id != id)],
+//       }));
+//     }
+//   },
+// }));
 
 export const useMessageStore = create((set) => ({
   messages: [],

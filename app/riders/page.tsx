@@ -19,19 +19,25 @@ import { FaChevronLeft, FaChevronRight, FaPlus } from "react-icons/fa";
 
 export default function Customers({}: any) {
   const router = useRouter();
-  const { riders, getRider, removeRider } = useRiderStore() as any;
+  const { riders, getRiders, setLimit, nextPage, previousPage, page, limit } =
+    useRiderStore();
+  const { overallRiders, getOverallRiders } = useRiderStore();
 
   const [search, setsearch] = useState("");
-  const [page, setpage] = useState(1);
-  const [limit, setlimit] = useState(20);
 
   useEffect(() => {
+    getOverallRiders({});
+  }, [getOverallRiders]);
+
+  useEffect(() => {
+    // TODO: Add search
+    // getSearchFilterQuery(SEARCH_FILTERS, search);
     if (search != "") {
-      getRider(page, limit, getSearchFilterQuery(SEARCH_FILTERS, search));
+      getRiders({ page, limit });
     } else {
-      getRider(page, limit);
+      getRiders({ page, limit });
     }
-  }, [page, limit, search, getRider]);
+  }, [getRiders, page, limit]);
 
   return (
     <>
@@ -40,7 +46,7 @@ export default function Customers({}: any) {
           <Card>
             <div className="flex flex-col justify-evenly h-full p-4">
               <p className="text-2xl font-bold">Overall Riders</p>
-              <p className="text-2xl">{1}</p>
+              <p className="text-2xl">{overallRiders.length}</p>
             </div>
           </Card>
           <Card>
@@ -87,7 +93,7 @@ export default function Customers({}: any) {
                 </div>
                 <div
                   onClick={() => {
-                    removeRider(e._id);
+                    // removeRider(e._id);
                   }}
                 >
                   <Image src={trash} alt={"trash"}></Image>
@@ -108,20 +114,20 @@ export default function Customers({}: any) {
               name={""}
               title={""}
               onChange={(e: any) => {
-                setlimit(e.target.value);
+                setLimit(e.target.value as number);
               }}
             />
           </div>
           <div className="flex items-center gap-4 ">
             <FaChevronLeft
               onClick={() => {
-                if (page > 1) setpage((prev: number) => prev - 1);
+                previousPage();
               }}
             />
             {page}
             <FaChevronRight
               onClick={() => {
-                setpage((prev: number) => prev + 1);
+                nextPage();
               }}
             />
           </div>

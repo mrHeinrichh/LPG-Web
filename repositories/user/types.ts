@@ -1,12 +1,26 @@
 import { IHttpResponse, IQuery } from "@/interfaces";
-import { IUserModel } from "@/models";
+import {
+  IAdminModel,
+  ICustomerModel,
+  IRetailerModel,
+  IRiderModel,
+} from "@/models";
 
-export type UserResponse = IHttpResponse<IUserModel>;
-export type PromiseUserResponse = Promise<UserResponse>;
+// TODO: Fix types
+export type UserType =
+  | IAdminModel
+  | IRetailerModel
+  | ICustomerModel
+  | IRiderModel;
+
+export type PromiseUserResponse = Promise<IHttpResponse<UserType>>;
 
 export type GetUsers = (query: IQuery) => PromiseUserResponse;
+
 export type GetUserById = (id: string) => PromiseUserResponse;
+
 export type CreateUser = (request: any) => PromiseUserResponse;
+
 export type UpdateUser = (id: string, request: any) => PromiseUserResponse;
 
 export interface ChangePasswordArgs {
