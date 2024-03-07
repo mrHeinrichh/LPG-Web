@@ -9,8 +9,9 @@ import useFaqStore from "./faq";
 import useCreateFaqStore from "./createFaq";
 import useWalkinStore from "./walkin";
 import useRiderStore from "./rider";
-
+import useCreateRiderStore from "./createRider";
 export {
+  useCreateRiderStore,
   useRiderStore,
   useWalkinStore,
   useCreateFaqStore,
