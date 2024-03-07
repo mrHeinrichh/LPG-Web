@@ -7,6 +7,8 @@ import {
   GetUserById,
   GetUsers,
   UpdateUser,
+  ChangePassword,
+  ChangePasswordArgs,
 } from "./types";
 
 export const getUsers: GetUsers = async function ({
@@ -16,29 +18,37 @@ export const getUsers: GetUsers = async function ({
   populate = "",
 }: IQuery) {
   const { data } = await get(
-    `transactions?page=${page}&limit=${limit}&filter=${filter}&populate=${populate}`
+    `users?page=${page}&limit=${limit}&filter=${filter}&populate=${populate}`
   );
 
   return data as UserResponse;
 };
 
 export const getUserbyId: GetUserById = async function (id: string) {
-  const { data } = await get(`transactions/${id}`);
+  const { data } = await get(`users/${id}`);
   return data as UserResponse;
 };
 
 export const createUser: CreateUser = async function (body: any) {
-  const { data } = await post(`transactions`, body);
+  const { data } = await post(`users`, body);
   return data as UserResponse;
 };
 
 export const updateUser: UpdateUser = async function (id: string, body: any) {
-  const { data } = await patch(`transactions/${id}`, body);
+  const { data } = await patch(`users/${id}`, body);
+  return data as UserResponse;
+};
+
+export const changePassword: ChangePassword = async function (
+  id: string,
+  body: ChangePasswordArgs
+) {
+  const { data } = await patch(`users/${id}/password`, body);
   return data as UserResponse;
 };
 
 export const deleteUser: DeleteUser = async function (id: string) {
-  const { data } = await remove(`transactions/${id}`);
+  const { data } = await remove(`users/${id}`);
   return data as UserResponse;
 };
 
