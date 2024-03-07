@@ -18,6 +18,7 @@ export default create<RiderStore>((set) => {
     });
   };
 
+  // TODO: Add reset
   const getRiders: GetRiders = async ({ page = 1, limit = 10 }: IQuery) => {
     const { data } = await userRepository.getUsers<IRiderModel>({
       page,
