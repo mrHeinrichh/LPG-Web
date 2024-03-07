@@ -6,7 +6,9 @@ import itemRepository from "./item";
 import messageRepository from "./message";
 import priceRepository from "./price";
 import transactionRepository from "./transaction";
+import userRepository from "./user";
 export {
+  userRepository,
   transactionRepository,
   priceRepository,
   messageRepository,
@@ -18,3 +20,5 @@ export {
 };
 
 // TODO: Add GeoApify Repository
+// TODO: Update Transaction Repository specific routes
+// TODO: Update User Repository specific routes
