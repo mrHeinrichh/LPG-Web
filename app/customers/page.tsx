@@ -83,7 +83,7 @@ export default function Customers({}: any) {
           <div className="rounded-lg bg-black-50 p-2">
             <FaPlus
               onClick={() => {
-                router.push("/customers/add");
+                router.push("/customers/create");
               }}
             />
           </div>

@@ -48,7 +48,7 @@ export default function Announcements({}: any) {
           <div className="rounded-lg bg-black-50 p-2">
             <FaPlus
               onClick={() => {
-                router.push("/announcements/add");
+                router.push("/announcements/create");
               }}
             />
           </div>

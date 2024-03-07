@@ -52,7 +52,7 @@ export default function Faqs({}: any) {
           <div className="rounded-lg bg-black-50 p-2">
             <FaPlus
               onClick={() => {
-                router.push("/faqs/add");
+                router.push("/faqs/create");
               }}
             />
           </div>
