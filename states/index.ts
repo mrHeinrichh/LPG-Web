@@ -4,9 +4,12 @@ import { create } from "zustand";
 import { AppointmentStatus } from "@/interfaces";
 import useAnnouncementStore from "./announcement";
 import useCreateAnnouncementStore from "./createAnnouncement";
-import useEditAnnouncement from "./editAnnouncement";
+import useEditAnnouncementStore from "./editAnnouncement";
+import useFaqStore from "./faq";
+
 export {
-  useEditAnnouncement,
+  useFaqStore,
+  useEditAnnouncementStore,
   useCreateAnnouncementStore,
   useAnnouncementStore,
 };
@@ -334,22 +337,6 @@ export const useCustomerStore = create((set) => ({
           maxPendingCustomers: state.maxPendingCustomers - 1,
         };
       });
-    }
-  },
-}));
-
-export const useFaqStore = create((set) => ({
-  faqs: [],
-  getFaqs: async () => {
-    const { data } = await get(`faqs`);
-    return set(() => ({ faqs: data.data }));
-  },
-  removeFaq: async (id: any) => {
-    const { data } = await remove(`faqs/${id}`);
-    if (data.status == "success") {
-      return set((state: any) => ({
-        faqs: [...state.faqs.filter((e: any) => e._id != id)],
-      }));
     }
   },
 }));

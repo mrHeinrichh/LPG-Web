@@ -2,47 +2,42 @@
 import { TableRow, Datatable, Sidenav, Button, InputField } from "@/components";
 import trash from "@/public/trash.svg";
 import edit from "@/public/edit.svg";
-import { useFaqStore, useItemStore } from "@/states";
+import { useFaqStore } from "@/states";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
-import { remove } from "@/config";
+import { useEffect, useState } from "react";
+import { DatatableFooter } from "../shared";
+import { HEADERS } from "./data";
 
 export default function Faqs({}: any) {
-  const { faqs, getFaqs, removeFaq } = useFaqStore() as any;
+  const {
+    page,
+    nextPage,
+    previousPage,
+    setLimit,
+    limit,
+    faqs,
+    getFaqs,
+    removeFaq,
+  } = useFaqStore();
   const router = useRouter();
+
+  // TODO: Add search filter
   const [search, setsearch] = useState("");
-  const header: any[] = ["Question", "Answer", "Action"];
 
   useEffect(() => {
-    getFaqs();
-  });
-
-  const deleteFaq = async (id: any) => {
-    removeFaq(id);
-  };
-
-  const filtered = useMemo(() => {
-    let temp = [];
-    if (search != "") {
-      faqs.forEach((e: any) => {
-        if (e.question.includes(search) || e.answer.includes(search)) {
-          temp.push(e);
-        }
-      });
-    }
-
-    if (search == "") {
-      temp = faqs;
-    }
-
-    return temp;
-  }, [faqs, search]);
+    getFaqs({ page, limit });
+  }, [getFaqs, page, limit]);
 
   const handleChange = (event: any) => {
     const { name, value } = event.target;
     setsearch(value);
   };
+
+  const deleteFaq = async (id: any) => {
+    removeFaq(id);
+  };
+
   return (
     <>
       <Sidenav>
@@ -56,9 +51,9 @@ export default function Faqs({}: any) {
             Create FAQS
           </Button>
         </div>
-        <InputField name="search" onChange={handleChange} />;
-        <Datatable header={header}>
-          {filtered.map((e: any) => (
+        <InputField name="search" onChange={handleChange} />
+        <Datatable header={HEADERS}>
+          {faqs.map((e: any) => (
             <TableRow key={e._id}>
               <td>{e.question}</td>
               <td>{e.answer}</td>
@@ -82,6 +77,18 @@ export default function Faqs({}: any) {
             </TableRow>
           ))}
         </Datatable>
+        <DatatableFooter
+          page={page}
+          onLeft={() => {
+            previousPage();
+          }}
+          onRight={() => {
+            nextPage();
+          }}
+          onSetLimit={(event) => {
+            setLimit(Number(event.target.value));
+          }}
+        />
       </Sidenav>
     </>
   );

@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import style from "./style.module.css";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { useEditAnnouncement } from "@/states";
+import { useEditAnnouncementStore } from "@/states";
 
 export default function EditAnnouncement({}: any) {
   const router = useRouter();
@@ -20,7 +20,7 @@ export default function EditAnnouncement({}: any) {
     updateAnnouncement,
     editSuccess,
     reset,
-  } = useEditAnnouncement();
+  } = useEditAnnouncementStore();
 
   useEffect(() => {
     if (id) getAnnouncementById(id ?? "");

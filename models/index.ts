@@ -6,10 +6,14 @@ export interface IModel {
 }
 
 export interface IAnnouncementModel extends IModel {
-  _id?: string;
   image: string;
   start: Date | string;
   end: Date | string;
   text?: string;
-  deleted: boolean;
+}
+
+export interface IFaqModel extends IModel {
+  image: string;
+  question: string;
+  answer: string;
 }
