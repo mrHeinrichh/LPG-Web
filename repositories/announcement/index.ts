@@ -2,11 +2,11 @@ import { get, patch, post, remove } from "@/config";
 import { IQuery } from "@/interfaces";
 import {
   AnnouncementResponse,
-  CreateAnnouncment,
+  CreateAnnouncement,
   DeleteAnnouncements,
   GetAnnouncementById,
   GetAnnouncements,
-  UpdateAnnouncment,
+  UpdateAnnouncement,
 } from "./types";
 
 export const getAnnouncements: GetAnnouncements = async function ({
@@ -29,14 +29,14 @@ export const getAnnouncementbyId: GetAnnouncementById = async function (
   return data as AnnouncementResponse;
 };
 
-export const createAnnouncement: CreateAnnouncment = async function (
+export const createAnnouncement: CreateAnnouncement = async function (
   body: any
 ) {
   const { data } = await post(`announcements`, body);
   return data as AnnouncementResponse;
 };
 
-export const updateAnnouncment: UpdateAnnouncment = async function (
+export const updateAnnouncement: UpdateAnnouncement = async function (
   id: string,
   body: any
 ) {
@@ -56,5 +56,5 @@ export default {
   deleteAnnouncement,
   createAnnouncement,
   getAnnouncementbyId,
-  updateAnnouncment,
+  updateAnnouncement,
 };

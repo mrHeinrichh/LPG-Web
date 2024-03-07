@@ -53,7 +53,7 @@ export default function EditAnnouncement({}: any) {
       <Sidenav>
         <form onSubmit={handleSubmit} className={style.form}>
           <div className="col-span-2">
-            <h3 className="font-bold text-lg">Edit Announcments</h3>
+            <h3 className="font-bold text-lg">Edit Announcements</h3>
           </div>
           <div className="col-span-2">
             {image ? (

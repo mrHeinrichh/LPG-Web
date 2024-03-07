@@ -6,8 +6,8 @@ export type PromiseAnnouncementResponse = Promise<AnnouncementResponse>;
 
 export type GetAnnouncements = (query: IQuery) => PromiseAnnouncementResponse;
 export type GetAnnouncementById = (id: string) => PromiseAnnouncementResponse;
-export type CreateAnnouncment = (request: any) => PromiseAnnouncementResponse;
-export type UpdateAnnouncment = (
+export type CreateAnnouncement = (request: any) => PromiseAnnouncementResponse;
+export type UpdateAnnouncement = (
   id: string,
   request: any
 ) => PromiseAnnouncementResponse;

@@ -11,7 +11,7 @@ export interface IEditAnnouncementArgs extends IEditFormData {
 
 export type SetEditFormData = (form: IEditFormData) => void;
 export type GetAnnouncementById = (id: string) => Promise<void>;
-export type UpdateAnnouncment = (
+export type UpdateAnnouncement = (
   id: string,
   body: IEditAnnouncementArgs
 ) => Promise<void>;
@@ -23,7 +23,7 @@ export interface IEditAnnouncementActions {
   getAnnouncementById: GetAnnouncementById;
   setEditFormData: SetEditFormData;
   uploadImage: UploadImage;
-  updateAnnouncement: UpdateAnnouncment;
+  updateAnnouncement: UpdateAnnouncement;
   reset: Reset;
 }
 
