@@ -10,7 +10,9 @@ import useCreateFaqStore from "./createFaq";
 import useWalkinStore from "./walkin";
 import useRiderStore from "./rider";
 import useCreateRiderStore from "./createRider";
+import useHomeStore from "./home";
 export {
+  useHomeStore,
   useCreateRiderStore,
   useRiderStore,
   useWalkinStore,

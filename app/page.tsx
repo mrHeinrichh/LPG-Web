@@ -2,6 +2,7 @@
 import { Sidenav, Card, SelectField, InputField } from "@/components";
 import {
   useCustomerStore,
+  useHomeStore,
   usePriceStore,
   useTransactionStore,
 } from "@/states";
@@ -22,7 +23,7 @@ import {
   getEndDayDate,
   getMutiplier,
   getStartDayDate,
-  // parseToFiat,
+  parseToFiat,
 } from "@/utils";
 import React from "react";
 import jsPDF from 'jspdf';
@@ -126,6 +127,7 @@ export default function Home() {
     getSolds,
     solds,
   } = useTransactionStore() as any;
+  const { getTotalRevenueToday, revenueToday } = useHomeStore();
   const { getVerifiedCustomer, verifiedCustomers } = useCustomerStore() as any;
   const [units, setunits] = useState(20);
   const [timeFilter, settimeFilter] = useState<TimeFilter>("Daily");
@@ -272,6 +274,9 @@ export default function Home() {
     getDeliveriesByStatuses(0, 0, ["Pending", "Completed"]);
   }, [getDeliveriesByStatuses, getTotal]);
 
+  useEffect(() => {
+    getTotalRevenueToday({});
+  }, [getTotalRevenueToday]);
 
   return (
     <main>
@@ -280,7 +285,7 @@ export default function Home() {
           <Card>
             <div className="flex flex-col justify-evenly h-full p-4">
               <p className="text-2xl font-bold">Total Revenue Today</p>
-              <p className="text-2xl"> { }</p>
+              <p className="text-2xl"> {parseToFiat(revenueToday)}</p>
             </div>
           </Card>
           <Card>

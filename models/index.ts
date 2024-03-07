@@ -38,8 +38,8 @@ export interface IMessageModel extends IModel {
 }
 
 export type PriceType = "Customer" | "Retailer";
-export interface IPriceModel extends IModel {
-  item: string | IItemModel;
+export interface IPriceModel<T> extends IModel {
+  item: T;
   price: number;
   reason?: string;
   type: PriceType;
@@ -84,10 +84,7 @@ export interface IDeliveryModel extends ITransactionModel {
 export interface ITransactionModel extends IModel {
   name: string;
   contactNumber: string;
-  total: {
-    type: Number;
-    required: true;
-  };
+  total: number;
   // TODO: Add cart items model
   items: any[];
   discounted: boolean;
