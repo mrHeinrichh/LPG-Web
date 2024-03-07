@@ -74,7 +74,7 @@ export default function Items({}: any) {
           <div className="rounded-lg bg-black-50 p-2">
             <FaPlus
               onClick={() => {
-                router.push("/items/add");
+                router.push("/items/create");
               }}
             />
           </div>
