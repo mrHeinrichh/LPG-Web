@@ -12,6 +12,8 @@ import {
   AcceptDelivery,
   AddFeedbackArgs,
   AddFeedback,
+  CompleteDelivery,
+  CompleteDeliveryArgs,
 } from "./types";
 
 export const getTransactions: GetTransactions = async function ({
@@ -68,6 +70,14 @@ export const addFeedback: AddFeedback = async function (
   return data as TransactionResponse;
 };
 
+export const completeDelivery: CompleteDelivery = async function (
+  id: string,
+  body: CompleteDeliveryArgs
+) {
+  const { data } = await patch(`transactions/${id}/complete`, body);
+  return data as TransactionResponse;
+};
+
 export const deleteTransaction: DeleteTransaction = async function (
   id: string
 ) {
@@ -76,6 +86,7 @@ export const deleteTransaction: DeleteTransaction = async function (
 };
 
 export default {
+  completeDelivery,
   addFeedback,
   acceptDelivery,
   approveDelivery,
