@@ -35,11 +35,10 @@ function RetailerPriceChangesChart({ timeFilter, units }: any) {
     );
 
     const multiplier = getMutiplier(timeFilter);
-
     return parsedStartDay.map((element) => {
       let temp: any = { name: `${element.toDateString()}` };
 
-      const customerPrices = prices
+      const retailerPrices = prices
         .filter((e: any) => {
           return (
             element.getTime() <=
@@ -49,10 +48,17 @@ function RetailerPriceChangesChart({ timeFilter, units }: any) {
             e.type === "Retailer"
           );
         })
-        .map((e: any) => e.price);
+        .map((e: any) => e);
 
       keywords.forEach((keyword: string) => {
-        temp[keyword] = customerPrices.length;
+        const priceTemp = retailerPrices.filter(
+          (e: any) => e.item.name == keyword
+        );
+
+        temp[keyword] = 0;
+        if (priceTemp.length !== 0) {
+          temp[keyword] = Math.max(...priceTemp.map((e: any) => e.price));
+        }
       });
 
       return temp;

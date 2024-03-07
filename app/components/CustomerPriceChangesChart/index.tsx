@@ -49,15 +49,57 @@ function PriceChangesChart({ timeFilter, units }: any) {
             e.type === "Customer"
           );
         })
-        .map((e: any) => e.price);
+        .map((e: any) => e);
 
       keywords.forEach((keyword: string) => {
-        temp[keyword] = customerPrices.length;
+        const priceTemp = customerPrices.filter(
+          (e: any) => e.item.name == keyword
+        );
+        temp[keyword] = 0;
+        if (priceTemp.length !== 0) {
+          temp[keyword] = Math.max(...priceTemp.map((e: any) => e.price));
+        }
       });
 
       return temp;
     });
   }, [prices, keywords, timeFilter, units]);
+
+  // const data = useMemo(() => {
+  //   const parsedStartDay = getDates(timeFilter, units).map((e: Date) =>
+  //     getStartDayDate(e)
+  //   );
+
+  //   const multiplier = getMutiplier(timeFilter);
+  //   return parsedStartDay.map((element) => {
+  //     let temp: any = { name: `${element.toDateString()}` };
+
+  //     const retailerPrices = prices
+  //       .filter((e: any) => {
+  //         return (
+  //           element.getTime() <=
+  //             getStartDayDate(new Date(e.createdAt)).getTime() &&
+  //           element.getTime() + 86399999 * multiplier >=
+  //             getStartDayDate(new Date(e.createdAt)).getTime() &&
+  //           e.type === "Retailer"
+  //         );
+  //       })
+  //       .map((e: any) => e);
+
+  //     keywords.forEach((keyword: string) => {
+  // const priceTemp = retailerPrices.filter(
+  //   (e: any) => e.item.name == keyword
+  // );
+
+  // temp[keyword] = 0;
+  // if (priceTemp.length !== 0) {
+  //   temp[keyword] = Math.max(...priceTemp.map((e: any) => e.price));
+  // }
+  //     });
+
+  //     return temp;
+  //   });
+  // }, [prices, keywords, timeFilter, units]);
   return (
     <div>
       <p className="text-2xl font-black">Customer Price Changes</p>
