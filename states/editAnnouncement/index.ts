@@ -43,7 +43,7 @@ export default create<EditAnnouncementStore>((set) => {
     id: string,
     body: IEditAnnouncementArgs
   ) => {
-    const { data, status } = await announcementRepository.updateAnnouncment(
+    const { data, status } = await announcementRepository.updateAnnouncement(
       id,
       body
     );

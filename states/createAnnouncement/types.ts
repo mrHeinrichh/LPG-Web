@@ -10,7 +10,7 @@ export interface ICreateAnnouncementArgs extends ICreateFormData {
 }
 
 export type SetCreateFormData = (form: ICreateFormData) => void;
-export type CreateAnnouncment = (
+export type CreateAnnouncement = (
   body: ICreateAnnouncementArgs
 ) => Promise<void>;
 export type UploadImage = (request: FormData) => Promise<void>;
@@ -20,7 +20,7 @@ export type Reset = () => void;
 export interface ICreateAnnouncementActions {
   setCreateFormData: SetCreateFormData;
   uploadImage: UploadImage;
-  createAnnouncement: CreateAnnouncment;
+  createAnnouncement: CreateAnnouncement;
   reset: Reset;
 }
 
