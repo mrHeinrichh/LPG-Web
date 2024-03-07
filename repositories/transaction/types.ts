@@ -52,6 +52,16 @@ export type DeclineDelivery = (
   body: DeclineDeliveryArgs
 ) => PromiseTransactionResponse;
 
+export interface CancelDeliveryArgs {
+  cancelReason: string;
+  cancellationImages: string[];
+}
+
+export type CancelDelivery = (
+  id: string,
+  body: CancelDeliveryArgs
+) => PromiseTransactionResponse;
+
 export type DeleteTransaction = (id: string) => PromiseTransactionResponse;
 
 // TODO: Add types for delivery
