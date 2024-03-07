@@ -1,7 +1,7 @@
 import { IHttpResponse, IQuery } from "@/interfaces";
-import { IPriceModel } from "@/models";
+import { IItemModel, IPriceModel } from "@/models";
 
-export type PriceResponse = IHttpResponse<IPriceModel>;
+export type PriceResponse = IHttpResponse<IPriceModel<IItemModel>>;
 export type PromisePriceResponse = Promise<PriceResponse>;
 
 export type GetPrices = (query: IQuery) => PromisePriceResponse;

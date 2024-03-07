@@ -1,34 +1,30 @@
 import { SelectField, InputField, Datatable, TableRow } from "@/components";
 import React, { useEffect, useState } from "react";
-import { SEARCH_FILTERS, TABLE_HEADERS } from "./data";
-import { usePriceStore } from "@/states";
-import { getSearchFilterQuery } from "@/utils";
-import { useSearchParams } from "next/navigation";
+import { TABLE_HEADERS } from "./data";
+import { useHomeStore } from "@/states";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 function PricesTable() {
-  const searchParams = useSearchParams();
-  const { getReasons, reasons } = usePriceStore() as any;
-  const id = searchParams.get("id");
+  const {
+    getPrices,
+    prices,
+    priceNext,
+    priceBack,
+    priceLimit,
+    pricePage,
+    setPriceLimit,
+  } = useHomeStore();
   const [search, setsearch] = useState("");
-  const [page, setpage] = useState(1);
-  const [limit, setlimit] = useState(20);
 
   useEffect(() => {
-    if (search != "") {
-      getReasons(
-        page,
-        limit,
-        `{ "$and": [{"reason": {"$ne": null}}, ${getSearchFilterQuery(
-          SEARCH_FILTERS,
-          search
-        )}]}`,
-        "item"
-      );
-    } else {
-      getReasons(page, limit, `{ "$and": [{"reason": {"$ne": null}}]}`, "item");
-    }
-  }, [page, limit, search, id, getReasons]);
+    // TODO: Add search
+    getPrices({
+      page: pricePage,
+      limit: priceLimit,
+      filter: `{ "$and": [{"reason": {"$ne": null}}]}`,
+      populate: "item",
+    });
+  }, [pricePage, priceLimit, search]);
 
   return (
     <div>
@@ -47,7 +43,7 @@ function PricesTable() {
       </div>
 
       <Datatable header={TABLE_HEADERS}>
-        {reasons.map((e: any) => (
+        {prices.map((e: any) => (
           <TableRow key={e._id}>
             <td>{e.item.name}</td>
             <td>{e.price}</td>
@@ -69,20 +65,20 @@ function PricesTable() {
             name={""}
             title={""}
             onChange={(e: any) => {
-              setlimit(e.target.value);
+              setPriceLimit(Number(e.target.value));
             }}
           />
         </div>
         <div className="flex items-center gap-4 ">
           <FaChevronLeft
             onClick={() => {
-              if (page > 0) if (page > 1) setpage((prev: number) => prev - 1);
+              priceBack();
             }}
           />
-          {page}
+          {pricePage}
           <FaChevronRight
             onClick={() => {
-              setpage((prev: number) => prev + 1);
+              priceNext();
             }}
           />
         </div>
