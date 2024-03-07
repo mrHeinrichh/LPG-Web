@@ -6,8 +6,9 @@ import useAnnouncementStore from "./announcement";
 import useCreateAnnouncementStore from "./createAnnouncement";
 import useEditAnnouncementStore from "./editAnnouncement";
 import useFaqStore from "./faq";
-
+import useCreateFaqStore from "./createFaq";
 export {
+  useCreateFaqStore,
   useFaqStore,
   useEditAnnouncementStore,
   useCreateAnnouncementStore,
