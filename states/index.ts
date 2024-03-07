@@ -7,7 +7,10 @@ import useCreateAnnouncementStore from "./createAnnouncement";
 import useEditAnnouncementStore from "./editAnnouncement";
 import useFaqStore from "./faq";
 import useCreateFaqStore from "./createFaq";
+import useWalkinStore from "./walkin";
+
 export {
+  useWalkinStore,
   useCreateFaqStore,
   useFaqStore,
   useEditAnnouncementStore,

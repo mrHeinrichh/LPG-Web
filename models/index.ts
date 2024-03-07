@@ -27,6 +27,10 @@ export interface IItemModel extends IModel {
   type: ItemType;
 }
 
+export interface ICartItemModel extends IItemModel {
+  quantity: number;
+}
+
 export interface IMessageModel extends IModel {
   to: string | IUserModel;
   from: string | IUserModel;
