@@ -32,7 +32,7 @@ export const createFaq: CreateFaq = async function (body: any) {
   return data as FaqResponse;
 };
 
-export const updateAnnouncment: UpdateFaq = async function (
+export const updateAnnouncement: UpdateFaq = async function (
   id: string,
   body: any
 ) {
@@ -50,5 +50,5 @@ export default {
   deleteFaq,
   createFaq,
   getFaqbyId,
-  updateAnnouncment,
+  updateAnnouncement,
 };
