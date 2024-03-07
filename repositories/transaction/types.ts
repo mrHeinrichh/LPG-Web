@@ -22,6 +22,15 @@ export type AcceptDelivery = (
   body: AcceptDeliveryArgs
 ) => PromiseTransactionResponse;
 
+export interface AddFeedbackArgs {
+  // TODO: Add types
+  feedback: any[];
+}
+export type AddFeedback = (
+  id: string,
+  body: AddFeedbackArgs
+) => PromiseTransactionResponse;
+
 export type DeleteTransaction = (id: string) => PromiseTransactionResponse;
 
 // TODO: Add types for delivery
