@@ -39,7 +39,6 @@ export default function Transactions({}: any) {
       const { data } = await get(
         `users?filter={"__t": "Rider", "_id": "${id}"}`
       );
-      console.log(data);
 
       if (data.status === "success") {
         setFormData({

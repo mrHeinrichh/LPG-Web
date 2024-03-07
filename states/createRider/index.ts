@@ -23,6 +23,8 @@ export default create<CreateRiderStore>((set) => {
       ...body,
       __t: "Rider",
     });
+    console.log({ data, status });
+
     if (status == "success" && data.length !== 0) {
       return set(() => ({
         createSuccess: true,
