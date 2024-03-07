@@ -1,20 +1,9 @@
 import { get, patch, post, remove } from "@/config";
-import { IQuery } from "@/interfaces";
-import {
-  UserResponse,
-  CreateUser,
-  DeleteUser,
-  GetUserById,
-  GetUsers,
-  UpdateUser,
-  ChangePassword,
-  ChangePasswordArgs,
-  Authenticate,
-  AuthenticateArgs,
-  VerifyCustomer,
-} from "./types";
+import { IHttpResponse, IQuery } from "@/interfaces";
+import { ChangePasswordArgs, AuthenticateArgs } from "./types";
+import { IUserModel } from "@/models";
 
-export const getUsers: GetUsers = async function ({
+export const getUsers = async function <T extends IUserModel>({
   page = 1,
   limit = 10,
   filter = "{}",
@@ -24,47 +13,52 @@ export const getUsers: GetUsers = async function ({
     `users?page=${page}&limit=${limit}&filter=${filter}&populate=${populate}`
   );
 
-  return data as UserResponse;
+  return data as Promise<IHttpResponse<T>>;
 };
 
-export const getUserbyId: GetUserById = async function (id: string) {
+export const getUserbyId = async function <T extends IUserModel>(id: string) {
   const { data } = await get(`users/${id}`);
-  return data as UserResponse;
+  return data as Promise<IHttpResponse<T>>;
 };
 
-export const createUser: CreateUser = async function (body: any) {
+export const createUser = async function <T extends IUserModel>(body: any) {
   const { data } = await post(`users`, body);
-  return data as UserResponse;
+  return data as Promise<IHttpResponse<T>>;
 };
 
-export const updateUser: UpdateUser = async function (id: string, body: any) {
+export const updateUser = async function <T extends IUserModel>(
+  id: string,
+  body: any
+) {
   const { data } = await patch(`users/${id}`, body);
-  return data as UserResponse;
+  return data as Promise<IHttpResponse<T>>;
 };
 
-export const authenticate: Authenticate = async function (
+export const authenticate = async function <T extends IUserModel>(
   body: AuthenticateArgs
 ) {
   const { data } = await patch(`users/authenticate`, body);
-  return data as UserResponse;
+  return data as Promise<IHttpResponse<T>>;
 };
 
-export const verifyCustomer: VerifyCustomer = async function (id: string) {
+export const verifyCustomer = async function <T extends IUserModel>(
+  id: string
+) {
   const { data } = await patch(`users/${id}/verify`, {});
-  return data as UserResponse;
+  return data as Promise<IHttpResponse<T>>;
 };
 
-export const changePassword: ChangePassword = async function (
+export const changePassword = async function <T extends IUserModel>(
   id: string,
   body: ChangePasswordArgs
 ) {
   const { data } = await patch(`users/${id}/password`, body);
-  return data as UserResponse;
+  return data as Promise<IHttpResponse<T>>;
 };
 
-export const deleteUser: DeleteUser = async function (id: string) {
+export const deleteUser = async function <T extends IUserModel>(id: string) {
   const { data } = await remove(`users/${id}`);
-  return data as UserResponse;
+  return data as Promise<IHttpResponse<T>>;
 };
 
 export default {
