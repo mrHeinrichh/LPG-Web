@@ -31,7 +31,7 @@ export default function CreateRider({}: any) {
 
   useEffect(() => {
     if (createSuccess) {
-      router.back();
+      router.push("/riders");
       reset();
     }
   }, [createSuccess, reset]);
