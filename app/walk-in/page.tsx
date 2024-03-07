@@ -1,38 +1,28 @@
 "use client";
 import { Sidenav, Button } from "@/components";
-import { useItemStore, useWalkInStore } from "@/states";
+import { ICartItemModel, IItemModel } from "@/models";
+import { useWalkInStore, useWalkinStore } from "@/states";
+import { parseToFiat } from "@/utils";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 
 export default function WalkIn({}: any) {
-  const { getItems, items } = useItemStore() as any;
-  const walkInStore = useWalkInStore() as any;
+  const {
+    getItems,
+    brandNewTanks,
+    refillTanks,
+    accessories,
+    increment,
+    cartItems,
+    decrement,
+    total,
+  } = useWalkinStore();
   const router = useRouter();
-  const total = useMemo(
-    () =>
-      walkInStore.items.reduce(
-        (acc: any, curr: any) => acc + curr.customerPrice * curr.quantity,
-        0
-      ),
-    [walkInStore.items]
-  );
-  const brandNewTanks = useMemo(
-    () => items.filter((e: any) => e.category == "Brand New Tanks"),
-    [items]
-  );
-  const refillTanks = useMemo(
-    () => items.filter((e: any) => e.category == "Refill Tanks"),
-    [items]
-  );
-  const accessories = useMemo(
-    () => items.filter((e: any) => e.category == "Accessories"),
-    [items]
-  );
 
   useEffect(() => {
-    getItems();
-  });
+    getItems({});
+  }, [getItems]);
 
   return (
     <>
@@ -42,13 +32,13 @@ export default function WalkIn({}: any) {
             <div className="flex flex-col gap-2">
               <p className="font-bold">Brand New Tanks</p>
               <div className="flex items-center gap-4">
-                {brandNewTanks.map((e: any) => {
+                {brandNewTanks.map((e: IItemModel) => {
                   return (
                     <div
                       className="w-fit h-fit"
                       key={e._id}
                       onClick={() => {
-                        walkInStore.increment(e);
+                        increment(e);
                       }}
                     >
                       <Image
@@ -66,13 +56,13 @@ export default function WalkIn({}: any) {
             <div className="flex flex-col gap-2">
               <p className="font-bold">Refill Tanks</p>
               <div className="flex items-center gap-4">
-                {refillTanks.map((e: any) => {
+                {refillTanks.map((e: IItemModel) => {
                   return (
                     <div
                       className="w-fit h-fit"
                       key={e._id}
                       onClick={() => {
-                        walkInStore.increment(e);
+                        increment(e);
                       }}
                     >
                       <Image
@@ -90,13 +80,13 @@ export default function WalkIn({}: any) {
             <div className="flex flex-col gap-2">
               <p className="font-bold">Accessories</p>
               <div className="flex items-center gap-4">
-                {accessories.map((e: any) => {
+                {accessories.map((e: IItemModel) => {
                   return (
                     <div
                       className="w-fit h-fit"
                       key={e._id}
                       onClick={() => {
-                        walkInStore.increment(e);
+                        increment(e);
                       }}
                     >
                       <Image
@@ -111,28 +101,28 @@ export default function WalkIn({}: any) {
                 })}
               </div>
             </div>
-          </div>{" "}
+          </div>
           <div className="w-1/3">
-            {walkInStore.items.map((e: any) => {
+            {cartItems.map((e: ICartItemModel) => {
               return (
                 <div className="" key={e._id}>
                   <div className="w-full flex item-center justify-between">
                     <p>
-                      {e.quantity}X {e.name}
+                      {e.name} ({e.quantity}X)
                     </p>
-                    <p>{e.quantity * e.customerPrice} PHP</p>
-                  </div>{" "}
+                    <p>{parseToFiat(e.quantity * e.customerPrice)} </p>
+                  </div>
                   <div className="w-full flex item-center justify-end gap-2">
                     <Button
                       onClick={() => {
-                        walkInStore.increment(e);
+                        increment(e);
                       }}
                     >
                       <p>Add</p>
                     </Button>
                     <Button
                       onClick={() => {
-                        walkInStore.decrement(e);
+                        decrement(e);
                       }}
                     >
                       <p>Deduct</p>
@@ -144,7 +134,7 @@ export default function WalkIn({}: any) {
 
             <div className="w-full flex item-center justify-between">
               <p>Total</p>
-              <p>{total} PHP</p>
+              <p>{parseToFiat(total)} </p>
             </div>
 
             <Button

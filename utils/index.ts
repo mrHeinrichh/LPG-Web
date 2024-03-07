@@ -1,6 +1,30 @@
 import { MUTIPLIERS } from "@/constants";
 import { ISearchFilter, TimeFilter } from "@/interfaces";
 
+export function parseToFiat(value: string | number) {
+  if (typeof value == "string" && !isNumber(value)) {
+    return Number(0).toFixed(2);
+  }
+
+  if (typeof value == "string" && isNumber(value)) {
+    return Number.parseFloat(value).toFixed(2);
+  }
+
+  return `₱ ${parseToFloat(value)}`;
+}
+
+export function parseToFloat(value: string | number) {
+  if (typeof value == "string" && !isNumber(value)) {
+    return Number(0).toFixed(2);
+  }
+
+  if (typeof value == "string" && isNumber(value)) {
+    return Number.parseFloat(value).toFixed(2);
+  }
+
+  return Number(value).toFixed(2);
+}
+
 export const parseToInputFieldDate = (date: Date | string) => {
   if (date instanceof Date) {
     return date.toISOString().substring(0, 10);
