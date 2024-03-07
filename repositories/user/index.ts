@@ -11,6 +11,7 @@ import {
   ChangePasswordArgs,
   Authenticate,
   AuthenticateArgs,
+  VerifyCustomer,
 } from "./types";
 
 export const getUsers: GetUsers = async function ({
@@ -48,6 +49,11 @@ export const authenticate: Authenticate = async function (
   return data as UserResponse;
 };
 
+export const verifyCustomer: VerifyCustomer = async function (id: string) {
+  const { data } = await patch(`users/${id}/verify`, {});
+  return data as UserResponse;
+};
+
 export const changePassword: ChangePassword = async function (
   id: string,
   body: ChangePasswordArgs
@@ -62,6 +68,9 @@ export const deleteUser: DeleteUser = async function (id: string) {
 };
 
 export default {
+  authenticate,
+  changePassword,
+  verifyCustomer,
   getUsers,
   deleteUser,
   createUser,
