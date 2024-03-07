@@ -1,95 +1,73 @@
 "use client";
-import {
-  TableRow,
-  Datatable,
-  Sidenav,
-  InputField,
-  Button,
-  SelectField,
-} from "@/components";
-import { API_URL } from "@/env";
-import trash from "@/public/trash.svg";
-import { useItemStore } from "@/states";
+import { Sidenav, InputField, Button } from "@/components";
+import { useCreateRiderStore } from "@/states";
 import Image from "next/image";
-import { useEffect, useState } from "react";
 import style from "./style.module.css";
 import { useRouter } from "next/navigation";
-import { post } from "@/config";
-export default function Transactions({}: any) {
-  const router = useRouter();
-  const { items, getItems, removeItem } = useItemStore() as any;
-  const [formData, setFormData] = useState<any>({
-    name: "",
-    category: "",
-    description: "",
-    weight: 0,
-    quantity: 1,
-    customerPrice: 0,
-    retailerPrice: 0,
-  });
+import { useEffect } from "react";
 
-  const [image, setimage] = useState<null | string>(null);
-  const [gcashQr, setgcashQr] = useState<null | string>(null);
-  const [license, setlicense] = useState<null | string>(null);
-  const [seminarCert, setseminarCert] = useState<null | string>(null);
+export default function CreateRider({}: any) {
+  const router = useRouter();
+  const {
+    uploadImage,
+    uploadGcash,
+    uploadLicense,
+    uploadSeminarCert,
+    image,
+    gcashQr,
+    license,
+    seminarCert,
+    setCreateFormData,
+    createFormData,
+    createRider,
+    createSuccess,
+    reset,
+  } = useCreateRiderStore();
 
   const handleChange = (event: any) => {
     const { name, value } = event.target;
-    setFormData((prevFormData: any) => ({ ...prevFormData, [name]: value }));
+    setCreateFormData({ ...createFormData, [name]: value });
   };
+
+  useEffect(() => {
+    if (createSuccess) {
+      router.back();
+      reset();
+    }
+  }, [createSuccess, reset]);
 
   const handleUpload = async (event: any) => {
     const form = new FormData();
     form.append("image", event.target.files[0]);
-    const { data } = await post<FormData>("upload/image", form);
-    if (data.status == "success") {
-      setimage(data.data[0]?.path ?? "");
-    }
+    uploadImage(form);
   };
 
   const handleUploadGcash = async (event: any) => {
     const form = new FormData();
     form.append("image", event.target.files[0]);
-    const { data } = await post<FormData>("upload/image", form);
-    if (data.status == "success") {
-      setgcashQr(data.data[0]?.path ?? "");
-    }
+    uploadGcash(form);
   };
 
   const handleUploadLicense = async (event: any) => {
     const form = new FormData();
     form.append("image", event.target.files[0]);
-    const { data } = await post<FormData>("upload/image", form);
-    if (data.status == "success") {
-      setlicense(data.data[0]?.path ?? "");
-    }
+    uploadLicense(form);
   };
 
   const handleUploadSeminarCert = async (event: any) => {
     const form = new FormData();
     form.append("image", event.target.files[0]);
-    const { data } = await post<FormData>("upload/image", form);
-    if (data.status == "success") {
-      setseminarCert(data.data[0]?.path ?? "");
-    }
+    uploadSeminarCert(form);
   };
 
   const handleSubmit = async () => {
-    try {
-      const { data } = await post(`users`, {
-        ...formData,
-        image,
-        gcashQr,
-        license,
-        seminarCert,
-        type: "Rider",
-      });
-      if (data.status === "success") {
-        router.push("/riders");
-      }
-    } catch (error) {
-      console.error("Error adding customers:", error);
-    }
+    createRider({
+      ...createFormData,
+      image: image ?? "",
+      gcashQr: gcashQr ?? "",
+      license: license ?? "",
+      seminarCert: seminarCert ?? "",
+    });
   };
 
   return (
