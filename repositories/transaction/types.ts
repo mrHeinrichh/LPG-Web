@@ -11,4 +11,8 @@ export type UpdateTransaction = (
   id: string,
   request: any
 ) => PromiseTransactionResponse;
+
+export type ApproveDelivery = (id: string) => PromiseTransactionResponse;
 export type DeleteTransaction = (id: string) => PromiseTransactionResponse;
+
+// TODO: Add types for delivery

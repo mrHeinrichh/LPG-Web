@@ -7,6 +7,7 @@ import {
   GetTransactionById,
   GetTransactions,
   UpdateTransaction,
+  ApproveDelivery,
 } from "./types";
 
 export const getTransactions: GetTransactions = async function ({
@@ -42,6 +43,11 @@ export const updateTransaction: UpdateTransaction = async function (
   return data as TransactionResponse;
 };
 
+export const approveDelivery: ApproveDelivery = async function (id: string) {
+  const { data } = await patch(`transactions/${id}/approve`, {});
+  return data as TransactionResponse;
+};
+
 export const deleteTransaction: DeleteTransaction = async function (
   id: string
 ) {
@@ -50,6 +56,7 @@ export const deleteTransaction: DeleteTransaction = async function (
 };
 
 export default {
+  approveDelivery,
   getTransactions,
   deleteTransaction,
   createTransaction,
