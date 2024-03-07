@@ -8,6 +8,8 @@ import {
   GetTransactions,
   UpdateTransaction,
   ApproveDelivery,
+  AcceptDeliveryArgs,
+  AcceptDelivery,
 } from "./types";
 
 export const getTransactions: GetTransactions = async function ({
@@ -48,6 +50,14 @@ export const approveDelivery: ApproveDelivery = async function (id: string) {
   return data as TransactionResponse;
 };
 
+export const acceptDelivery: AcceptDelivery = async function (
+  id: string,
+  body: AcceptDeliveryArgs
+) {
+  const { data } = await patch(`transactions/${id}/accept`, body);
+  return data as TransactionResponse;
+};
+
 export const deleteTransaction: DeleteTransaction = async function (
   id: string
 ) {
@@ -56,6 +66,7 @@ export const deleteTransaction: DeleteTransaction = async function (
 };
 
 export default {
+  acceptDelivery,
   approveDelivery,
   getTransactions,
   deleteTransaction,

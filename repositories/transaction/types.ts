@@ -13,6 +13,15 @@ export type UpdateTransaction = (
 ) => PromiseTransactionResponse;
 
 export type ApproveDelivery = (id: string) => PromiseTransactionResponse;
+
+export interface AcceptDeliveryArgs {
+  rider: string;
+}
+export type AcceptDelivery = (
+  id: string,
+  body: AcceptDeliveryArgs
+) => PromiseTransactionResponse;
+
 export type DeleteTransaction = (id: string) => PromiseTransactionResponse;
 
 // TODO: Add types for delivery
