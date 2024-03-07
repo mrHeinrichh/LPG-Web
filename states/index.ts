@@ -4,7 +4,12 @@ import { create } from "zustand";
 import { AppointmentStatus } from "@/interfaces";
 import useAnnouncementStore from "./announcement";
 import useCreateAnnouncementStore from "./createAnnouncement";
-export { useCreateAnnouncementStore, useAnnouncementStore };
+import useEditAnnouncement from "./editAnnouncement";
+export {
+  useEditAnnouncement,
+  useCreateAnnouncementStore,
+  useAnnouncementStore,
+};
 
 export const useAuthStore = create((set) => ({
   user: null,

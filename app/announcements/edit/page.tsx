@@ -1,61 +1,51 @@
 "use client";
 import { Sidenav, InputField, Button } from "@/components";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import style from "./style.module.css";
 import { useRouter, useSearchParams } from "next/navigation";
-import { get, patch, post } from "@/config";
 import Image from "next/image";
+import { useEditAnnouncement } from "@/states";
 
-export default function Transactions({}: any) {
+export default function EditAnnouncement({}: any) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
-  const [image, setimage] = useState<null | string>(null);
-  const [formData, setFormData] = useState<any>({
-    question: "",
-    answer: "",
-  });
+
+  const {
+    getAnnouncementById,
+    uploadImage,
+    image,
+    setEditFormData,
+    editFormData,
+    updateAnnouncement,
+    editSuccess,
+    reset,
+  } = useEditAnnouncement();
 
   useEffect(() => {
-    fetchFaqs();
-  });
+    if (id) getAnnouncementById(id ?? "");
+  }, [getAnnouncementById, id]);
 
-  const fetchFaqs = async () => {
-    try {
-      const { data } = await get(`faqs/${id}`);
-      if (data.status === "success") {
-        setFormData({
-          question: data.data[0].question ?? "",
-          answer: data.data[0].answer ?? "",
-        });
-        setimage(data.data[0].image ?? "");
-      }
-    } catch (error) {
-      console.error("Error fetching users:", error);
+  useEffect(() => {
+    if (editSuccess) {
+      reset();
+      router.push("/announcements");
     }
-  };
+  }, [editSuccess, reset]);
 
   const handleChange = (event: any) => {
     const { name, value } = event.target;
-    setFormData((prevFormData: any) => ({ ...prevFormData, [name]: value }));
+    setEditFormData({ ...editFormData, [name]: value });
   };
 
   const handleUpload = async (event: any) => {
     const form = new FormData();
     form.append("image", event.target.files[0]);
-    const { data } = await post<FormData>("upload/image", form);
-    if (data.status == "success") {
-      setimage(data.data[0]?.path ?? "");
-    }
+    uploadImage(form);
   };
 
   const handleSubmit = async () => {
-    try {
-      const { data } = await patch(`faqs/${id}`, { image, ...formData });
-      if (data.status === "success") router.push("/faqs");
-    } catch (error) {
-      console.error("Error adding customers:", error);
-    }
+    updateAnnouncement(id ?? "", { ...editFormData, image: image ?? "" });
   };
 
   return (
@@ -63,7 +53,7 @@ export default function Transactions({}: any) {
       <Sidenav>
         <form onSubmit={handleSubmit} className={style.form}>
           <div className="col-span-2">
-            <h3 className="font-bold text-lg">Edit FAQs Details</h3>
+            <h3 className="font-bold text-lg">Edit Announcments</h3>
           </div>
           <div className="col-span-2">
             {image ? (
@@ -78,23 +68,34 @@ export default function Transactions({}: any) {
               onChange={handleUpload}
             />
           </div>
-
           <InputField
-            name="question"
-            placeholder="question"
+            name="text"
+            placeholder="Text"
             onChange={handleChange}
-            defaultValue={formData.question}
+            defaultValue={editFormData.text}
           />
-
           <InputField
-            name="answer"
-            placeholder="answer"
+            type="date"
+            name="start"
+            placeholder="Start Date"
             onChange={handleChange}
-            defaultValue={formData.answer}
+            value={editFormData.start}
+          />
+          <InputField
+            type="date"
+            name="end"
+            placeholder="End Date"
+            onChange={handleChange}
+            value={editFormData.end}
           />
 
           <div className="col-span-2">
-            <Button type="button" onClick={handleSubmit}>
+            <Button
+              type="button"
+              onClick={() => {
+                handleSubmit();
+              }}
+            >
               Submit
             </Button>
           </div>
