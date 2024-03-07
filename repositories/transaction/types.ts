@@ -42,6 +42,16 @@ export type CompleteDelivery = (
   body: CompleteDeliveryArgs
 ) => PromiseTransactionResponse;
 
+// TODO: Add reason for decline
+export interface DeclineDeliveryArgs {
+  // TODO: Add types
+}
+
+export type DeclineDelivery = (
+  id: string,
+  body: DeclineDeliveryArgs
+) => PromiseTransactionResponse;
+
 export type DeleteTransaction = (id: string) => PromiseTransactionResponse;
 
 // TODO: Add types for delivery
