@@ -9,6 +9,8 @@ import {
   UpdateUser,
   ChangePassword,
   ChangePasswordArgs,
+  Authenticate,
+  AuthenticateArgs,
 } from "./types";
 
 export const getUsers: GetUsers = async function ({
@@ -36,6 +38,13 @@ export const createUser: CreateUser = async function (body: any) {
 
 export const updateUser: UpdateUser = async function (id: string, body: any) {
   const { data } = await patch(`users/${id}`, body);
+  return data as UserResponse;
+};
+
+export const authenticate: Authenticate = async function (
+  body: AuthenticateArgs
+) {
+  const { data } = await patch(`users/authenticate`, body);
   return data as UserResponse;
 };
 

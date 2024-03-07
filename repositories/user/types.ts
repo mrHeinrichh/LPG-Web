@@ -16,4 +16,11 @@ export type ChangePassword = (
   id: string,
   request: ChangePasswordArgs
 ) => PromiseUserResponse;
+
+export interface AuthenticateArgs {
+  email: string;
+  password: string;
+}
+export type Authenticate = (request: AuthenticateArgs) => PromiseUserResponse;
+
 export type DeleteUser = (id: string) => PromiseUserResponse;
