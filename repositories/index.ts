@@ -5,7 +5,9 @@ import feedbackRepository from "./feedback";
 import itemRepository from "./item";
 import messageRepository from "./message";
 import priceRepository from "./price";
+import transactionRepository from "./transaction";
 export {
+  transactionRepository,
   priceRepository,
   messageRepository,
   itemRepository,
