@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { DatatableFooter } from "../shared";
 import { HEADERS } from "./data";
+import { FaPlus } from "react-icons/fa";
 
 export default function Faqs({}: any) {
   const {
@@ -43,15 +44,19 @@ export default function Faqs({}: any) {
       <Sidenav>
         <div className="flex justify-between items-center w-full">
           <h4>FAQs</h4>
-          <Button
-            onClick={() => {
-              router.push("/faqs/add");
-            }}
-          >
-            Create FAQS
-          </Button>
         </div>
-        <InputField name="search" onChange={handleChange} />
+        <div className="flex justify-between items-center w-full mt-5 mb-2 bg-white-100 rounded-md px-4 py-2">
+          <div className="">
+            <InputField name="search" onChange={handleChange} />
+          </div>
+          <div className="rounded-lg bg-black-50 p-2">
+            <FaPlus
+              onClick={() => {
+                router.push("/faqs/add");
+              }}
+            />
+          </div>
+        </div>
         <Datatable header={HEADERS}>
           {faqs.map((e: any) => (
             <TableRow key={e._id}>
