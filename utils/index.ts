@@ -1,6 +1,14 @@
 import { MUTIPLIERS } from "@/constants";
 import { ISearchFilter, TimeFilter } from "@/interfaces";
 
+export const parseToInputFieldDate = (date: Date | string) => {
+  if (date instanceof Date) {
+    return date.toISOString().substring(0, 10);
+  }
+  const temp = new Date(date);
+  return temp.toISOString().substring(0, 10);
+};
+
 export function generateRandomColor() {
   return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
 }

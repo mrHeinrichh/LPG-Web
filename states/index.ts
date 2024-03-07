@@ -4,7 +4,9 @@ import { create } from "zustand";
 import { AppointmentStatus } from "@/interfaces";
 import useAnnouncementStore from "./announcement";
 import useCreateAnnouncementStore from "./createAnnouncement";
+import useEditAnnouncement from "./editAnnouncement";
 export {
+  useEditAnnouncement,
   useCreateAnnouncementStore,
   useAnnouncementStore,
 };
