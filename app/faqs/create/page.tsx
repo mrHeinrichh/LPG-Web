@@ -1,49 +1,43 @@
 "use client";
-import {
-  TableRow,
-  Datatable,
-  Sidenav,
-  InputField,
-  Button,
-  SelectField,
-} from "@/components";
+import { Sidenav, InputField, Button } from "@/components";
 import Image from "next/image";
-import { useState } from "react";
 import style from "./style.module.css";
 import { useRouter } from "next/navigation";
-import { post } from "@/config";
+import { useCreateFaqStore } from "@/states";
+import { useEffect } from "react";
 
 export default function CreateFaqs({}: any) {
+  const {
+    createFormData,
+    setCreateFormData,
+    uploadImage,
+    image,
+    createFaq,
+    createSuccess,
+    reset,
+  } = useCreateFaqStore();
   const router = useRouter();
 
-  const [formData, setFormData] = useState<any>({
-    question: "",
-    answer: "",
-  });
-
-  const [image, setimage] = useState<null | string>(null);
+  useEffect(() => {
+    if (createSuccess) {
+      reset();
+      router.push("/faqs");
+    }
+  }, [reset, createSuccess]);
 
   const handleChange = (event: any) => {
     const { name, value } = event.target;
-    setFormData((prevFormData: any) => ({ ...prevFormData, [name]: value }));
+    setCreateFormData({ ...createFormData, [name]: value });
   };
 
   const handleUpload = async (event: any) => {
     const form = new FormData();
     form.append("image", event.target.files[0]);
-    const { data } = await post<FormData>("upload/image", form);
-    if (data.status == "success") {
-      setimage(data.data[0]?.path ?? "");
-    }
+    uploadImage(form);
   };
 
   const handleSubmit = async () => {
-    try {
-      const { data } = await post(`faqs`, { ...formData, image });
-      if (data.status === "success") router.push("/faqs");
-    } catch (error) {
-      console.error("Error adding customers:", error);
-    }
+    createFaq({ ...createFormData, image: image ?? "" });
   };
 
   return (
