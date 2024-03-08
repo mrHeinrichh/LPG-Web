@@ -26,6 +26,9 @@ import {
   parseToFiat,
 } from "@/utils";
 import React from "react";
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+
 import {
   BarChart,
   Bar,
@@ -42,6 +45,80 @@ import { TimeFilter } from "@/interfaces";
 import { BARANGGAYS, TIME_FILTERS } from "@/constants";
 
 export default function Home() {
+  const downloadAsPDF = async () => {
+    const element = document.getElementById('pdf-content');
+  
+    if (element) {
+      try {
+        const canvas = await html2canvas(element);
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 15, 15, 150, 150);
+  
+        // Create a Blob from the PDF data
+        const pdfBlob = pdf.output('blob');
+  
+        // Create a URL for the Blob
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+  
+        // Open the PDF in a new window or tab
+        window.open(pdfUrl, '_blank');
+      } catch (error) {
+        console.error('Error generating PDF:', error);
+      }
+    } else {
+      console.error('Element not found');
+    }
+  };
+  const downloadAsPDF2 = async () => {
+    const element = document.getElementById('pdf-content2');
+  
+    if (element) {
+      try {
+        const canvas = await html2canvas(element);
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 15, 15, 150, 150);
+  
+        // Create a Blob from the PDF data
+        const pdfBlob = pdf.output('blob');
+  
+        // Create a URL for the Blob
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+  
+        // Open the PDF in a new window or tab
+        window.open(pdfUrl, '_blank');
+      } catch (error) {
+        console.error('Error generating PDF:', error);
+      }
+    } else {
+      console.error('Element not found');
+    }
+  };
+  
+  const downloadAsPDF3 = async () => {
+    const element = document.getElementById('pdf-content3');
+  
+    if (element) {
+      try {
+        const canvas = await html2canvas(element);
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 15, 15, 150, 150);
+  
+        // Create a Blob from the PDF data
+        const pdfBlob = pdf.output('blob');
+  
+        // Create a URL for the Blob
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+  
+        // Open the PDF in a new window or tab
+        window.open(pdfUrl, '_blank');
+      } catch (error) {
+        console.error('Error generating PDF:', error);
+      }
+    } else {
+      console.error('Element not found');
+    }
+  };
+  
   const {
     getDeliveriesByStatuses,
     deliveries,
@@ -253,8 +330,17 @@ export default function Home() {
             setunits(value);
           }}
         ></InputField>
+<button onClick={downloadAsPDF}>Download as PDF</button>
+
+        <div id="pdf-content">
+        
+        
+      
         <RetailerPriceChangesChart timeFilter={timeFilter} units={units} />
-        <CustomerPriceChangesChart timeFilter={timeFilter} units={units} />
+          <CustomerPriceChangesChart timeFilter={timeFilter} units={units} />
+        </div>
+        <button onClick={downloadAsPDF2}>Download as PDF</button>
+        <div id="pdf-content2">
         <BrandNewTanksChart
           baranggay={baranggay}
           timeFilter={timeFilter}
@@ -269,7 +355,12 @@ export default function Home() {
           baranggay={baranggay}
           timeFilter={timeFilter}
           units={units}
-        />
+          />
+        </div>
+        <button onClick={downloadAsPDF3}>Download as PDF</button>
+
+        <div id="pdf-content3">
+        
         <LineChart
           width={1000}
           height={300}
@@ -280,7 +371,8 @@ export default function Home() {
             left: 20,
             bottom: 5,
           }}
-        >
+          >
+         
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
           <YAxis />
@@ -317,7 +409,7 @@ export default function Home() {
           />
           <Line type="monotone" dataKey="cancelled" stroke="#86ca9d" />
           <Line type="monotone" dataKey="declined" stroke="#83ca9d" />
-        </LineChart>
+          </LineChart>
         <BarChart
           width={1000}
           height={300}
@@ -363,12 +455,15 @@ export default function Home() {
             fill="#82ca9d"
             activeBar={<Rectangle fill="gold" stroke="purple" />}
           />
-        </BarChart>
+          </BarChart>
+          </div>
+          
         <RiderAppointmentsList />
         <div className="grid grid-cols-2 gap-2 w-full my-5">
           <PendingCustomerList />
           <PendingDeliveryList />
-        </div>
+          </div>
+        
       </Sidenav>
     </main>
   );
