@@ -153,14 +153,16 @@ export const useTransactionStore = create((set) => ({
       });
     }
   },
-  decline: async (_id: string) => {
-    const { data } = await patch(`transactions/${_id}/decline`, {});
-    if (data.status == "success") {
+  decline: async (_id: string, cancelReason: string) => {
+    const { data } = await patch(`transactions/${_id}/decline`, { cancelReason });
+  
+    if (data.status === "success") {
       return set((state: any) => {
         const temp = state.pendingDeliveries.map((e: any) => {
-          if (e._id == _id) e = data.data[0];
+          if (e._id === _id) e = data.data[0];
           return e;
         });
+  
         return {
           pendingDeliveries: temp,
           maxPendingDeliveries: state.maxPendingDeliveries - 1,

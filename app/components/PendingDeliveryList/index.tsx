@@ -18,6 +18,8 @@ export default function PendingDeliveryList() {
     () => pendingDeliveries.filter((e: any) => e.status == "Pending"),
     [pendingDeliveries]
   );
+  const [cancelReasons, setCancelReasons] = useState<{ [key: string]: string }>({});
+  const [showCancelReasonInput, setShowCancelReasonInput] = useState<{ [key: string]: boolean }>({});
 
   useEffect(() => {
     getPendingDeliveries(page, limit);
@@ -101,13 +103,34 @@ export default function PendingDeliveryList() {
             >
               <p className="">Approve</p>
             </Button>
-            <Button
-              onClick={() => {
-                decline(e._id);
-              }}
-            >
-              <p className="text-white-100">Decline</p>
-            </Button>
+            <div className="flex gap-2">
+            {showCancelReasonInput[e._id] && (
+                <input
+                  type="text"
+                  placeholder="Enter cancel reason"
+                  value={cancelReasons[e._id] || ''}
+                  onChange={(event) => {
+                    const newCancelReasons = { ...cancelReasons, [e._id]: event.target.value };
+                    setCancelReasons(newCancelReasons);
+                  }}
+                  className="border border-gray-300 p-2"
+                />
+              )}
+              
+              <Button
+                onClick={() => {
+                  // Toggle the visibility of the cancel reason input
+                  setShowCancelReasonInput((prev) => ({ ...prev, [e._id]: !prev[e._id] }));
+                  
+                  // If the cancel reason input is visible, decline the transaction
+                  if (showCancelReasonInput[e._id]) {
+                    decline(e._id, cancelReasons[e._id] || '');
+                  }
+                }}
+              >
+                <p className="text-white-100">{showCancelReasonInput[e._id] ? 'Confirm' : 'Decline'}</p>
+              </Button>
+            </div>
           </div>
         </div>
       </div>
