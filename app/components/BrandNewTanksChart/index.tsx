@@ -1,6 +1,7 @@
 "use client";
 import { ITEM_CATEGORIES } from "@/constants";
 import { useTransactionStore } from "@/states";
+import { Card } from 'antd'; // Assuming you're using Ant Design
 import {
   generateRandomColor,
   getDates,
@@ -60,7 +61,7 @@ export default function BrandNewTanksChart({
         return (
           e.getTime() <= getStartDayDate(new Date(sold.createdAt)).getTime() &&
           e.getTime() + 86399999 * multiplier >=
-            getStartDayDate(new Date(sold.createdAt)).getTime()
+          getStartDayDate(new Date(sold.createdAt)).getTime()
         );
       });
 
@@ -92,38 +93,41 @@ export default function BrandNewTanksChart({
   }, [solds, timeFilter, units, baranggay, keywords]);
 
   return (
-    <div>
-      <p className="text-2xl font-bold">Brand New Tanks</p>
-      <BarChart
-        width={1000}
-        height={300}
-        data={data}
-        margin={{
-          top: 5,
-          right: 30,
-          left: 20,
-          bottom: 5,
-        }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        {keywords.map((e: any) => (
-          <Bar
-            key={e}
-            dataKey={e}
-            fill={generateRandomColor()}
-            activeBar={
-              <Rectangle
-                fill={generateRandomColor()}
-                stroke={generateRandomColor()}
-              />
-            }
-          />
-        ))}
-      </BarChart>
-    </div>
+    <Card style={{ background: 'white' }}>
+
+      <div>
+        <p className="text-2xl font-black">Brand New Tanks Sales</p>
+        <BarChart
+          width={1200}
+          height={400}
+          data={data}
+          margin={{
+            top: 5,
+            right: 30,
+            left: 20,
+            bottom: 5,
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          {keywords.map((e: any) => (
+            <Bar
+              key={e}
+              dataKey={e}
+              fill={generateRandomColor()}
+              activeBar={
+                <Rectangle
+                  fill={generateRandomColor()}
+                  stroke={generateRandomColor()}
+                />
+              }
+            />
+          ))}
+        </BarChart>
+      </div>
+    </Card>
   );
 }

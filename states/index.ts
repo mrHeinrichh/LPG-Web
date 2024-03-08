@@ -4,7 +4,10 @@ import { create } from "zustand";
 import { AppointmentStatus } from "@/interfaces";
 import useAnnouncementStore from "./announcement";
 import useCreateAnnouncementStore from "./createAnnouncement";
-export { useCreateAnnouncementStore, useAnnouncementStore };
+export {
+  useCreateAnnouncementStore,
+  useAnnouncementStore,
+};
 
 export const useAuthStore = create((set) => ({
   user: null,
@@ -136,14 +139,16 @@ export const useTransactionStore = create((set) => ({
       });
     }
   },
-  decline: async (_id: string) => {
-    const { data } = await patch(`transactions/${_id}/decline`, {});
-    if (data.status == "success") {
+  decline: async (_id: string, cancelReason: string) => {
+    const { data } = await patch(`transactions/${_id}/decline`, { cancelReason });
+
+    if (data.status === "success") {
       return set((state: any) => {
         const temp = state.pendingDeliveries.map((e: any) => {
-          if (e._id == _id) e = data.data[0];
+          if (e._id === _id) e = data.data[0];
           return e;
         });
+
         return {
           pendingDeliveries: temp,
           maxPendingDeliveries: state.maxPendingDeliveries - 1,
@@ -169,29 +174,29 @@ export const useTransactionStore = create((set) => ({
   },
 }));
 
-export const useRiderStore = create((set) => ({
-  riders: [],
-  getRider: async (page: number = 1, limit: number = 5, filter = "") => {
-    const query =
-      filter != ""
-        ? `{ "$and": [{"__t": "Rider"}, ${filter} ] }`
-        : `{ "__t": "Rider" }`;
-    const { data } = await get(
-      `users?page=${page}&limit=${limit}&filter=${query}`
-    );
-    if (data.status == "success") {
-      return set(() => ({ riders: data.data }));
-    }
-  },
-  removeRider: async (id: string) => {
-    const { data } = await remove(`users/${id}`);
-    if (data.state == "success") {
-      return set((state: any) => ({
-        items: [...state.riders.filter((e: any) => e._id != id)],
-      }));
-    }
-  },
-}));
+// export const useRiderStore = create((set) => ({
+//   riders: [],
+//   getRider: async (page: number = 1, limit: number = 5, filter = "") => {
+//     const query =
+//       filter != ""
+//         ? `{ "$and": [{"__t": "Rider"}, ${filter} ] }`
+//         : `{ "__t": "Rider" }`;
+//     const { data } = await get(
+//       `users?page=${page}&limit=${limit}&filter=${query}`
+//     );
+//     if (data.status == "success") {
+//       return set(() => ({ riders: data.data }));
+//     }
+//   },
+//   removeRider: async (id: string) => {
+//     const { data } = await remove(`users/${id}`);
+//     if (data.state == "success") {
+//       return set((state: any) => ({
+//         items: [...state.riders.filter((e: any) => e._id != id)],
+//       }));
+//     }
+//   },
+// }));
 
 export const useMessageStore = create((set) => ({
   messages: [],
@@ -329,22 +334,6 @@ export const useCustomerStore = create((set) => ({
           maxPendingCustomers: state.maxPendingCustomers - 1,
         };
       });
-    }
-  },
-}));
-
-export const useFaqStore = create((set) => ({
-  faqs: [],
-  getFaqs: async () => {
-    const { data } = await get(`faqs`);
-    return set(() => ({ faqs: data.data }));
-  },
-  removeFaq: async (id: any) => {
-    const { data } = await remove(`faqs/${id}`);
-    if (data.status == "success") {
-      return set((state: any) => ({
-        faqs: [...state.faqs.filter((e: any) => e._id != id)],
-      }));
     }
   },
 }));

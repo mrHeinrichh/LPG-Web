@@ -1,4 +1,6 @@
 import React, { useMemo } from "react";
+import { Card } from 'antd'; // Assuming you're using Ant Design
+
 import {
   LineChart,
   CartesianGrid,
@@ -35,59 +37,68 @@ function RetailerPriceChangesChart({ timeFilter, units }: any) {
     );
 
     const multiplier = getMutiplier(timeFilter);
-
     return parsedStartDay.map((element) => {
       let temp: any = { name: `${element.toDateString()}` };
 
-      const customerPrices = prices
+      const retailerPrices = prices
         .filter((e: any) => {
           return (
             element.getTime() <=
-              getStartDayDate(new Date(e.createdAt)).getTime() &&
+            getStartDayDate(new Date(e.createdAt)).getTime() &&
             element.getTime() + 86399999 * multiplier >=
-              getStartDayDate(new Date(e.createdAt)).getTime() &&
+            getStartDayDate(new Date(e.createdAt)).getTime() &&
             e.type === "Retailer"
           );
         })
-        .map((e: any) => e.price);
+        .map((e: any) => e);
 
       keywords.forEach((keyword: string) => {
-        temp[keyword] = customerPrices.length;
+        const priceTemp = retailerPrices.filter(
+          (e: any) => e.item.name == keyword
+        );
+
+        temp[keyword] = 0;
+        if (priceTemp.length !== 0) {
+          temp[keyword] = Math.max(...priceTemp.map((e: any) => e.price));
+        }
       });
 
       return temp;
     });
   }, [prices, keywords, timeFilter, units]);
   return (
-    <div>
-      <p className="text-2xl font-black">Retailer Price Changes</p>
-      <LineChart
-        width={1300}
-        height={300}
-        data={data}
-        margin={{
-          top: 5,
-          right: 30,
-          left: 20,
-          bottom: 5,
-        }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        {keywords.map((keyword: string) => (
-          <Line
-            key={keyword}
-            type="monotone"
-            dataKey={keyword}
-            stroke={generateRandomColor()}
-            activeDot={{ r: 8 }}
-          />
-        ))}
-      </LineChart>
-    </div>
+    <Card style={{ background: 'white' }}>
+
+      <div>
+        <p className="text-2xl font-black">Retailer Price Changes</p>
+        <LineChart
+          width={1200}
+          height={400}
+          data={data}
+          margin={{
+            top: 5,
+            right: 30,
+            left: 20,
+            bottom: 5,
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          {keywords.map((keyword: string) => (
+            <Line
+              key={keyword}
+              type="monotone"
+              dataKey={keyword}
+              stroke={generateRandomColor()}
+              activeDot={{ r: 8 }}
+            />
+          ))}
+        </LineChart>
+      </div>
+    </Card>
   );
 }
 

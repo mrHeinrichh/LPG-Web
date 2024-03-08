@@ -1,6 +1,10 @@
 "use client";
 import { Sidenav, Card, SelectField, InputField } from "@/components";
-import { useCustomerStore, usePriceStore, useTransactionStore } from "@/states";
+import {
+  useCustomerStore,
+  usePriceStore,
+  useTransactionStore,
+} from "@/states";
 import { useEffect, useMemo, useState } from "react";
 import {
   AccessoriesChart,
@@ -18,8 +22,12 @@ import {
   getEndDayDate,
   getMutiplier,
   getStartDayDate,
+  // parseToFiat,
 } from "@/utils";
 import React from "react";
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+
 import {
   BarChart,
   Bar,
@@ -36,6 +44,80 @@ import { TimeFilter } from "@/interfaces";
 import { BARANGGAYS, TIME_FILTERS } from "@/constants";
 
 export default function Home() {
+  const downloadAsPDF = async () => {
+    const element = document.getElementById('pdf-content');
+
+    if (element) {
+      try {
+        const canvas = await html2canvas(element);
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 15, 15, 150, 150);
+
+        // Create a Blob from the PDF data
+        const pdfBlob = pdf.output('blob');
+
+        // Create a URL for the Blob
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+
+        // Open the PDF in a new window or tab
+        window.open(pdfUrl, '_blank');
+      } catch (error) {
+        console.error('Error generating PDF:', error);
+      }
+    } else {
+      console.error('Element not found');
+    }
+  };
+  const downloadAsPDF2 = async () => {
+    const element = document.getElementById('pdf-content2');
+
+    if (element) {
+      try {
+        const canvas = await html2canvas(element);
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 15, 15, 150, 150);
+
+        // Create a Blob from the PDF data
+        const pdfBlob = pdf.output('blob');
+
+        // Create a URL for the Blob
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+
+        // Open the PDF in a new window or tab
+        window.open(pdfUrl, '_blank');
+      } catch (error) {
+        console.error('Error generating PDF:', error);
+      }
+    } else {
+      console.error('Element not found');
+    }
+  };
+
+  const downloadAsPDF3 = async () => {
+    const element = document.getElementById('pdf-content3');
+
+    if (element) {
+      try {
+        const canvas = await html2canvas(element);
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 15, 15, 150, 150);
+
+        // Create a Blob from the PDF data
+        const pdfBlob = pdf.output('blob');
+
+        // Create a URL for the Blob
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+
+        // Open the PDF in a new window or tab
+        window.open(pdfUrl, '_blank');
+      } catch (error) {
+        console.error('Error generating PDF:', error);
+      }
+    } else {
+      console.error('Element not found');
+    }
+  };
+
   const {
     getDeliveriesByStatuses,
     deliveries,
@@ -76,7 +158,7 @@ export default function Home() {
         return (
           e.getTime() <= getStartDayDate(new Date(sold.createdAt)).getTime() &&
           e.getTime() + 86399999 * multiplier >=
-            getStartDayDate(new Date(sold.createdAt)).getTime()
+          getStartDayDate(new Date(sold.createdAt)).getTime()
         );
       });
 
@@ -146,7 +228,7 @@ export default function Home() {
         return (
           e.getTime() <= getStartDayDate(new Date(sold.createdAt)).getTime() &&
           e.getTime() + 86399999 * multiplier >=
-            getStartDayDate(new Date(sold.createdAt)).getTime()
+          getStartDayDate(new Date(sold.createdAt)).getTime()
         );
       });
 
@@ -190,6 +272,7 @@ export default function Home() {
     getDeliveriesByStatuses(0, 0, ["Pending", "Completed"]);
   }, [getDeliveriesByStatuses, getTotal]);
 
+
   return (
     <main>
       <Sidenav>
@@ -197,7 +280,7 @@ export default function Home() {
           <Card>
             <div className="flex flex-col justify-evenly h-full p-4">
               <p className="text-2xl font-bold">Total Revenue Today</p>
-              <p className="text-2xl">₱ {total}.00</p>
+              <p className="text-2xl"> { }</p>
             </div>
           </Card>
           <Card>
@@ -242,122 +325,154 @@ export default function Home() {
             setunits(value);
           }}
         ></InputField>
-        <RetailerPriceChangesChart timeFilter={timeFilter} units={units} />
-        <CustomerPriceChangesChart timeFilter={timeFilter} units={units} />
-        <BrandNewTanksChart
-          baranggay={baranggay}
-          timeFilter={timeFilter}
-          units={units}
-        />
-        <RefillTanksChart
-          baranggay={baranggay}
-          timeFilter={timeFilter}
-          units={units}
-        />
-        <AccessoriesChart
-          baranggay={baranggay}
-          timeFilter={timeFilter}
-          units={units}
-        />
-        <LineChart
-          width={1000}
-          height={300}
-          data={parsedCustomers}
-          margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Line
-            type="monotone"
-            dataKey="customers"
-            stroke="#8884d8"
-            activeDot={{ r: 8 }}
+        <button className="bg-blue-500 text-white px-4 py-2 rounded-md" onClick={downloadAsPDF}>Download as PDF</button>
+
+        <div id="pdf-content">
+
+
+
+          <RetailerPriceChangesChart timeFilter={timeFilter} units={units} />
+          <CustomerPriceChangesChart timeFilter={timeFilter} units={units} />
+        </div>
+        <button className="bg-blue-500 text-white px-4 py-2 rounded-md" onClick={downloadAsPDF2}>Download as PDF</button>
+        <div id="pdf-content2">
+          <BrandNewTanksChart
+            baranggay={baranggay}
+            timeFilter={timeFilter}
+            units={units}
           />
-        </LineChart>
-        <LineChart
-          width={1000}
-          height={300}
-          data={data}
-          margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Line
-            type="monotone"
-            dataKey="completed"
-            stroke="#8884d8"
-            activeDot={{ r: 8 }}
+          <RefillTanksChart
+            baranggay={baranggay}
+            timeFilter={timeFilter}
+            units={units}
           />
-          <Line type="monotone" dataKey="cancelled" stroke="#86ca9d" />
-          <Line type="monotone" dataKey="declined" stroke="#83ca9d" />
-        </LineChart>
-        <BarChart
-          width={1000}
-          height={300}
-          data={data}
-          margin={{
-            top: 20,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Bar dataKey="walkin" stackId="a" fill="#8884d8" />
-          <Bar dataKey="delivery" stackId="a" fill="#82ca9d" />
-        </BarChart>
-        <BarChart
-          width={1000}
-          height={300}
-          data={data}
-          margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Bar
-            dataKey="accesories"
-            fill="#8884d8"
-            activeBar={<Rectangle fill="pink" stroke="blue" />}
+          <AccessoriesChart
+            baranggay={baranggay}
+            timeFilter={timeFilter}
+            units={units}
           />
-          <Bar
-            dataKey="products"
-            fill="#82ca9d"
-            activeBar={<Rectangle fill="gold" stroke="purple" />}
-          />
-        </BarChart>
+        </div>
+        <button className="bg-blue-500 text-white px-4 py-2 rounded-md" onClick={downloadAsPDF3}>Download as PDF</button>
+
+        <div id="pdf-content3">
+          <Card style={{ background: 'white' }}>
+            <p className="text-2xl font-black">Verified Customers</p>
+
+            <LineChart
+              width={1200}
+              height={300}
+              data={parsedCustomers}
+              margin={{
+                top: 5,
+                right: 30,
+                left: 20,
+                bottom: 5,
+              }}
+            >
+
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line
+                type="monotone"
+                dataKey="customers"
+                stroke="#8884d8"
+                activeDot={{ r: 8 }}
+              />
+            </LineChart>
+          </Card>
+          <Card style={{ background: 'white' }}>
+
+            <p className="text-2xl font-black">Orders Accomplishments</p>
+            <LineChart
+              width={1200}
+              height={300}
+              data={data}
+              margin={{
+                top: 5,
+                right: 30,
+                left: 20,
+                bottom: 5,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line
+                type="monotone"
+                dataKey="completed"
+                stroke="#8884d8"
+                activeDot={{ r: 8 }}
+              />
+              <Line type="monotone" dataKey="cancelled" stroke="#86ca9d" />
+              <Line type="monotone" dataKey="declined" stroke="#83ca9d" />
+            </LineChart>
+          </Card>
+          <Card style={{ background: 'white' }}>
+            <p className="text-2xl font-black">Walkin and Delivery Orders</p>
+            <BarChart
+              width={1200}
+              height={300}
+              data={data}
+              margin={{
+                top: 20,
+                right: 30,
+                left: 20,
+                bottom: 5,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="walkin" stackId="a" fill="#8884d8" />
+              <Bar dataKey="delivery" stackId="a" fill="#82ca9d" />
+            </BarChart>
+          </Card>
+          <Card style={{ background: 'white' }}>
+            <p className="text-2xl font-black">Accessories and Products</p>
+
+            <BarChart
+              width={1200}
+              height={300}
+              data={data}
+              margin={{
+                top: 5,
+                right: 30,
+                left: 20,
+                bottom: 5,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar
+                dataKey="accesories"
+                fill="#8884d8"
+                activeBar={<Rectangle fill="pink" stroke="blue" />}
+              />
+              <Bar
+                dataKey="products"
+                fill="#82ca9d"
+                activeBar={<Rectangle fill="gold" stroke="purple" />}
+              />
+            </BarChart>
+          </Card>
+        </div>
+
         <RiderAppointmentsList />
         <div className="grid grid-cols-2 gap-2 w-full my-5">
           <PendingCustomerList />
           <PendingDeliveryList />
         </div>
+
       </Sidenav>
     </main>
   );
