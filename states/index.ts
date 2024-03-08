@@ -12,7 +12,10 @@ import useCreateRiderStore from "./createRider";
 import useHomeStore from "./home";
 import useRiderAppointmentsListStore from "./riderAppointmentsList";
 import usePendingCustomerListStore from "./pendingCustomerList";
+import usePendingDeliveryListStore from "./pendingDeliveryList";
+
 export {
+  usePendingDeliveryListStore,
   usePendingCustomerListStore,
   useRiderAppointmentsListStore,
   useHomeStore,
@@ -216,11 +219,9 @@ export const useMessageStore = create((set) => ({
 
 export const useCustomerStore = create((set) => ({
   customers: [],
-  pendingCustomers: [],
   verifiedCustomers: [],
   noOfCustomer: 0,
   maxAppointments: 0,
-  maxPendingCustomers: 0,
   noOfVerifiedCustomer: 0,
   getCustomer: async (page: number = 1, limit: number = 5, filter = "") => {
     const query =
@@ -232,17 +233,6 @@ export const useCustomerStore = create((set) => ({
     );
     if (data.status == "success") {
       return set(() => ({ customers: data.data }));
-    }
-  },
-  getPendingCustomer: async (page: number = 1, limit: number = 5) => {
-    const { data } = await get(
-      `users?page=${page}&limit=${limit}&filter={ "$and": [{"__t": "Customer"}, {"verified": false} ] }`
-    );
-    if (data.status == "success") {
-      return set(() => ({
-        pendingCustomers: data.data,
-        maxPendingCustomers: data.meta.max,
-      }));
     }
   },
   getVerifiedCustomer: async (

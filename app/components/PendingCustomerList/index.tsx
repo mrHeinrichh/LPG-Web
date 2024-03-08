@@ -1,7 +1,6 @@
 import { ApprovalsList, Card, Button } from "@/components";
-import { useCustomerStore, usePendingCustomerListStore } from "@/states";
-import { useState, useMemo, useEffect } from "react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { usePendingCustomerListStore } from "@/states";
+import { useEffect } from "react";
 import Image from "next/image";
 
 export default function PendingCustomerList() {

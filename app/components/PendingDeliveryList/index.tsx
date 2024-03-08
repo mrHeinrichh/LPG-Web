@@ -1,18 +1,14 @@
 import { ApprovalsList, Card, Button } from "@/components";
-import { useTransactionStore } from "@/states";
-import { useState, useMemo, useEffect } from "react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { usePendingDeliveryListStore } from "@/states";
+import { useEffect } from "react";
 
 export default function PendingDeliveryList() {
   const {
     getPendingDeliveries,
     pendingDeliveries,
-    approve,
-    decline,
-    maxPendingDeliveries,
-  } = useTransactionStore() as any;
-  const [page, setpage] = useState(1);
-  const [limit, setlimit] = useState(3);
+    declineDelivery,
+    approveDelivery,
+  } = usePendingDeliveryListStore();
 
   const pendings = useMemo(
     () => pendingDeliveries.filter((e: any) => e.status == "Pending"),
@@ -22,38 +18,20 @@ export default function PendingDeliveryList() {
   const [showCancelReasonInput, setShowCancelReasonInput] = useState<{ [key: string]: boolean }>({});
 
   useEffect(() => {
-    getPendingDeliveries(page, limit);
-  }, [page, limit, getPendingDeliveries]);
+    getPendingDeliveries({});
+  }, [getPendingDeliveries]);
 
   return (
     <ApprovalsList
       header={
         <div className="flex items-center justify-between">
           <p className="text-xl font-semibold">
-            Pending Delivery Approvals ({maxPendingDeliveries})
+            Pending Delivery Approvals ({pendingDeliveries.length ?? 0})
           </p>
-          <div className="flex items-center gap-4 ">
-            <div className="cursor-pointer">
-              <FaChevronLeft
-                onClick={() => {
-                  if (page > 1) setpage((prev: number) => prev - 1);
-                }}
-              />
-            </div>
-
-            <p>{page}</p>
-            <div className="cursor-pointer">
-              <FaChevronRight
-                onClick={() => {
-                  setpage((prev: number) => prev + 1);
-                }}
-              />
-            </div>
-          </div>
         </div>
       }
     >
-      {pendings.map((e: any) => {
+      {pendingDeliveries.map((e) => {
         return (
           <Card key={e._id}>
             <div className="flex justify-between items-center w-full p-2">
