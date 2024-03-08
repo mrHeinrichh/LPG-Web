@@ -1,4 +1,6 @@
 import React, { useMemo } from "react";
+import { Card } from 'antd'; // Assuming you're using Ant Design
+
 import {
   LineChart,
   CartesianGrid,
@@ -42,9 +44,9 @@ function RetailerPriceChangesChart({ timeFilter, units }: any) {
         .filter((e: any) => {
           return (
             element.getTime() <=
-              getStartDayDate(new Date(e.createdAt)).getTime() &&
+            getStartDayDate(new Date(e.createdAt)).getTime() &&
             element.getTime() + 86399999 * multiplier >=
-              getStartDayDate(new Date(e.createdAt)).getTime() &&
+            getStartDayDate(new Date(e.createdAt)).getTime() &&
             e.type === "Retailer"
           );
         })
@@ -65,11 +67,13 @@ function RetailerPriceChangesChart({ timeFilter, units }: any) {
     });
   }, [prices, keywords, timeFilter, units]);
   return (
+    <Card style={{ background: 'white' }}>
+
     <div>
       <p className="text-2xl font-black">Retailer Price Changes</p>
       <LineChart
-        width={1300}
-        height={300}
+        width={1200}
+        height={400}
         data={data}
         margin={{
           top: 5,
@@ -94,6 +98,7 @@ function RetailerPriceChangesChart({ timeFilter, units }: any) {
         ))}
       </LineChart>
     </div>
+    </Card>
   );
 }
 
