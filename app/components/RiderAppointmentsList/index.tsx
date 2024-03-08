@@ -1,14 +1,12 @@
 import { ApprovalsList, Card, Button } from "@/components";
 import { useRiderAppointmentsListStore } from "@/states";
-import { useState, useEffect } from "react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { useEffect } from "react";
 import Image from "next/image";
 import { getDateToString } from "@/utils";
 
 export default function RiderAppointmentsList() {
   const { getAppointments, appointments, updateAppointmentStatus } =
     useRiderAppointmentsListStore();
-  const [page, setpage] = useState(1);
 
   useEffect(() => {
     getAppointments({});
@@ -21,25 +19,6 @@ export default function RiderAppointmentsList() {
           <p className="text-xl font-semibold">
             Rider Appointments ({appointments.length ?? 0})
           </p>
-          <div className="flex items-center gap-4 ">
-            <div className="cursor-pointer">
-              <FaChevronLeft
-                onClick={() => {
-                  if (page > 0)
-                    if (page > 1) setpage((prev: number) => prev - 1);
-                }}
-              />
-            </div>
-
-            <p>{page}</p>
-            <div className="cursor-pointer">
-              <FaChevronRight
-                onClick={() => {
-                  setpage((prev: number) => prev + 1);
-                }}
-              />
-            </div>
-          </div>
         </div>
       }
     >

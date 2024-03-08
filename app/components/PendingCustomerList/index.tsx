@@ -1,58 +1,28 @@
 import { ApprovalsList, Card, Button } from "@/components";
-import { useCustomerStore } from "@/states";
+import { useCustomerStore, usePendingCustomerListStore } from "@/states";
 import { useState, useMemo, useEffect } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import Image from "next/image";
 
 export default function PendingCustomerList() {
-  const {
-    getPendingCustomer,
-    pendingCustomers,
-    verifyCustomer,
-    maxPendingCustomers,
-  } = useCustomerStore() as any;
-  const [page, setpage] = useState(1);
-  const [limit, setlimit] = useState(3);
+  const { getPendingCustomers, pendingCustomers, verifyCustomer } =
+    usePendingCustomerListStore();
 
   useEffect(() => {
-    getPendingCustomer(page, limit);
-  }, [page, limit, getPendingCustomer]);
-
-  const pendings = useMemo(
-    () => pendingCustomers.filter((e: any) => e.verified == false),
-    [pendingCustomers]
-  );
+    getPendingCustomers({});
+  }, [getPendingCustomers]);
 
   return (
     <ApprovalsList
       header={
         <div className="flex items-center justify-between">
           <p className="text-xl font-semibold">
-            Pending Customer Verification ({maxPendingCustomers})
+            Pending Customer Verification ({pendingCustomers.length ?? 0})
           </p>
-          <div className="flex items-center gap-4 ">
-            <div className="cursor-pointer">
-              <FaChevronLeft
-                onClick={() => {
-                  if (page > 0)
-                    if (page > 1) setpage((prev: number) => prev - 1);
-                }}
-              />
-            </div>
-
-            <p>{page}</p>
-            <div className="cursor-pointer">
-              <FaChevronRight
-                onClick={() => {
-                  setpage((prev: number) => prev + 1);
-                }}
-              />
-            </div>
-          </div>
         </div>
       }
     >
-      {pendings.map((e: any) => {
+      {pendingCustomers.map((e: any) => {
         return (
           <Card key={e._id}>
             <div className="w-full flex items-center justify-between p-3">

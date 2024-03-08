@@ -11,8 +11,9 @@ import useRiderStore from "./rider";
 import useCreateRiderStore from "./createRider";
 import useHomeStore from "./home";
 import useRiderAppointmentsListStore from "./riderAppointmentsList";
-
+import usePendingCustomerListStore from "./pendingCustomerList";
 export {
+  usePendingCustomerListStore,
   useRiderAppointmentsListStore,
   useHomeStore,
   useCreateRiderStore,

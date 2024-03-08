@@ -9,6 +9,10 @@ export const getUsers = async function <T extends IUserModel>({
   filter = "{}",
   populate = "",
 }: IQuery) {
+  console.log(
+    `users?page=${page}&limit=${limit}&filter=${filter}&populate=${populate}`
+  );
+
   const { data } = await get(
     `users?page=${page}&limit=${limit}&filter=${filter}&populate=${populate}`
   );
