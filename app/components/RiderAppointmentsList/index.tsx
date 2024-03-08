@@ -1,35 +1,25 @@
 import { ApprovalsList, Card, Button } from "@/components";
-import { useCustomerStore, useTransactionStore } from "@/states";
-import { useState, useMemo, useEffect } from "react";
+import { useRiderAppointmentsListStore } from "@/states";
+import { useState, useEffect } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import Image from "next/image";
 import { getDateToString } from "@/utils";
 
 export default function RiderAppointmentsList() {
-  const {
-    getAppointments,
-    appointments,
-    updateAppointmentStatus,
-    maxAppointments,
-  } = useCustomerStore() as any;
+  const { getAppointments, appointments, updateAppointmentStatus } =
+    useRiderAppointmentsListStore();
   const [page, setpage] = useState(1);
-  const [limit, setlimit] = useState(3);
-
-  const pendings = useMemo(
-    () => appointments.filter((e: any) => e.appointmentStatus === "Pending"),
-    [appointments]
-  );
 
   useEffect(() => {
-    getAppointments(page, limit);
-  }, [page, limit, getAppointments]);
+    getAppointments({});
+  }, [getAppointments]);
 
   return (
     <ApprovalsList
       header={
         <div className="flex items-center justify-between">
           <p className="text-xl font-semibold">
-            Rider Appointments ({maxAppointments})
+            Rider Appointments ({appointments.length ?? 0})
           </p>
           <div className="flex items-center gap-4 ">
             <div className="cursor-pointer">
@@ -53,7 +43,7 @@ export default function RiderAppointmentsList() {
         </div>
       }
     >
-      {pendings.map((e: any) => {
+      {appointments.map((e: any) => {
         return (
           <Card key={e._id}>
             <div className="w-full flex items-center justify-between p-3">

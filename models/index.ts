@@ -99,14 +99,14 @@ export interface IUploadModel extends IModel {
 export interface IAdminModel {}
 
 export type AppointmentStatus = "Pending" | "Approved" | "Declined";
-export interface ICustomerModel {
+export interface ICustomerModel extends IUserModel {
   address: string;
   appointmentDate: Date | string;
   appointmentStatus: AppointmentStatus;
   verified: boolean;
 }
 
-export interface IRetailerModel {
+export interface IRetailerModel extends IUserModel {
   address: string;
   verified: boolean;
   doe: string;

@@ -1,7 +1,6 @@
 import { get, patch, post, remove } from "@/config";
 import { getEndDayDate, getStartDayDate } from "@/utils";
 import { create } from "zustand";
-import { AppointmentStatus } from "@/interfaces";
 import useAnnouncementStore from "./announcement";
 import useCreateAnnouncementStore from "./createAnnouncement";
 import useEditAnnouncementStore from "./editAnnouncement";
@@ -11,7 +10,10 @@ import useWalkinStore from "./walkin";
 import useRiderStore from "./rider";
 import useCreateRiderStore from "./createRider";
 import useHomeStore from "./home";
+import useRiderAppointmentsListStore from "./riderAppointmentsList";
+
 export {
+  useRiderAppointmentsListStore,
   useHomeStore,
   useCreateRiderStore,
   useRiderStore,
@@ -188,30 +190,6 @@ export const useTransactionStore = create((set) => ({
   },
 }));
 
-// export const useRiderStore = create((set) => ({
-//   riders: [],
-//   getRider: async (page: number = 1, limit: number = 5, filter = "") => {
-//     const query =
-//       filter != ""
-//         ? `{ "$and": [{"__t": "Rider"}, ${filter} ] }`
-//         : `{ "__t": "Rider" }`;
-//     const { data } = await get(
-//       `users?page=${page}&limit=${limit}&filter=${query}`
-//     );
-//     if (data.status == "success") {
-//       return set(() => ({ riders: data.data }));
-//     }
-//   },
-//   removeRider: async (id: string) => {
-//     const { data } = await remove(`users/${id}`);
-//     if (data.state == "success") {
-//       return set((state: any) => ({
-//         items: [...state.riders.filter((e: any) => e._id != id)],
-//       }));
-//     }
-//   },
-// }));
-
 export const useMessageStore = create((set) => ({
   messages: [],
   getMessages: async (customer: string) => {
@@ -243,7 +221,6 @@ export const useCustomerStore = create((set) => ({
   maxAppointments: 0,
   maxPendingCustomers: 0,
   noOfVerifiedCustomer: 0,
-  appointments: [],
   getCustomer: async (page: number = 1, limit: number = 5, filter = "") => {
     const query =
       filter != ""
@@ -296,36 +273,7 @@ export const useCustomerStore = create((set) => ({
       return set(() => ({ noOfVerifiedCustomer, noOfCustomer }));
     }
   },
-  getAppointments: async (page: number = 1, limit: number = 5) => {
-    const { data } = await get(
-      `users?page=${page}&limit=${limit}&filter={"__t": "Customer", "appointmentStatus": "Pending"}`
-    );
 
-    if (data.status == "success") {
-      return set(() => ({
-        appointments: data.data,
-        maxAppointments: data.meta.max,
-      }));
-    }
-  },
-  updateAppointmentStatus: async (_id: string, status: AppointmentStatus) => {
-    const { data } = await patch(`users/${_id}`, {
-      appointmentStatus: status,
-      __t: "Customer",
-    });
-    if (data.status == "success") {
-      return set((prev: any) => {
-        const temp = prev.appointments.map((e: any) => {
-          if (e._id == _id) e = data.data[0];
-          return e;
-        });
-        return {
-          appointments: temp,
-          maxAppointments: prev.maxAppointments - 1,
-        };
-      });
-    }
-  },
   removeCustomer: async (id: string) => {
     const { data } = await remove(`users/${id}`);
     if (data.state == "success") {
