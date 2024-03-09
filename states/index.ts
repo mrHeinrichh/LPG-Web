@@ -13,10 +13,11 @@ import useHomeStore from "./home";
 import useRiderAppointmentsListStore from "./riderAppointmentsList";
 import usePendingCustomerListStore from "./pendingCustomerList";
 import usePendingDeliveryListStore from "./pendingDeliveryList";
-
 import useCheckoutStore from "./checkout";
 import useCustomerStore from "./customer";
+import useCreateCustomerStore from "./createCustomer";
 export {
+  useCreateCustomerStore,
   useCustomerStore,
   usePendingDeliveryListStore,
   usePendingCustomerListStore,

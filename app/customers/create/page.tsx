@@ -1,63 +1,43 @@
 "use client";
-import {
-  TableRow,
-  Datatable,
-  Sidenav,
-  InputField,
-  Button,
-  SelectField,
-} from "@/components";
-import { API_URL } from "@/env";
-import trash from "@/public/trash.svg";
-import { useItemStore } from "@/states";
+import { Sidenav, InputField, Button } from "@/components";
+import { useCreateCustomerStore } from "@/states";
 import Image from "next/image";
-import { useEffect, useState } from "react";
 import style from "./style.module.css";
 import { useRouter } from "next/navigation";
-import { post } from "@/config";
-export default function Transactions({}: any) {
+import { useEffect } from "react";
+
+export default function CreateCustomer({}: any) {
   const router = useRouter();
+  const {
+    createFormData,
+    setCreateFormData,
+    uploadImage,
+    image,
+    createCustomer,
+    reset,
+    createSuccess,
+  } = useCreateCustomerStore();
 
-  const [formData, setFormData] = useState<any>({
-    name: "",
-    contactNumber: "",
-    email: "",
-    password: "",
-    address: "",
-    hasAppointment: false,
-    verified: false,
-    discounted: false,
-  });
-
-  const [image, setimage] = useState<null | string>(null);
+  useEffect(() => {
+    if (createSuccess) {
+      reset();
+      router.back();
+    }
+  }, [createSuccess, router, reset]);
 
   const handleChange = (event: any) => {
     const { name, value } = event.target;
-    setFormData((prevFormData: any) => ({ ...prevFormData, [name]: value }));
+    setCreateFormData({ ...createFormData, [name]: value });
   };
 
   const handleUpload = async (event: any) => {
     const form = new FormData();
     form.append("image", event.target.files[0]);
-    const { data } = await post<FormData>("upload/image", form);
-    if (data.status == "success") {
-      setimage(data.data[0]?.path ?? "");
-    }
+    uploadImage(form);
   };
 
   const handleSubmit = async () => {
-    try {
-      const { data } = await post(`users`, {
-        ...formData,
-        image,
-        type: "Customer",
-      });
-      if (data.status === "success") {
-        router.push("/customers");
-      }
-    } catch (error) {
-      console.error("Error adding customers:", error);
-    }
+    createCustomer({ ...createFormData, image: image ?? "" });
   };
 
   return (
