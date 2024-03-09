@@ -17,7 +17,10 @@ import useCheckoutStore from "./checkout";
 import useCustomerStore from "./customer";
 import useCreateCustomerStore from "./createCustomer";
 import useEditCustomerStore from "./editCustomer";
+import useItemStore from "./item";
+
 export {
+  useItemStore,
   useEditCustomerStore,
   useCreateCustomerStore,
   useCustomerStore,
@@ -221,106 +224,6 @@ export const useMessageStore = create((set) => ({
     return set((state: any) => ({
       messages: [...state.messages, data],
     }));
-  },
-}));
-
-// export const useCustomerStore = create((set) => ({
-//   customers: [],
-//   verifiedCustomers: [],
-//   noOfCustomer: 0,
-//   maxAppointments: 0,
-//   noOfVerifiedCustomer: 0,
-//   getCustomer: async (page: number = 1, limit: number = 5, filter = "") => {
-//     const query =
-//       filter != ""
-//         ? `{ "$and": [{"__t": "Customer"}, ${filter} ] }`
-//         : `{ "__t": "Customer" }`;
-//     const { data } = await get(
-//       `users?page=${page}&limit=${limit}&filter=${query}`
-//     );
-//     if (data.status == "success") {
-//       return set(() => ({ customers: data.data }));
-//     }
-//   },
-//
-//   getNoOfCustomer: async () => {
-//     const { data } = await get(
-//       `users?page=${0}&limit=${0}&filter={"__t": "Customer"}`
-//     );
-
-//     if (data.status == "success") {
-//       const noOfVerifiedCustomer = data.data.reduce(
-//         (acc: number, curr: any) => (curr.verified ? acc + 1 : acc),
-//         0
-//       );
-//       const noOfCustomer = data.data.reduce(
-//         (acc: number, curr: any) => acc + 1,
-//         0
-//       );
-//       return set(() => ({ noOfVerifiedCustomer, noOfCustomer }));
-//     }
-//   },
-
-//   removeCustomer: async (id: string) => {
-//     const { data } = await remove(`users/${id}`);
-//     if (data.state == "success") {
-//       return set((state: any) => ({
-//         customers: [...state.customers.filter((e: any) => e._id != id)],
-//       }));
-//     }
-//   },
-//   verifyCustomer: async (id: string) => {
-//     const { data } = await patch(`users/${id}/verify`, {});
-
-//     if (data.status == "success") {
-//       return set((state: any) => {
-//         const pendingCustomers = state.pendingCustomers.map((e: any) => {
-//           if (e._id == id) e = data.data[0];
-//           return e;
-//         });
-//         return {
-//           pendingCustomers,
-//           maxPendingCustomers: state.maxPendingCustomers - 1,
-//         };
-//       });
-//     }
-//   },
-// }));
-
-export const useItemStore = create((set) => ({
-  items: [],
-  noOfProducts: 0,
-  noOfAccessories: 0,
-  getItems: async (page: number = 1, limit: number = 5, filter = "{}") => {
-    const { data } = await get(
-      `items?page=${page}&limit=${limit}&filter=${filter}`
-    );
-
-    if (data.status == "success") {
-      return set(() => ({ items: data.data }));
-    }
-  },
-  getNumbers: async () => {
-    const { data } = await get(`items?page=${0}&limit=${0}`);
-    if (data.status == "success") {
-      const noOfProducts = data.data.reduce(
-        (acc: number, curr: any) => (curr.type === "Product" ? acc + 1 : acc),
-        0
-      );
-      const noOfAccessories = data.data.reduce(
-        (acc: number, curr: any) => (curr.type === "Accessory" ? acc + 1 : acc),
-        0
-      );
-      return set(() => ({ noOfProducts, noOfAccessories }));
-    }
-  },
-  removeItem: async (id: any) => {
-    const { data } = await remove(`items/${id}`);
-    if (data.status == "success") {
-      return set((state: any) => ({
-        items: [...state.items.filter((e: any) => e._id != id)],
-      }));
-    }
   },
 }));
 

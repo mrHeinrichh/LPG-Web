@@ -3,7 +3,6 @@ import {
   TableRow,
   Datatable,
   Sidenav,
-  Button,
   InputField,
   SelectField,
   Card,
@@ -13,35 +12,36 @@ import edit from "@/public/edit.svg";
 import { useItemStore } from "@/states";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { FaChevronLeft, FaChevronRight, FaPlus } from "react-icons/fa";
-import { getSearchFilterQuery } from "@/utils";
-import { SEARCH_FILTERS, TABLE_HEADERS } from "./data";
+import { TABLE_HEADERS } from "./data";
+
 export default function Items({}: any) {
   const {
     items,
     getItems,
     removeItem,
-    getNumbers,
-    noOfProducts,
-    noOfAccessories,
-  } = useItemStore() as any;
+    page,
+    limit,
+    search,
+    getOverallItems,
+    products,
+    accessories,
+    setLimit,
+    nextPage,
+    previousPage,
+    setSearch,
+  } = useItemStore();
   const router = useRouter();
-  const [search, setsearch] = useState("");
-  const [page, setpage] = useState(1);
-  const [limit, setlimit] = useState(20);
 
   useEffect(() => {
-    if (search != "") {
-      getItems(page, limit, getSearchFilterQuery(SEARCH_FILTERS, search));
-    } else {
-      getItems(page, limit);
-    }
+    // TODO: Add search
+    getItems({ page, limit });
   }, [page, limit, search, getItems]);
 
   useEffect(() => {
-    getNumbers();
-  });
+    getOverallItems({});
+  }, [getOverallItems]);
 
   return (
     <>
@@ -50,13 +50,13 @@ export default function Items({}: any) {
           <Card>
             <div className="flex flex-col justify-evenly h-full p-4">
               <p className="text-2xl font-bold">Products</p>
-              <p className="text-2xl">{noOfProducts}</p>
+              <p className="text-2xl">{products.length}</p>
             </div>
           </Card>{" "}
           <Card>
             <div className="flex flex-col justify-evenly h-full p-4">
               <p className="text-2xl font-bold">Accesories</p>
-              <p className="text-2xl">{noOfAccessories}</p>
+              <p className="text-2xl">{accessories.length}</p>
             </div>
           </Card>
         </div>
@@ -67,7 +67,7 @@ export default function Items({}: any) {
               name="search"
               onChange={(event: any) => {
                 const { value } = event.target;
-                setsearch(value);
+                setSearch(value);
               }}
             />
           </div>
@@ -136,20 +136,20 @@ export default function Items({}: any) {
               name={""}
               title={""}
               onChange={(e: any) => {
-                setlimit(e.target.value);
+                setLimit(Number(e.target.value));
               }}
             />
           </div>
           <div className="flex items-center gap-4 ">
             <FaChevronLeft
               onClick={() => {
-                if (page > 1) setpage((prev: number) => prev - 1);
+                nextPage();
               }}
             />
             {page}
             <FaChevronRight
               onClick={() => {
-                setpage((prev: number) => prev + 1);
+                previousPage();
               }}
             />
           </div>
