@@ -32,8 +32,8 @@ export default create<ItemStore>((set) => {
     if (status == "success") {
       return set((state) => ({
         items: [...state.items.filter((e: any) => e._id != id)],
-        products: [...state.items.filter((e: any) => e._id != id)],
-        accessories: [...state.items.filter((e: any) => e._id != id)],
+        products: [...state.products.filter((e: any) => e._id != id)],
+        accessories: [...state.accessories.filter((e: any) => e._id != id)],
       }));
     }
   };

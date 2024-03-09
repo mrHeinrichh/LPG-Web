@@ -143,13 +143,13 @@ export default function Items({}: any) {
           <div className="flex items-center gap-4 ">
             <FaChevronLeft
               onClick={() => {
-                nextPage();
+                previousPage();
               }}
             />
             {page}
             <FaChevronRight
               onClick={() => {
-                previousPage();
+                nextPage();
               }}
             />
           </div>
