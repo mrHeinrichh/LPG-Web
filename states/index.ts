@@ -16,7 +16,9 @@ import usePendingDeliveryListStore from "./pendingDeliveryList";
 import useCheckoutStore from "./checkout";
 import useCustomerStore from "./customer";
 import useCreateCustomerStore from "./createCustomer";
+import useEditCustomerStore from "./editCustomer";
 export {
+  useEditCustomerStore,
   useCreateCustomerStore,
   useCustomerStore,
   usePendingDeliveryListStore,

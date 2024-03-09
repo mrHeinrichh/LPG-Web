@@ -1,75 +1,50 @@
 "use client";
-import { Sidenav, InputField, Button, SelectField } from "@/components";
-import { API_URL } from "@/env";
-import { useEffect, useState } from "react";
+import { Sidenav, InputField, Button } from "@/components";
+import { useEffect } from "react";
 import style from "./style.module.css";
 import { useRouter, useSearchParams } from "next/navigation";
-import { get, patch, post } from "@/config";
 import Image from "next/image";
+import { useEditCustomerStore } from "@/states";
 
-export default function Transactions({}: any) {
+export default function EditCustomer({}: any) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
-  const [image, setimage] = useState<null | string>(null);
-
-  const [formData, setFormData] = useState<any>({
-    name: "",
-    category: "",
-    description: "",
-    weight: 0,
-    quantity: 1,
-    customerPrice: 0,
-    retailerPrice: 0,
-    type: "",
-  });
+  const {
+    image,
+    editFormData,
+    setEditFormData,
+    getCustomerById,
+    updateCustomer,
+    uploadImage,
+    editSuccess,
+    reset,
+  } = useEditCustomerStore();
 
   useEffect(() => {
-    fetchItem();
-  });
-
-  const fetchItem = async () => {
-    try {
-      const { data } = await get(`users/${id}`);
-      if (data.status === "success") {
-        setFormData({
-          name: data.data[0].name ?? "",
-          contactNumber: data.data[0].contactNumber ?? "",
-          email: data.data[0].email ?? "",
-          address: data.data[0].address ?? 0,
-          hasAppointment: data.data[0].hasAppointment ?? false,
-          verified: data.data[0].verified ?? false,
-          discounted: data.data[0].verified ?? false,
-        });
-
-        setimage(data.data[0].image ?? "");
-      }
-    } catch (error) {
-      console.error("Error fetching users:", error);
+    if (editSuccess) {
+      reset();
+      router.push("/customers");
     }
-  };
+  }, [router, reset, editSuccess]);
+
+  useEffect(() => {
+    getCustomerById(id ?? "");
+  }, [getCustomerById, id]);
 
   const handleChange = (event: any) => {
     const { name, value } = event.target;
-    setFormData((prevFormData: any) => ({ ...prevFormData, [name]: value }));
+    setEditFormData({ ...editFormData, [name]: value });
   };
 
   const handleUpload = async (event: any) => {
     const form = new FormData();
     form.append("image", event.target.files[0]);
-    const { data } = await post<FormData>("upload/image", form);
-    if (data.status == "success") {
-      setimage(data.data[0]?.path ?? "");
-    }
+    uploadImage(form);
   };
 
   const handleSubmit = async () => {
-    try {
-      const { data } = await patch(`users/${id}`, { image, ...formData });
-      if (data.status === "success") router.push("/customers");
-    } catch (error) {
-      console.error("Error adding customers:", error);
-    }
+    updateCustomer(id ?? "", { image: image ?? "", ...editFormData });
   };
 
   return (
@@ -96,20 +71,20 @@ export default function Transactions({}: any) {
             name="name"
             placeholder="Name"
             onChange={handleChange}
-            defaultValue={formData.name}
+            defaultValue={editFormData.name}
           />
 
           <InputField
             name="contactNumber"
             placeholder="Contact Number"
             onChange={handleChange}
-            defaultValue={formData.contactNumber}
+            defaultValue={editFormData.contactNumber}
           />
           <InputField
             name="address"
             placeholder="Address"
             onChange={handleChange}
-            defaultValue={formData.address}
+            defaultValue={editFormData.address}
           />
 
           <div className="col-span-2">
