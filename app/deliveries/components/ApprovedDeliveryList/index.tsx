@@ -1,25 +1,21 @@
 import { ApprovalsList, Card, DeliveryCard } from "@/components";
-import { useTransactionStore } from "@/states";
-import { useMemo } from "react";
+import { useDeliveriesStore } from "@/states";
 
 export default function ApprovedDeliveryList({ setcurrent, setopen }: any) {
-  const { transactions } = useTransactionStore() as any;
-
-  const data = useMemo(
-    () => transactions.filter((e: any) => e.status == "Approved"),
-    [transactions]
-  );
+  const { approvedDeliveries } = useDeliveriesStore();
 
   return (
     <ApprovalsList
       header={
         <div className="flex items-center justify-between">
-          <p className="text-xl font-semibold">Approved ({data.length})</p>
+          <p className="text-xl font-semibold">
+            Approved ({approvedDeliveries.length})
+          </p>
           <div className=""></div>
         </div>
       }
     >
-      {data.map((e: any) => {
+      {approvedDeliveries.map((e) => {
         return (
           <Card
             key={e._id}

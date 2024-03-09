@@ -1,25 +1,21 @@
-import { ApprovalsList, Card, Button, DeliveryCard } from "@/components";
-import { useTransactionStore } from "@/states";
-import { useMemo } from "react";
+import { ApprovalsList, Card, DeliveryCard } from "@/components";
+import { useDeliveriesStore } from "@/states";
 
 export default function PendingCustomerList({ setcurrent, setopen }: any) {
-  const { transactions, approve, decline } = useTransactionStore() as any;
-
-  const data = useMemo(
-    () => transactions.filter((e: any) => e.status == "Pending"),
-    [transactions]
-  );
+  const { pendingDeliveries } = useDeliveriesStore();
 
   return (
     <ApprovalsList
       header={
         <div className="flex items-center justify-between">
-          <p className="text-xl font-semibold">Pending ({data.length})</p>
+          <p className="text-xl font-semibold">
+            Pending ({pendingDeliveries.length})
+          </p>
           <div></div>
         </div>
       }
     >
-      {data.map((e: any) => {
+      {pendingDeliveries.map((e: any) => {
         return (
           <Card
             key={e._id}

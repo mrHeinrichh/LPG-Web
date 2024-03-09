@@ -5,7 +5,7 @@ import {
   SelectField,
   Sidenav,
 } from "@/components";
-import { useTransactionStore } from "@/states";
+import { useDeliveriesStore } from "@/states";
 import { useEffect, useMemo, useState } from "react";
 import {
   ApprovedDeliveryList,
@@ -16,76 +16,80 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { TABLE_HEADERS } from "./data";
 import CsvDownloadButton from "react-json-to-csv";
 
-export default function Transactions() {
-  const { getTransactions, transactions, getFeedbacks, feedbacks } =
-    useTransactionStore() as any;
+export default function Deliveries() {
+  const {
+    pendingDeliveries,
+    approvedDeliveries,
+    onGoingDeliveries,
+    getPendingDeliveries,
+    getApprovedDeliveries,
+    getOnGoingDeliveries,
+    getFeedbacks,
+    page,
+    limit,
+    setLimit,
+    nextPage,
+    previousPage,
+    feedbacks,
+  } = useDeliveriesStore();
   const [current, setcurrent] = useState<any>({});
   const [open, setopen] = useState<boolean>(false);
-  const [page, setpage] = useState(1);
-  const [limit, setlimit] = useState(100);
 
   useEffect(() => {
-    getTransactions(0, 0, `{"__t": "Delivery"}`);
-  });
-
-  useEffect(() => {
-    getFeedbacks(page, limit);
-  }, [page, limit, getFeedbacks]);
+    getPendingDeliveries({});
+    getApprovedDeliveries({});
+    getOnGoingDeliveries({});
+    getFeedbacks({ page, limit });
+  }, [getPendingDeliveries, getApprovedDeliveries, getOnGoingDeliveries]);
 
   const data = useMemo(
-    () =>
-      transactions.filter(
-        (e: any) =>
-          e.status == "Approved" ||
-          e.status == "Pending" ||
-          e.status == "On Going"
-      ),
-    [transactions]
+    () => [...pendingDeliveries, ...approvedDeliveries, ...onGoingDeliveries],
+    [pendingDeliveries, approvedDeliveries, onGoingDeliveries]
   );
 
-  const feedbackHeaders = useMemo(() => {
-    let headers: any[] = [];
-    const questions = feedbacks.map((e: any) =>
-      e.feedback.map((qna: any) => qna.question)
-    );
-    questions.forEach((element: any) => {
-      headers = [...new Set<any>([...headers, ...element])];
-    });
-    return headers;
-  }, [feedbacks]);
+  // const feedbackHeaders = useMemo(() => {
+  //   let headers: any[] = [];
+  //   const questions = feedbacks.map((e: any) =>
+  //     e.feedback.map((qna: any) => qna.question)
+  //   );
+  //   questions.forEach((element: any) => {
+  //     headers = [...new Set<any>([...headers, ...element])];
+  //   });
+  //   return headers;
+  // }, [feedbacks]);
 
-  const parsedFeedback = useMemo(() => {
-    const mockData: any[] = [];
-    let temp: any = {};
-    feedbacks.forEach((element: any) => {
-      element.feedback.forEach((e: any) => {
-        temp[e.question] = e.answer ?? "";
-      });
-      mockData.push(temp);
-      temp = {};
-    });
+  // const parsedFeedback = useMemo(() => {
+  //   const mockData: any[] = [];
+  //   let temp: any = {};
+  //   feedbacks.forEach((element: any) => {
+  //     element.feedback.forEach((e: any) => {
+  //       temp[e.question] = e.answer ?? "";
+  //     });
+  //     mockData.push(temp);
+  //     temp = {};
+  //   });
 
-    return mockData;
-  }, [feedbacks]);
+  //   return mockData;
+  // }, [feedbacks]);
 
   const downloadFeedbackData = () => {
     // Extract the array data from the feedback column and remove curly braces
     const feedbackArrayData = feedbacks.map((feedback: any) => {
-      const formattedFeedback = feedback.feedback.map((item: any) => JSON.stringify(item)).join(',');
+      const formattedFeedback = feedback.feedback
+        .map((item: any) => JSON.stringify(item))
+        .join(",");
       return formattedFeedback;
     });
 
     // Convert the array data to a CSV string with a different separator
-    const csvString =
-      'Feedback\n' +
-      feedbackArrayData.join('\n');
+    const csvString = "Feedback\n" + feedbackArrayData.join("\n");
 
     // Create a Blob and create a download link
-    const blob = new Blob([csvString], { type: 'text/csv' });
+    const blob = new Blob([csvString], { type: "text/csv" });
     const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = 'feedback_data.csv';
+    a.download = "feedback_data.csv";
 
     // Trigger the download
     document.body.appendChild(a);
@@ -96,11 +100,9 @@ export default function Transactions() {
     window.URL.revokeObjectURL(url);
   };
 
-
   return (
     <>
       <DeliveryDetailsModal isOpen={open} setIsOpen={setopen} data={current} />
-
       <Sidenav>
         <p className="text-4xl font-bold">
           Deliveries <span className="font-light">({data.length})</span>
@@ -121,7 +123,6 @@ export default function Transactions() {
               Download Datatable Data
             </button>
           </div>
-
         </div>
         <div className="w-full flex justify-between py-2 px-3 bg-white-50">
           <div className="flex items-center gap-4 ">
@@ -136,30 +137,31 @@ export default function Transactions() {
               name={""}
               title={""}
               onChange={(e: any) => {
-                setlimit(e.target.value);
+                setLimit(Number(e.target.value));
               }}
             />
           </div>
           <div className="flex items-center gap-4 ">
             <FaChevronLeft
               onClick={() => {
-                if (page > 0) if (page > 1) setpage((prev: number) => prev - 1);
+                previousPage();
               }}
             />
+
             {page}
             <FaChevronRight
               onClick={() => {
-                setpage((prev: number) => prev + 1);
+                nextPage();
               }}
             />
           </div>
         </div>
         <Datatable header={TABLE_HEADERS}>
-          {feedbacks.map((e: any) => (
+          {feedbacks.map((e) => (
             <tr key={e._id}>
+              <td>{e.feedback.length}</td>
               <td>{e._id}</td>
-              <td>{e.feedback}</td>
-              <td>{e.updatedAt}</td>
+              <td>{e.updatedAt.toString()}</td>
             </tr>
           ))}
         </Datatable>

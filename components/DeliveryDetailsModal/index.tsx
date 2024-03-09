@@ -4,9 +4,11 @@ import React from "react";
 import Image from "next/image";
 import style from "./style.module.css";
 import Button from "../Button";
-import { useTransactionStore } from "@/states";
+import { useDeliveriesStore } from "@/states";
+
 function DeliveryDetailsModal({ isOpen, setIsOpen, data }: any) {
-  const { approve, decline } = useTransactionStore() as any;
+  const { approve, decline } = useDeliveriesStore();
+
   if (!isOpen) {
     return <></>;
   }
