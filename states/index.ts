@@ -14,10 +14,12 @@ import useRiderAppointmentsListStore from "./riderAppointmentsList";
 import usePendingCustomerListStore from "./pendingCustomerList";
 import usePendingDeliveryListStore from "./pendingDeliveryList";
 
+import useCheckoutStore from "./checkout";
 export {
   usePendingDeliveryListStore,
   usePendingCustomerListStore,
   useRiderAppointmentsListStore,
+  useCheckoutStore,
   useHomeStore,
   useCreateRiderStore,
   useRiderStore,

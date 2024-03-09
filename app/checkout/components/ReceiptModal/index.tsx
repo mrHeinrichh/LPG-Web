@@ -1,33 +1,30 @@
 "use client";
 import { Button } from "@/components";
-import { post } from "@/config";
 import { DISCOUNT } from "@/constants";
-import { useWalkInStore } from "@/states";
-import { useRouter } from "next/navigation";
+import { useCheckoutStore, useWalkInStore, useWalkinStore } from "@/states";
 import React, { useMemo } from "react";
 
 function ReceiptModal({ isOpen, setIsOpen }: any) {
   const walkInStore = useWalkInStore() as any;
-  const router = useRouter();
+  const { createTransaction, name, contactNumber, discountIdImage } =
+    useCheckoutStore();
+  const { cartItems } = useWalkinStore();
+
   const total = useMemo(() => {
-    const temp = walkInStore.items.reduce(
-      (acc: any, curr: any) => acc + curr.customerPrice * curr.quantity,
+    const temp = cartItems.reduce(
+      (acc, curr) => acc + curr.customerPrice * curr.quantity,
       0
     );
-    return walkInStore.discounted ? temp * DISCOUNT : temp;
-  }, [walkInStore.items, walkInStore.discounted]);
+    return discountIdImage ? temp * DISCOUNT : temp;
+  }, [cartItems, discountIdImage]);
 
   const handleSubmit = async () => {
-    let temp: any = {
-      name: walkInStore.name,
-      contactNumber: walkInStore.contactNumber,
-      items: walkInStore.items,
-      discountIdImage: walkInStore.discounted ? "" : null,
-    };
-
-    const { data } = await post("transactions", temp);
-
-    if (data.status == "success") router.push("/");
+    createTransaction({
+      name,
+      contactNumber,
+      items: cartItems,
+      discountIdImage: discountIdImage ? "" : null,
+    });
   };
 
   if (!isOpen) {
@@ -47,10 +44,10 @@ function ReceiptModal({ isOpen, setIsOpen }: any) {
           </p>
         </div>
         <div className="flex flex-col gap-4">
-          <p>Customer: {walkInStore.name}</p>
-          <p>Contact Number: {walkInStore.contactNumber}</p>
+          <p>Customer: {name}</p>
+          <p>Contact Number: {contactNumber}</p>
           <p>{walkInStore.discounted ? "Discounted" : "Not Discounted"}</p>
-          {walkInStore.items.map((e: any) => {
+          {cartItems.map((e) => {
             return (
               <div
                 key={e._id}

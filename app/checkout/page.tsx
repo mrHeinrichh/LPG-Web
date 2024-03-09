@@ -1,49 +1,46 @@
 "use client";
 import { Sidenav, Button, InputField } from "@/components";
-import { post } from "@/config";
 import { DISCOUNT } from "@/constants";
-import { useItemStore, useWalkInStore } from "@/states";
+import { useCheckoutStore, useWalkinStore } from "@/states";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { ReceiptModal } from "./components";
+import { ICartItemModel } from "@/models";
+import { parseToFiat } from "@/utils";
 
-export default function WalkIn({}: any) {
-  const walkInStore = useWalkInStore() as any;
+export default function Checkout({}: any) {
+  const { cartItems, increment, decrement, reset } = useWalkinStore();
+  const {
+    setFormData,
+    setDiscounted,
+    createSuccess,
+    discountIdImage,
+    resetCheckout,
+  } = useCheckoutStore();
   const router = useRouter();
+
   const [isOpen, setIsOpen] = useState(false);
 
-  const [formData, setFormData] = useState<any>({
-    name: "",
-    contactNumber: "",
-  });
-  const [discounted, setdiscounted] = useState<boolean>(false);
   const handleChange = (event: any) => {
     const { name, value } = event.target;
-    setFormData((prevFormData: any) => ({ ...prevFormData, [name]: value }));
-  };
-
-  const handleSubmit = async () => {
-    let temp: any = {
-      ...formData,
-      items: walkInStore.items,
-    };
-
-    if (discounted) {
-      temp.discountIdImage = "";
-    }
-
-    const { data } = await post("transactions", temp);
-
-    if (data.status == "success") router.push("/");
+    setFormData({ [name]: value });
   };
 
   const total = useMemo(() => {
-    const temp = walkInStore.items.reduce(
+    const temp = cartItems.reduce(
       (acc: any, curr: any) => acc + curr.customerPrice * curr.quantity,
       0
     );
-    return discounted ? temp * DISCOUNT : temp;
-  }, [walkInStore.items, discounted]);
+    return discountIdImage ? temp * DISCOUNT : temp;
+  }, [cartItems, discountIdImage]);
+
+  useEffect(() => {
+    if (createSuccess) {
+      router.back();
+      reset();
+      resetCheckout();
+    }
+  }, [createSuccess]);
 
   return (
     <>
@@ -51,26 +48,26 @@ export default function WalkIn({}: any) {
       <Sidenav>
         <div className="flex gap-2 ">
           <div className="w-1/2">
-            {walkInStore.items.map((e: any) => {
+            {cartItems.map((e: ICartItemModel) => {
               return (
                 <div className="" key={e._id}>
                   <div className="w-full flex item-center justify-between">
                     <p>
                       {e.quantity}X {e.name}
                     </p>
-                    <p>{e.quantity * e.customerPrice} PHP</p>
+                    <p>{parseToFiat(e.quantity * e.customerPrice)}</p>
                   </div>{" "}
                   <div className="w-full flex item-center justify-end gap-2">
                     <Button
                       onClick={() => {
-                        walkInStore.increment(e);
+                        increment(e);
                       }}
                     >
                       <p>Add</p>
                     </Button>
                     <Button
                       onClick={() => {
-                        walkInStore.decrement(e);
+                        decrement(e);
                       }}
                     >
                       <p>Deduct</p>
@@ -82,7 +79,7 @@ export default function WalkIn({}: any) {
 
             <div className="w-full flex item-center justify-between">
               <p>Total</p>
-              <p>{total} PHP</p>
+              <p>{parseToFiat(total)} </p>
             </div>
           </div>
           <div className="w-1/2">
@@ -101,7 +98,7 @@ export default function WalkIn({}: any) {
                 <input
                   type="checkbox"
                   onClick={(e: any) => {
-                    setdiscounted(e.target.checked);
+                    setDiscounted(e.target.checked);
                   }}
                 />
                 <p>Discounted? </p>
@@ -111,11 +108,6 @@ export default function WalkIn({}: any) {
         </div>
         <Button
           onClick={() => {
-            walkInStore.setData(
-              formData.name,
-              formData.contactNumber,
-              discounted
-            );
             // handleSubmit();
             setIsOpen(true);
           }}

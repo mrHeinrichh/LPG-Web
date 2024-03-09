@@ -78,11 +78,10 @@ export default create<WalkinStore>((set) => {
       return { cartItems, total };
     });
   };
-
-  return {
-    decrement,
-    increment,
-    getItems,
-    ...initialState,
+  const reset = () => {
+    return set(() => ({
+      ...initialState,
+    }));
   };
+  return { reset, decrement, increment, getItems, ...initialState };
 });

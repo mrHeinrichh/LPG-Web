@@ -5,12 +5,14 @@ import { ICartItemModel, IItemModel } from "@/models";
 export type GetItems = (query: IQuery) => Promise<void>;
 export type Increment = (item: IItemModel) => void;
 export type Decrement = (item: ICartItemModel) => void;
+export type Reset = () => void;
 
 // Actions
 export interface IWalkinActions {
   getItems: GetItems;
   increment: Increment;
   decrement: Decrement;
+  reset: Reset;
 }
 
 // States

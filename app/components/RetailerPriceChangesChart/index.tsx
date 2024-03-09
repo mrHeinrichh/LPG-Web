@@ -66,6 +66,7 @@ function RetailerPriceChangesChart({ timeFilter, units }: any) {
       return temp;
     });
   }, [prices, keywords, timeFilter, units]);
+
   return (
     <Card style={{ background: 'white' }}>
 
