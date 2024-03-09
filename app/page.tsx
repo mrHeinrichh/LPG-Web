@@ -21,8 +21,8 @@ import {
   parseToFiat,
 } from "@/utils";
 import React from "react";
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 import {
   BarChart,
@@ -41,76 +41,76 @@ import { BARANGGAYS, TIME_FILTERS } from "@/constants";
 
 export default function Home() {
   const downloadAsPDF = async () => {
-    const element = document.getElementById('pdf-content');
+    const element = document.getElementById("pdf-content");
 
     if (element) {
       try {
         const canvas = await html2canvas(element);
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 15, 15, 150, 150);
+        const pdf = new jsPDF("p", "mm", "a4");
+        pdf.addImage(canvas.toDataURL("image/png"), "PNG", 15, 15, 150, 150);
 
         // Create a Blob from the PDF data
-        const pdfBlob = pdf.output('blob');
+        const pdfBlob = pdf.output("blob");
 
         // Create a URL for the Blob
         const pdfUrl = URL.createObjectURL(pdfBlob);
 
         // Open the PDF in a new window or tab
-        window.open(pdfUrl, '_blank');
+        window.open(pdfUrl, "_blank");
       } catch (error) {
-        console.error('Error generating PDF:', error);
+        console.error("Error generating PDF:", error);
       }
     } else {
-      console.error('Element not found');
+      console.error("Element not found");
     }
   };
   const downloadAsPDF2 = async () => {
-    const element = document.getElementById('pdf-content2');
+    const element = document.getElementById("pdf-content2");
 
     if (element) {
       try {
         const canvas = await html2canvas(element);
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 15, 15, 150, 150);
+        const pdf = new jsPDF("p", "mm", "a4");
+        pdf.addImage(canvas.toDataURL("image/png"), "PNG", 15, 15, 150, 150);
 
         // Create a Blob from the PDF data
-        const pdfBlob = pdf.output('blob');
+        const pdfBlob = pdf.output("blob");
 
         // Create a URL for the Blob
         const pdfUrl = URL.createObjectURL(pdfBlob);
 
         // Open the PDF in a new window or tab
-        window.open(pdfUrl, '_blank');
+        window.open(pdfUrl, "_blank");
       } catch (error) {
-        console.error('Error generating PDF:', error);
+        console.error("Error generating PDF:", error);
       }
     } else {
-      console.error('Element not found');
+      console.error("Element not found");
     }
   };
 
   const downloadAsPDF3 = async () => {
-    const element = document.getElementById('pdf-content3');
+    const element = document.getElementById("pdf-content3");
 
     if (element) {
       try {
         const canvas = await html2canvas(element);
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 15, 15, 150, 150);
+        const pdf = new jsPDF("p", "mm", "a4");
+        pdf.addImage(canvas.toDataURL("image/png"), "PNG", 15, 15, 150, 150);
 
         // Create a Blob from the PDF data
-        const pdfBlob = pdf.output('blob');
+        const pdfBlob = pdf.output("blob");
 
         // Create a URL for the Blob
         const pdfUrl = URL.createObjectURL(pdfBlob);
 
         // Open the PDF in a new window or tab
-        window.open(pdfUrl, '_blank');
+        window.open(pdfUrl, "_blank");
       } catch (error) {
-        console.error('Error generating PDF:', error);
+        console.error("Error generating PDF:", error);
       }
     } else {
-      console.error('Element not found');
+      console.error("Element not found");
     }
   };
 
@@ -151,20 +151,20 @@ export default function Home() {
   //       });
   //     }
 
-  const data = useMemo(() => {
-    const parsedStartDay = getDates(timeFilter, units).map((e: Date) =>
-      getStartDayDate(e)
-    );
-    const multiplier = getMutiplier(timeFilter);
-    return parsedStartDay.map((e: Date) => {
-      let transactionsTemp: any[] = [];
-      transactionsTemp = solds.filter((sold: any) => {
-        return (
-          e.getTime() <= getStartDayDate(new Date(sold.createdAt)).getTime() &&
-          e.getTime() + 86399999 * multiplier >=
-          getStartDayDate(new Date(sold.createdAt)).getTime()
-        );
-      });
+  // const data = useMemo(() => {
+  //   const parsedStartDay = getDates(timeFilter, units).map((e: Date) =>
+  //     getStartDayDate(e)
+  //   );
+  //   const multiplier = getMutiplier(timeFilter);
+  //   return parsedStartDay.map((e: Date) => {
+  //     let transactionsTemp: any[] = [];
+  //     transactionsTemp = solds.filter((sold: any) => {
+  //       return (
+  //         e.getTime() <= getStartDayDate(new Date(sold.createdAt)).getTime() &&
+  //         e.getTime() + 86399999 * multiplier >=
+  //         getStartDayDate(new Date(sold.createdAt)).getTime()
+  //       );
+  //     });
 
   //     const delivery = transactionsTemp.reduce((acc: any, curr: any) => {
   //       return curr.__t == "Delivery" ? acc + 1 : acc;
@@ -207,7 +207,7 @@ export default function Home() {
         return (
           e.getTime() <= getStartDayDate(new Date(sold.createdAt)).getTime() &&
           e.getTime() + 86399999 * multiplier >=
-          getStartDayDate(new Date(sold.createdAt)).getTime()
+            getStartDayDate(new Date(sold.createdAt)).getTime()
         );
       });
 
@@ -307,18 +307,25 @@ export default function Home() {
             setunits(value);
           }}
         ></InputField>
-        <button className="bg-blue-500 text-white px-4 py-2 rounded-md" onClick={downloadAsPDF}>Download as PDF</button>
+        <button
+          className="bg-blue-500 text-white px-4 py-2 rounded-md"
+          onClick={downloadAsPDF}
+        >
+          Download as PDF
+        </button>
 
         <div id="pdf-content">
-
-
-
-          <RetailerPriceChangesChart timeFilter={timeFilter} units={units} />
-          <CustomerPriceChangesChart timeFilter={timeFilter} units={units} />
+          {/* <RetailerPriceChangesChart timeFilter={timeFilter} units={units} />
+          <CustomerPriceChangesChart timeFilter={timeFilter} units={units} /> */}
         </div>
-        <button className="bg-blue-500 text-white px-4 py-2 rounded-md" onClick={downloadAsPDF2}>Download as PDF</button>
+        <button
+          className="bg-blue-500 text-white px-4 py-2 rounded-md"
+          onClick={downloadAsPDF2}
+        >
+          Download as PDF
+        </button>
         <div id="pdf-content2">
-          <BrandNewTanksChart
+          {/* <BrandNewTanksChart
             baranggay={baranggay}
             timeFilter={timeFilter}
             units={units}
@@ -332,12 +339,17 @@ export default function Home() {
             baranggay={baranggay}
             timeFilter={timeFilter}
             units={units}
-          />
+          /> */}
         </div>
-        <button className="bg-blue-500 text-white px-4 py-2 rounded-md" onClick={downloadAsPDF3}>Download as PDF</button>
+        <button
+          className="bg-blue-500 text-white px-4 py-2 rounded-md"
+          onClick={downloadAsPDF3}
+        >
+          Download as PDF
+        </button>
 
         <div id="pdf-content3">
-          <Card style={{ background: 'white' }}>
+          {/* <Card style={{ background: "white" }}>
             <p className="text-2xl font-black">Verified Customers</p>
 
             <LineChart
@@ -351,7 +363,6 @@ export default function Home() {
                 bottom: 5,
               }}
             >
-
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />
               <YAxis />
@@ -364,8 +375,8 @@ export default function Home() {
                 activeDot={{ r: 8 }}
               />
             </LineChart>
-          </Card>
-          <Card style={{ background: 'white' }}>
+          </Card> */}
+          {/* <Card style={{ background: 'white' }}>
 
             <p className="text-2xl font-black">Orders Accomplishments</p>
             <LineChart
@@ -446,15 +457,14 @@ export default function Home() {
                 activeBar={<Rectangle fill="gold" stroke="purple" />}
               />
             </BarChart>
-          </Card>
+          </Card> */}
         </div>
 
-        <RiderAppointmentsList />
+        {/* <RiderAppointmentsList />
         <div className="grid grid-cols-2 gap-2 w-full my-5">
           <PendingCustomerList />
           <PendingDeliveryList />
-        </div>
-
+        </div> */}
       </Sidenav>
     </main>
   );
