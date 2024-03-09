@@ -5,4 +5,5 @@ export const initialState: IHomeState = {
   pricePage: 1,
   priceLimit: 10,
   revenueToday: 0,
+  verifiedCustomers: [],
 };

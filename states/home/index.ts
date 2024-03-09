@@ -7,12 +7,31 @@ import {
   SetPriceLimit,
   GetTotalRevenueToday,
 } from "./types";
-import { priceRepository, transactionRepository } from "@/repositories";
+import {
+  priceRepository,
+  transactionRepository,
+  userRepository,
+} from "@/repositories";
 import { initialState } from "./initialState";
 import { IQuery } from "@/interfaces";
 import { getEndDayDate, getStartDayDate } from "@/utils";
+import { ICustomerModel } from "@/models";
 
 export default create<HomeStore>((set) => {
+  const getVerifiedCustomers = async (
+    start = getStartDayDate(new Date()),
+    end = getEndDayDate(new Date())
+  ) => {
+    const { data, status } = await userRepository.getUsers<ICustomerModel>({
+      page: 0,
+      limit: 0,
+      filter: `{"__t": "Customer", "$and": [{"verified": true}, { "createdAt": { "$gte": "${start.toISOString()}", "$lte": "${end.toISOString()}" }}]}`,
+    });
+
+    if (status == "success") {
+      return set(() => ({ verifiedCustomers: data }));
+    }
+  };
   const getTotalRevenueToday: GetTotalRevenueToday = async ({
     page = 0,
     limit = 0,
@@ -80,6 +99,7 @@ export default create<HomeStore>((set) => {
   };
 
   return {
+    getVerifiedCustomers,
     getTotalRevenueToday,
     setPriceLimit,
     priceNext,

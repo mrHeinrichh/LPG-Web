@@ -1,7 +1,6 @@
 "use client";
 import {
   SelectField,
-  Button,
   Datatable,
   InputField,
   Sidenav,
@@ -10,10 +9,9 @@ import {
 import edit from "@/public/edit.svg";
 import trash from "@/public/trash.svg";
 import { useCustomerStore } from "@/states";
-import { getSearchFilterQuery } from "@/utils";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FaChevronLeft,
   FaChevronRight,
@@ -21,38 +19,31 @@ import {
   FaTimes,
   FaPlus,
 } from "react-icons/fa";
-import { SEARCH_FILTERS, TABLE_HEADERS } from "./data";
+import { TABLE_HEADERS } from "./data";
+
 export default function Customers({}: any) {
   const router = useRouter();
   const [search, setsearch] = useState("");
   const [page, setpage] = useState(1);
   const [limit, setlimit] = useState(20);
   const {
-    getCustomer,
+    getCustomers,
     customers,
+    overallCustomers,
     removeCustomer,
-    toggleVerify,
-    noOfCustomer,
-    noOfVerifiedCustomer,
-    getNoOfCustomer,
-  } = useCustomerStore() as any;
-
-  const unverified = useMemo(
-    () => customers.filter((e: any) => !e.verified),
-    [customers]
-  );
+    getOverallCustomers,
+    verifiedCustomers,
+  } = useCustomerStore();
 
   useEffect(() => {
-    if (search != "") {
-      getCustomer(page, limit, getSearchFilterQuery(SEARCH_FILTERS, search));
-    } else {
-      getCustomer(page, limit);
-    }
-  }, [page, limit, search, getCustomer]);
+    // TODO: Add search
+    getCustomers({ page, limit });
+  }, [page, limit, search, getCustomers]);
 
   useEffect(() => {
-    getNoOfCustomer();
-  }, [unverified, getNoOfCustomer]);
+    getOverallCustomers({});
+  }, [getOverallCustomers]);
+
   return (
     <>
       <Sidenav>
@@ -60,13 +51,13 @@ export default function Customers({}: any) {
           <Card>
             <div className="flex flex-col justify-evenly h-full p-4">
               <p className="text-2xl font-bold">Overall Customers</p>
-              <p className="text-2xl">{noOfCustomer}</p>
+              <p className="text-2xl">{overallCustomers.length}</p>
             </div>
           </Card>
           <Card>
             <div className="flex flex-col justify-evenly h-full p-4">
               <p className="text-2xl font-bold">Verified Customers</p>
-              <p className="text-2xl">{noOfVerifiedCustomer}</p>
+              <p className="text-2xl">{verifiedCustomers.length}</p>
             </div>
           </Card>
         </div>
@@ -146,24 +137,6 @@ export default function Customers({}: any) {
               }}
             />
           </div>
-        </div>
-        <div className="flex flex-col gap-2 w-1/2">
-          <p>Pending</p>
-          {unverified.map((e: any) => {
-            return (
-              <div key={e._id} className=" bg-slate-800 p-3 rounded">
-                <p className="text-white-100">{e.name}</p>
-
-                <Button
-                  onClick={() => {
-                    toggleVerify(e._id, true);
-                  }}
-                >
-                  <p className="text-white-100">Approve</p>
-                </Button>
-              </div>
-            );
-          })}
         </div>
       </Sidenav>
     </>

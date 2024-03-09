@@ -15,7 +15,9 @@ import usePendingCustomerListStore from "./pendingCustomerList";
 import usePendingDeliveryListStore from "./pendingDeliveryList";
 
 import useCheckoutStore from "./checkout";
+import useCustomerStore from "./customer";
 export {
+  useCustomerStore,
   usePendingDeliveryListStore,
   usePendingCustomerListStore,
   useRiderAppointmentsListStore,
@@ -219,79 +221,68 @@ export const useMessageStore = create((set) => ({
   },
 }));
 
-export const useCustomerStore = create((set) => ({
-  customers: [],
-  verifiedCustomers: [],
-  noOfCustomer: 0,
-  maxAppointments: 0,
-  noOfVerifiedCustomer: 0,
-  getCustomer: async (page: number = 1, limit: number = 5, filter = "") => {
-    const query =
-      filter != ""
-        ? `{ "$and": [{"__t": "Customer"}, ${filter} ] }`
-        : `{ "__t": "Customer" }`;
-    const { data } = await get(
-      `users?page=${page}&limit=${limit}&filter=${query}`
-    );
-    if (data.status == "success") {
-      return set(() => ({ customers: data.data }));
-    }
-  },
-  getVerifiedCustomer: async (
-    start = getStartDayDate(new Date()),
-    end = getEndDayDate(new Date())
-  ) => {
-    const { data } = await get(
-      `users?page=${0}&limit=${0}&filter={"__t": "Customer", "$and": [{"verified": true}, { "createdAt": { "$gte": "${start.toISOString()}", "$lte": "${end.toISOString()}" }}]} `
-    );
+// export const useCustomerStore = create((set) => ({
+//   customers: [],
+//   verifiedCustomers: [],
+//   noOfCustomer: 0,
+//   maxAppointments: 0,
+//   noOfVerifiedCustomer: 0,
+//   getCustomer: async (page: number = 1, limit: number = 5, filter = "") => {
+//     const query =
+//       filter != ""
+//         ? `{ "$and": [{"__t": "Customer"}, ${filter} ] }`
+//         : `{ "__t": "Customer" }`;
+//     const { data } = await get(
+//       `users?page=${page}&limit=${limit}&filter=${query}`
+//     );
+//     if (data.status == "success") {
+//       return set(() => ({ customers: data.data }));
+//     }
+//   },
+//
+//   getNoOfCustomer: async () => {
+//     const { data } = await get(
+//       `users?page=${0}&limit=${0}&filter={"__t": "Customer"}`
+//     );
 
-    if (data.status == "success") {
-      return set(() => ({ verifiedCustomers: data.data }));
-    }
-  },
-  getNoOfCustomer: async () => {
-    const { data } = await get(
-      `users?page=${0}&limit=${0}&filter={"__t": "Customer"}`
-    );
+//     if (data.status == "success") {
+//       const noOfVerifiedCustomer = data.data.reduce(
+//         (acc: number, curr: any) => (curr.verified ? acc + 1 : acc),
+//         0
+//       );
+//       const noOfCustomer = data.data.reduce(
+//         (acc: number, curr: any) => acc + 1,
+//         0
+//       );
+//       return set(() => ({ noOfVerifiedCustomer, noOfCustomer }));
+//     }
+//   },
 
-    if (data.status == "success") {
-      const noOfVerifiedCustomer = data.data.reduce(
-        (acc: number, curr: any) => (curr.verified ? acc + 1 : acc),
-        0
-      );
-      const noOfCustomer = data.data.reduce(
-        (acc: number, curr: any) => acc + 1,
-        0
-      );
-      return set(() => ({ noOfVerifiedCustomer, noOfCustomer }));
-    }
-  },
+//   removeCustomer: async (id: string) => {
+//     const { data } = await remove(`users/${id}`);
+//     if (data.state == "success") {
+//       return set((state: any) => ({
+//         customers: [...state.customers.filter((e: any) => e._id != id)],
+//       }));
+//     }
+//   },
+//   verifyCustomer: async (id: string) => {
+//     const { data } = await patch(`users/${id}/verify`, {});
 
-  removeCustomer: async (id: string) => {
-    const { data } = await remove(`users/${id}`);
-    if (data.state == "success") {
-      return set((state: any) => ({
-        customers: [...state.customers.filter((e: any) => e._id != id)],
-      }));
-    }
-  },
-  verifyCustomer: async (id: string) => {
-    const { data } = await patch(`users/${id}/verify`, {});
-
-    if (data.status == "success") {
-      return set((state: any) => {
-        const pendingCustomers = state.pendingCustomers.map((e: any) => {
-          if (e._id == id) e = data.data[0];
-          return e;
-        });
-        return {
-          pendingCustomers,
-          maxPendingCustomers: state.maxPendingCustomers - 1,
-        };
-      });
-    }
-  },
-}));
+//     if (data.status == "success") {
+//       return set((state: any) => {
+//         const pendingCustomers = state.pendingCustomers.map((e: any) => {
+//           if (e._id == id) e = data.data[0];
+//           return e;
+//         });
+//         return {
+//           pendingCustomers,
+//           maxPendingCustomers: state.maxPendingCustomers - 1,
+//         };
+//       });
+//     }
+//   },
+// }));
 
 export const useItemStore = create((set) => ({
   items: [],

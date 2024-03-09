@@ -127,8 +127,12 @@ export default function Home() {
     getSolds,
     solds,
   } = useTransactionStore() as any;
-  const { getTotalRevenueToday, revenueToday } = useHomeStore();
-  const { getVerifiedCustomer, verifiedCustomers } = useCustomerStore() as any;
+  const {
+    getTotalRevenueToday,
+    revenueToday,
+    getVerifiedCustomers,
+    verifiedCustomers,
+  } = useHomeStore();
   const [units, setunits] = useState(20);
   const [timeFilter, settimeFilter] = useState<TimeFilter>("Daily");
   const [baranggay, setbaranggay] = useState<String>("All");
@@ -245,7 +249,7 @@ export default function Home() {
     const startDate = new Date();
     const endDate = new Date();
     startDate.setDate(startDate.getDate() - units * getMutiplier(timeFilter));
-    getVerifiedCustomer(startDate, endDate);
+    getVerifiedCustomers();
 
     startDate.setDate(startDate.getDate() - units * getMutiplier(timeFilter));
     getPrices(
@@ -254,7 +258,7 @@ export default function Home() {
       `{"$and": [{"createdAt": {"$gte": "${startDate.toISOString()}", "$lte": "${endDate.toISOString()}"}}]}`,
       "item"
     );
-  }, [units, timeFilter, getPrices, getVerifiedCustomer]);
+  }, [units, timeFilter, getPrices, getVerifiedCustomers]);
 
   useEffect(() => {
     const startDate = new Date();
