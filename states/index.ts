@@ -18,8 +18,10 @@ import useCustomerStore from "./customer";
 import useCreateCustomerStore from "./createCustomer";
 import useEditCustomerStore from "./editCustomer";
 import useItemStore from "./item";
+import useCreateItemStore from "./createItem";
 
 export {
+  useCreateItemStore,
   useItemStore,
   useEditCustomerStore,
   useCreateCustomerStore,

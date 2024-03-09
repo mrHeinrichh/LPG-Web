@@ -1,55 +1,46 @@
 "use client";
-import {
-  TableRow,
-  Datatable,
-  Sidenav,
-  InputField,
-  Button,
-  SelectField,
-} from "@/components";
+import { Sidenav, InputField, Button, SelectField } from "@/components";
 import Image from "next/image";
-import { useState } from "react";
 import style from "./style.module.css";
 import { useRouter } from "next/navigation";
-import { post } from "@/config";
-export default function Transactions({}: any) {
+import { useCreateItemStore } from "@/states";
+import { useEffect } from "react";
+
+export default function CreateItem({}: any) {
   const router = useRouter();
+  const {
+    setCreateFormData,
+    createFormData,
+    image,
+    uploadImage,
+    createItem,
+    reset,
+    createSuccess,
+  } = useCreateItemStore();
 
-  const [formData, setFormData] = useState<any>({
-    name: "",
-    category: "",
-    description: "",
-    weight: 0,
-    stock: 1,
-    customerPrice: 0,
-    retailerPrice: 0,
-  });
-
-  const [image, setimage] = useState<null | string>(null);
+  useEffect(() => {
+    if (createSuccess) {
+      reset();
+      router.back();
+    }
+  }, [createSuccess, reset, router]);
 
   const handleChange = (event: any) => {
     const { name, value } = event.target;
-    setFormData((prevFormData: any) => ({ ...prevFormData, [name]: value }));
+    setCreateFormData({
+      ...createFormData,
+      [name]: value,
+    });
   };
 
   const handleUpload = async (event: any) => {
     const form = new FormData();
     form.append("image", event.target.files[0]);
-    const { data } = await post<FormData>("upload/image", form);
-    if (data.status == "success") {
-      setimage(data.data[0]?.path ?? "");
-    }
+    uploadImage(form);
   };
 
   const handleSubmit = async () => {
-    try {
-      const { data } = await post(`items`, { ...formData, image });
-      if (data.status === "success") {
-        router.push("/");
-      }
-    } catch (error) {
-      console.error("Error adding customers:", error);
-    }
+    createItem({ ...createFormData, image: image ? image : "" });
   };
 
   return (
