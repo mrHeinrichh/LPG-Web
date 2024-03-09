@@ -1,11 +1,6 @@
 "use client";
 import { Sidenav, Card, SelectField, InputField } from "@/components";
-import {
-  useCustomerStore,
-  useHomeStore,
-  usePriceStore,
-  useTransactionStore,
-} from "@/states";
+import { useHomeStore, usePriceStore, useTransactionStore } from "@/states";
 import { useEffect, useMemo, useState } from "react";
 import {
   AccessoriesChart,
@@ -120,14 +115,6 @@ export default function Home() {
   };
 
   const {
-    getDeliveriesByStatuses,
-    deliveries,
-    total,
-    getTotal,
-    getSolds,
-    solds,
-  } = useTransactionStore() as any;
-  const {
     getTotalRevenueToday,
     revenueToday,
     getVerifiedCustomers,
@@ -143,15 +130,26 @@ export default function Home() {
     title: e,
   }));
 
-  const pending = useMemo(
-    () => deliveries.filter((e: any) => e.status == "Pending").length,
-    [deliveries]
-  );
+  // const data = useMemo(() => {
+  //   const parsedStartDay = getDates(timeFilter, units).map((e: Date) =>
+  //     getStartDayDate(e)
+  //   );
+  //   const multiplier = getMutiplier(timeFilter);
+  //   return parsedStartDay.map((e: Date) => {
+  //     let transactionsTemp: any[] = [];
+  //     transactionsTemp = solds.filter((sold: any) => {
+  //       return (
+  //         e.getTime() <= getStartDayDate(new Date(sold.createdAt)).getTime() &&
+  //         e.getTime() + 86399999 * multiplier >=
+  //           getStartDayDate(new Date(sold.createdAt)).getTime()
+  //       );
+  //     });
 
-  const completed = useMemo(
-    () => deliveries.filter((e: any) => e.status == "Completed").length,
-    [deliveries]
-  );
+  //     if (baranggay != "All") {
+  //       transactionsTemp = transactionsTemp.filter((sold: any) => {
+  //         return sold.__t == "Delivery" && sold.barangay == baranggay;
+  //       });
+  //     }
 
   const data = useMemo(() => {
     const parsedStartDay = getDates(timeFilter, units).map((e: Date) =>
@@ -168,60 +166,35 @@ export default function Home() {
         );
       });
 
-      if (baranggay != "All") {
-        transactionsTemp = transactionsTemp.filter((sold: any) => {
-          return sold.__t == "Delivery" && sold.barangay == baranggay;
-        });
-      }
+  //     const delivery = transactionsTemp.reduce((acc: any, curr: any) => {
+  //       return curr.__t == "Delivery" ? acc + 1 : acc;
+  //     }, 0);
 
-      const completed = transactionsTemp.reduce((acc: any, curr: any) => {
-        return curr.__t == "Delivery" && curr.status == "Completed"
-          ? acc + 1
-          : acc;
-      }, 0);
-      const cancelled = transactionsTemp.reduce((acc: any, curr: any) => {
-        return curr.__t == "Delivery" && curr.status == "Cancelled"
-          ? acc + 1
-          : acc;
-      }, 0);
-      const declined = transactionsTemp.reduce((acc: any, curr: any) => {
-        return curr.__t == "Delivery" && curr.status == "Declined"
-          ? acc + 1
-          : acc;
-      }, 0);
-      const walkin = transactionsTemp.reduce((acc: any, curr: any) => {
-        return curr.__t ? acc + 1 : acc;
-      }, 0);
+  //     const accessories = transactionsTemp.reduce((acc: any, curr: any) => {
+  //       return (
+  //         curr.items.filter((item: any) => item.type == "Accessory").length +
+  //         acc
+  //       );
+  //     }, 0);
 
-      const delivery = transactionsTemp.reduce((acc: any, curr: any) => {
-        return curr.__t == "Delivery" ? acc + 1 : acc;
-      }, 0);
+  //     const products = transactionsTemp.reduce((acc: any, curr: any) => {
+  //       return (
+  //         curr.items.filter((item: any) => item.type == "Product").length + acc
+  //       );
+  //     }, 0);
 
-      const accessories = transactionsTemp.reduce((acc: any, curr: any) => {
-        return (
-          curr.items.filter((item: any) => item.type == "Accessory").length +
-          acc
-        );
-      }, 0);
-
-      const products = transactionsTemp.reduce((acc: any, curr: any) => {
-        return (
-          curr.items.filter((item: any) => item.type == "Product").length + acc
-        );
-      }, 0);
-
-      return {
-        name: e.toDateString(),
-        accesories: accessories,
-        products: products,
-        walkin,
-        delivery,
-        completed,
-        cancelled,
-        declined,
-      };
-    });
-  }, [solds, units, timeFilter, baranggay]);
+  //     return {
+  //       name: e.toDateString(),
+  //       accesories: accessories,
+  //       products: products,
+  //       walkin,
+  //       delivery,
+  //       completed,
+  //       cancelled,
+  //       declined,
+  //     };
+  //   });
+  // }, [solds, units, timeFilter, baranggay]);
 
   const parsedCustomers = useMemo(() => {
     const parsedStartDay = getDates(timeFilter, units).map((e: Date) =>
@@ -260,23 +233,23 @@ export default function Home() {
     );
   }, [units, timeFilter, getPrices, getVerifiedCustomers]);
 
-  useEffect(() => {
-    const startDate = new Date();
-    const endDate = new Date();
-    startDate.setDate(startDate.getDate() - units * getMutiplier(timeFilter));
-    getSolds(0, 0, startDate, endDate);
-  }, [units, timeFilter, baranggay, getSolds]);
+  // useEffect(() => {
+  //   const startDate = new Date();
+  //   const endDate = new Date();
+  //   startDate.setDate(startDate.getDate() - units * getMutiplier(timeFilter));
+  //   getSolds(0, 0, startDate, endDate);
+  // }, [units, timeFilter, baranggay, getSolds]);
 
-  useEffect(() => {
-    getTotal(
-      0,
-      0,
-      `{"createdAt": {"$gte": "${getStartDayDate(
-        new Date()
-      ).toISOString()}", "$lte": "${getEndDayDate(new Date()).toISOString()}"}}`
-    );
-    getDeliveriesByStatuses(0, 0, ["Pending", "Completed"]);
-  }, [getDeliveriesByStatuses, getTotal]);
+  // useEffect(() => {
+  //   getTotal(
+  //     0,
+  //     0,
+  //     `{"createdAt": {"$gte": "${getStartDayDate(
+  //       new Date()
+  //     ).toISOString()}", "$lte": "${getEndDayDate(new Date()).toISOString()}"}}`
+  //   );
+  //   getDeliveriesByStatuses(0, 0, ["Pending", "Completed"]);
+  // }, [getDeliveriesByStatuses, getTotal]);
 
   useEffect(() => {
     getTotalRevenueToday({});
@@ -292,7 +265,7 @@ export default function Home() {
               <p className="text-2xl"> {parseToFiat(revenueToday)}</p>
             </div>
           </Card>
-          <Card>
+          {/* <Card>
             <div className="flex flex-col justify-evenly h-full p-4">
               <p className="text-2xl font-bold">Pending Deliveries</p>
               <p className="text-2xl">{pending}</p>
@@ -303,7 +276,7 @@ export default function Home() {
               <p className="text-2xl font-bold">Completed Deliveries</p>
               <p className="text-2xl">{completed}</p>
             </div>
-          </Card>
+          </Card> */}
         </div>
         <PricesTable />
 

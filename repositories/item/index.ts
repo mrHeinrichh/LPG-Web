@@ -37,6 +37,11 @@ export const updateItem: UpdateItem = async function (id: string, body: any) {
   return data as ItemResponse;
 };
 
+export const updatePrice: UpdateItem = async function (id: string, body: any) {
+  const { data } = await patch(`items/${id}/price`, body);
+  return data as ItemResponse;
+};
+
 export const deleteItem: DeleteItem = async function (id: string) {
   const { data } = await remove(`items/${id}`);
   return data as ItemResponse;
@@ -48,4 +53,5 @@ export default {
   createItem,
   getItembyId,
   updateItem,
+  updatePrice,
 };

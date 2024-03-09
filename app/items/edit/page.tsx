@@ -1,125 +1,79 @@
 "use client";
 import { Sidenav, InputField, Button, SelectField } from "@/components";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import style from "./style.module.css";
 import { useRouter, useSearchParams } from "next/navigation";
-import { get, patch, post } from "@/config";
 import Image from "next/image";
 import { PriceChangesChart, PricesTable } from "./components";
+import { useEditItemStore } from "@/states";
 
 export default function EditItems({}: any) {
+  const {
+    getItemById,
+    editFormData,
+    uploadImage,
+    setEditFormData,
+    image,
+    updateItem,
+    editSuccess,
+    reset,
+    customerPrice,
+    retailerPrice,
+    setCustomerPriceFormData,
+    editCustomerPriceFormData,
+    editRetailerPriceFormData,
+    setRetailerPriceData,
+    updateItemRetailerPrice,
+    updateItemCustomerPrice,
+  } = useEditItemStore();
+
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
-  const [image, setimage] = useState<null | string>(null);
-  const [formData, setFormData] = useState<any>({
-    name: "",
-    category: "",
-    description: "",
-    weight: 0,
-    stock: 1,
-    type: "",
-  });
-  const [customerPrice, setcustomerPrice] = useState<number>(0);
-  const [retailerPrice, setretailerPrice] = useState<number>(0);
-  const [retailerReason, setretailerReason] = useState<string>("");
-  const [customerReason, setcustomerReason] = useState<string>("");
 
   useEffect(() => {
-    fetchItem();
-  });
-
-  const fetchItem = async () => {
-    try {
-      const { data } = await get(`items/${id}`);
-
-      if (data.status === "success") {
-        setFormData({
-          name: data.data[0].name ?? "",
-          category: data.data[0].category ?? "",
-          description: data.data[0].description ?? "",
-          weight: data.data[0].weight.toString() ?? "0",
-          stock: data.data[0].stock.toString() ?? "0",
-          type: data.data[0].type ?? "",
-        });
-        setcustomerPrice(data.data[0].customerPrice.toString() ?? "0");
-        setretailerPrice(data.data[0].retailerPrice.toString() ?? "0");
-        setimage(data.data[0].image ?? "");
-      }
-    } catch (error) {
-      console.error("Error fetching users:", error);
+    if (editSuccess) {
+      reset();
+      router.back();
     }
-  };
+  }, [editSuccess, reset, router]);
+
+  useEffect(() => {
+    getItemById(id ?? "");
+  }, [getItemById, id]);
 
   const handleChange = (event: any) => {
     const { name, value } = event.target;
-    if (name == "customerPrice") {
-      setcustomerPrice(value);
+    if (name == "customerPrice" || name == "customerReason") {
+      setCustomerPriceFormData({ ...editCustomerPriceFormData, [name]: value });
       return;
-    }
-
-    if (name == "retailerPrice") {
-      setretailerPrice(value);
+    } else if (name == "retailerPrice" || name == "retailerReason") {
+      setRetailerPriceData({ ...editRetailerPriceFormData, [name]: value });
       return;
+    } else {
+      setEditFormData({ ...editFormData, [name]: value });
     }
-    if (name == "retailerReason") {
-      setretailerReason(value);
-      return;
-    }
-
-    if (name == "customerReason") {
-      setcustomerReason(value);
-      return;
-    }
-    setFormData((prevFormData: any) => ({ ...prevFormData, [name]: value }));
   };
 
   const handleUpload = async (event: any) => {
     const form = new FormData();
     form.append("image", event.target.files[0]);
-    const { data } = await post<FormData>("upload/image", form);
-    if (data.status == "success") {
-      setimage(data.data[0]?.path ?? "");
-    }
+    uploadImage(form);
   };
 
   const handleCustomerPriceSubmit = async () => {
-    const body: any = {
-      type: "Customer",
-      price: customerPrice,
-    };
-
-    if (customerReason != "") body.reason = customerReason;
-    try {
-      const { data } = await patch(`items/${id}/price`, body);
-      if (data.status === "success") router.push("/items");
-    } catch (error) {
-      console.error("Error adding customers:", error);
-    }
+    updateItemCustomerPrice(id ?? "", { ...editCustomerPriceFormData });
   };
 
   const handleRetailerPriceSubmit = async () => {
-    const body: any = {
-      type: "Retailer",
-      price: retailerPrice,
-    };
-
-    if (retailerReason != "") body.reason = retailerReason;
-    try {
-      const { data } = await patch(`items/${id}/price`, body);
-      if (data.status === "success") router.push("/items");
-    } catch (error) {
-      console.error("Error adding customers:", error);
-    }
+    updateItemRetailerPrice(id ?? "", { ...editRetailerPriceFormData });
   };
 
   const handleSubmit = async () => {
-    try {
-      const { data } = await patch(`items/${id}`, { image, ...formData });
-      if (data.status === "success") router.push("/items");
-    } catch (error) {
-      console.error("Error adding customers:", error);
-    }
+    updateItem(id ?? "", {
+      image: image ?? "",
+      ...editFormData,
+    });
   };
 
   return (
@@ -149,7 +103,7 @@ export default function EditItems({}: any) {
             name="name"
             placeholder="Name"
             onChange={handleChange}
-            defaultValue={formData.name}
+            defaultValue={editFormData.name}
           />
 
           <SelectField
@@ -160,28 +114,28 @@ export default function EditItems({}: any) {
             ]}
             name="category"
             title="Category"
-            defaultValue={formData.category}
+            defaultValue={editFormData.category}
             onChange={handleChange}
           />
           <InputField
             name="description"
             placeholder="Description"
             onChange={handleChange}
-            defaultValue={formData.description}
+            defaultValue={editFormData.description}
           />
           <InputField
             type="number"
             name="weight"
             placeholder="Weight"
             onChange={handleChange}
-            value={formData.weight}
+            value={editFormData.weight}
           />
           <InputField
             type="number"
             name="stock"
             placeholder="Stock"
             onChange={handleChange}
-            value={formData.stock}
+            value={editFormData.stock}
           />
 
           <SelectField
@@ -191,7 +145,7 @@ export default function EditItems({}: any) {
             ]}
             name="type"
             title="Item Type"
-            defaultValue={formData.type}
+            defaultValue={editFormData.type}
             onChange={handleChange}
           />
           <div className="col-span-2 flex justify-end">
@@ -205,11 +159,10 @@ export default function EditItems({}: any) {
           </div>
           <div className="">
             <InputField
-              type="number"
               name="customerPrice"
               placeholder="Customer Price"
               onChange={handleChange}
-              value={customerPrice}
+              defaultValue={customerPrice.toString()}
             />
             <InputField
               name="customerReason"
@@ -223,11 +176,10 @@ export default function EditItems({}: any) {
 
           <div className="">
             <InputField
-              type="number"
               name="retailerPrice"
               placeholder="Retailer Price"
               onChange={handleChange}
-              value={retailerPrice}
+              defaultValue={retailerPrice.toString()}
             />
             <InputField
               name="retailerReason"
