@@ -11,37 +11,32 @@ import { useTransactionStore } from "@/states";
 import { useEffect, useState } from "react";
 import trash from "@/public/trash.svg";
 import Image from "next/image";
-import { SEARCH_FILTERS, TABLE_HEADERS } from "./data";
-import { FaChevronLeft, FaChevronRight, FaPlus } from "react-icons/fa";
-import { getSearchFilterQuery } from "@/utils";
+import { TABLE_HEADERS } from "./data";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { parseToFiat } from "@/utils";
 
 export default function Transactions() {
   const {
     getTransactions,
     transactions,
     removeTransaction,
-    noOfTransactions,
-    getNoOfTransactions,
-    totalRevenue,
-  } = useTransactionStore() as any;
+    page,
+    limit,
+    getOverallTransactions,
+    overallTransactions,
+    setLimit,
+    nextPage,
+    previousPage,
+  } = useTransactionStore();
   const [search, setsearch] = useState("");
-  const [page, setpage] = useState(1);
-  const [limit, setlimit] = useState(20);
 
   useEffect(() => {
-    getNoOfTransactions(page, limit);
-  });
+    getOverallTransactions({});
+  }, [getOverallTransactions]);
 
   useEffect(() => {
-    if (search != "") {
-      getTransactions(
-        page,
-        limit,
-        getSearchFilterQuery(SEARCH_FILTERS, search)
-      );
-    } else {
-      getTransactions(page, limit);
-    }
+    // TODO: Add search
+    getTransactions({ page, limit });
   }, [page, limit, search, getTransactions]);
 
   return (
@@ -51,13 +46,17 @@ export default function Transactions() {
           <Card>
             <div className="flex flex-col justify-evenly h-full p-4">
               <p className="text-2xl font-bold">Overall Transactions</p>
-              <p className="text-2xl">{noOfTransactions}</p>
+              <p className="text-2xl">{overallTransactions.length}</p>
             </div>
           </Card>
           <Card>
             <div className="flex flex-col justify-evenly h-full p-4">
               <p className="text-2xl font-bold">Total Revenue</p>
-              <p className="text-2xl">₱ {totalRevenue}.00</p>
+              <p className="text-2xl">
+                {parseToFiat(
+                  overallTransactions.reduce((acc, curr) => curr.total + acc, 0)
+                )}
+              </p>
             </div>
           </Card>
         </div>
@@ -71,13 +70,6 @@ export default function Transactions() {
               }}
             />
           </div>
-          {/* <div className="rounded-lg bg-black-50 p-2">
-            <FaPlus
-              onClick={() => {
-                router.push("/customers/add");
-              }}
-            />
-          </div> */}
         </div>
 
         <Datatable header={TABLE_HEADERS}>
@@ -113,20 +105,20 @@ export default function Transactions() {
               name={""}
               title={""}
               onChange={(e: any) => {
-                setlimit(e.target.value);
+                setLimit(Number(e.target.value));
               }}
             />
           </div>
           <div className="flex items-center gap-4 ">
             <FaChevronLeft
               onClick={() => {
-                if (page > 1) setpage((prev: number) => prev - 1);
+                previousPage();
               }}
             />
             {page}
             <FaChevronRight
               onClick={() => {
-                setpage((prev: number) => prev + 1);
+                nextPage();
               }}
             />
           </div>
@@ -135,4 +127,3 @@ export default function Transactions() {
     </>
   );
 }
-// deleteItem;

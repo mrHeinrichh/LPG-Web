@@ -19,8 +19,10 @@ import useCreateCustomerStore from "./createCustomer";
 import useEditCustomerStore from "./editCustomer";
 import useItemStore from "./item";
 import useCreateItemStore from "./createItem";
+import useTransactionStore from "./transaction";
 
 export {
+  useTransactionStore,
   useCreateItemStore,
   useItemStore,
   useEditCustomerStore,
@@ -56,155 +58,153 @@ export const useAuthStore = create((set) => ({
   },
 }));
 
-export const useTransactionStore = create((set) => ({
-  transactions: [],
-  pendingDeliveries: [],
-  maxPendingDeliveries: 0,
-  deliveries: [],
-  feedbacks: [],
-  solds: [],
-  noOfTransactions: 0,
-  totalRevenue: 0,
-  total: 0,
-  getNoOfTransactions: async () => {
-    const { data } = await get(`transactions?page=${0}&limit=${0}`);
-    if (data.status == "success") {
-      const noOfTransactions = data.data.reduce(
-        (acc: number, curr: any) => acc + 1,
-        0
-      );
-      const totalRevenue = data.data.reduce(
-        (acc: number, curr: any) => acc + curr.total,
-        0
-      );
-      return set(() => ({ noOfTransactions, totalRevenue }));
-    }
-  },
-  getSolds: async (
-    page = 1,
-    limit = 5,
-    start = getStartDayDate(new Date()),
-    end = getEndDayDate(new Date())
-  ) => {
-    const temp = `transactions?page=${page}&limit=${limit}&filter={"$and": [{ "createdAt": { "$gte": "${start.toISOString()}", "$lte": "${end.toISOString()}" }}, {"$or": [{"$and": [{"__t": "Delivery"}, {"status": "Completed"}]}, {"__t": {"$eq": null}}]}]} `;
-    const { data } = await get(temp);
-    if (data.status == "success") {
-      return set(() => ({ solds: data.data }));
-    }
-  },
-  getFeedbacks: async (page = 1, limit = 5) => {
-    const { data } = await get(
-      `transactions?page=${page}&limit=${limit}&filter={"__t": "Delivery", "feedback": { "$ne": null }}`
-    );
-    if (data.status == "success") {
-      return set(() => ({ feedbacks: data.data }));
-    }
-  },
-  getTransactions: async (
-    page: number = 1,
-    limit: number = 5,
-    filter = "{}"
-  ) => {
-    const { data } = await get(
-      `transactions?page=${page}&limit=${limit}&filter=${filter}`
-    );
-    if (data.status == "success") {
-      return set(() => ({
-        transactions: data.data,
-      }));
-    }
-  },
-  getPendingDeliveries: async (page: number = 1, limit: number = 5) => {
-    const { data } = await get(
-      `transactions?page=${page}&limit=${limit}&filter={"__t": "Delivery", "status": "Pending"}`
-    );
-    if (data.status == "success") {
-      return set(() => ({
-        pendingDeliveries: data.data,
-        maxPendingDeliveries: data.meta.max,
-      }));
-    }
-  },
-  getTotal: async (page: number = 1, limit: number = 5, filter = "{}") => {
-    const { data } = await get(
-      `transactions?page=${page}&limit=${limit}&filter=${filter}`
-    );
-    if (data.status == "success") {
-      return set(() => ({
-        total: data.data.reduce(
-          (acc: number, curr: any) => acc + curr.total,
-          0
-        ),
-      }));
-    }
-  },
-  getDeliveriesByStatuses: async (
-    page: number = 1,
-    limit: number = 5,
-    statuses = []
-  ) => {
-    const query = statuses.map((e: string) => `{"status": "${e}"}`).join(", ");
-    const { data } = await get(
-      `transactions?page=${page}&limit=${limit}&filter={"$or": [${query}]}`
-    );
-    if (data.status == "success") {
-      return set(() => ({ deliveries: data.data }));
-    }
-  },
-  approve: async (_id: string) => {
-    const { data } = await patch(`transactions/${_id}/approve`, {});
-    if (data.status == "success") {
-      return set((state: any) => {
-        const pendingDeliveries = state.pendingDeliveries.map((e: any) => {
-          if (e._id == _id) e.status = "Approved";
-          return e;
-        });
-        const transactions = state.transactions.map((e: any) => {
-          if (e._id == _id) e.status = "Approved";
-          return e;
-        });
-        return {
-          pendingDeliveries,
-          transactions,
-          maxPendingDeliveries: state.maxPendingDeliveries - 1,
-        };
-      });
-    }
-  },
-  decline: async (_id: string, cancelReason: string) => {
-    const { data } = await patch(`transactions/${_id}/decline`, { cancelReason });
+// export const useTransactionStore = create((set) => ({
+//   transactions: [],
+//   pendingDeliveries: [],
+//   maxPendingDeliveries: 0,
+//   deliveries: [],
+//   feedbacks: [],
+//   solds: [],
+//   noOfTransactions: 0,
+//   totalRevenue: 0,
+//   total: 0,
+//   getNoOfTransactions: async () => {
+//     const { data } = await get(`transactions?page=${0}&limit=${0}`);
+//     if (data.status == "success") {
+//       const noOfTransactions = data.data.reduce(
+//         (acc: number, curr: any) => acc + 1,
+//         0
+//       );
+//       const totalRevenue = data.data.reduce(
+//         (acc: number, curr: any) => acc + curr.total,
+//         0
+//       );
+//       return set(() => ({ noOfTransactions, totalRevenue }));
+//     }
+//   },
+//   getSolds: async (
+//     page = 1,
+//     limit = 5,
+//     start = getStartDayDate(new Date()),
+//     end = getEndDayDate(new Date())
+//   ) => {
+//     const temp = `transactions?page=${page}&limit=${limit}&filter={"$and": [{ "createdAt": { "$gte": "${start.toISOString()}", "$lte": "${end.toISOString()}" }}, {"$or": [{"$and": [{"__t": "Delivery"}, {"status": "Completed"}]}, {"__t": {"$eq": null}}]}]} `;
+//     const { data } = await get(temp);
+//     if (data.status == "success") {
+//       return set(() => ({ solds: data.data }));
+//     }
+//   },
+//   getFeedbacks: async (page = 1, limit = 5) => {
+//     const { data } = await get(
+//       `transactions?page=${page}&limit=${limit}&filter={"__t": "Delivery", "feedback": { "$ne": null }}`
+//     );
+//     if (data.status == "success") {
+//       return set(() => ({ feedbacks: data.data }));
+//     }
+//   },
+//   getTransactions: async (
+//     page: number = 1,
+//     limit: number = 5,
+//     filter = "{}"
+//   ) => {
+//     const { data } = await get(
+//       `transactions?page=${page}&limit=${limit}&filter=${filter}`
+//     );
+//     if (data.status == "success") {
+//       return set(() => ({
+//         transactions: data.data,
+//       }));
+//     }
+//   },
+//   getPendingDeliveries: async (page: number = 1, limit: number = 5) => {
+//     const { data } = await get(
+//       `transactions?page=${page}&limit=${limit}&filter={"__t": "Delivery", "status": "Pending"}`
+//     );
+//     if (data.status == "success") {
+//       return set(() => ({
+//         pendingDeliveries: data.data,
+//         maxPendingDeliveries: data.meta.max,
+//       }));
+//     }
+//   },
+//   getTotal: async (page: number = 1, limit: number = 5, filter = "{}") => {
+//     const { data } = await get(
+//       `transactions?page=${page}&limit=${limit}&filter=${filter}`
+//     );
+//     if (data.status == "success") {
+//       return set(() => ({
+//         total: data.data.reduce(
+//           (acc: number, curr: any) => acc + curr.total,
+//           0
+//         ),
+//       }));
+//     }
+//   },
+//   getDeliveriesByStatuses: async (
+//     page: number = 1,
+//     limit: number = 5,
+//     statuses = []
+//   ) => {
+//     const query = statuses.map((e: string) => `{"status": "${e}"}`).join(", ");
+//     const { data } = await get(
+//       `transactions?page=${page}&limit=${limit}&filter={"$or": [${query}]}`
+//     );
+//     if (data.status == "success") {
+//       return set(() => ({ deliveries: data.data }));
+//     }
+//   },
+//   approve: async (_id: string) => {
+//     const { data } = await patch(`transactions/${_id}/approve`, {});
+//     if (data.status == "success") {
+//       return set((state: any) => {
+//         const pendingDeliveries = state.pendingDeliveries.map((e: any) => {
+//           if (e._id == _id) e.status = "Approved";
+//           return e;
+//         });
+//         const transactions = state.transactions.map((e: any) => {
+//           if (e._id == _id) e.status = "Approved";
+//           return e;
+//         });
+//         return {
+//           pendingDeliveries,
+//           transactions,
+//           maxPendingDeliveries: state.maxPendingDeliveries - 1,
+//         };
+//       });
+//     }
+//   },
+//   decline: async (_id: string) => {
+//     const { data } = await patch(`transactions/${_id}/decline`, {});
+//     if (data.status == "success") {
+//       return set((state: any) => {
+//         const temp = state.pendingDeliveries.map((e: any) => {
+//           if (e._id == _id) e = data.data[0];
+//           return e;
+//         });
+//         return {
+//           pendingDeliveries: temp,
+//           maxPendingDeliveries: state.maxPendingDeliveries - 1,
+//         };
+//       });
+//     }
+//   },
+//   getRiderTransactions: async (rider: string) => {
+//     const { data } = await get(`transactions?filter={"rider": "${rider}"}`);
+//     console.log(data);
 
-    if (data.status === "success") {
-      return set((state: any) => {
-        const temp = state.pendingDeliveries.map((e: any) => {
-          if (e._id === _id) e = data.data[0];
-          return e;
-        });
-
-        return {
-          pendingDeliveries: temp,
-          maxPendingDeliveries: state.maxPendingDeliveries - 1,
-        };
-      });
-    }
-  },
-  getRiderTransactions: async (rider: string) => {
-    const { data } = await get(`transactions?filter={"rider": "${rider}"}`);
-    console.log(data);
-
-    if (data.status == "success") {
-      return set(() => ({ transactions: data.data }));
-    }
-  },
-  removeTransaction: async (id: any) => {
-    const { data } = await remove(`transactions/${id}`);
-    if (data.status == "success") {
-      return set((state: any) => ({
-        transactions: [...state.transactions.filter((e: any) => e._id != id)],
-      }));
-    }
-  },
-}));
+//     if (data.status == "success") {
+//       return set(() => ({ transactions: data.data }));
+//     }
+//   },
+//   removeTransaction: async (id: any) => {
+//     const { data } = await remove(`transactions/${id}`);
+//     if (data.status == "success") {
+//       return set((state: any) => ({
+//         transactions: [...state.transactions.filter((e: any) => e._id != id)],
+//       }));
+//     }
+//   },
+// }));
 
 export const useMessageStore = create((set) => ({
   messages: [],
