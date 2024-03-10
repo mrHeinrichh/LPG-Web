@@ -11,6 +11,7 @@ import PriceChangesChart from "./PriceChangesChart";
 import VerifiedCustomersChart from "./VerifiedCustomersChart";
 import DeliveryStatusesChart from "./DeliveryStatusesChart";
 import TransactionTypeChart from "./TransactionTypeChart";
+import usePendingRetailerListStore from "./PendingRetailerList";
 export {
   TransactionTypeChart,
   DeliveryStatusesChart,
@@ -25,4 +26,5 @@ export {
   RiderAppointmentsList,
   PendingDeliveryList,
   PendingCustomerList,
+  usePendingRetailerListStore,
 };

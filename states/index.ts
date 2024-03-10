@@ -11,6 +11,7 @@ import useCreateRiderStore from "./createRider";
 import useHomeStore from "./home";
 import useRiderAppointmentsListStore from "./riderAppointmentsList";
 import usePendingCustomerListStore from "./pendingCustomerList";
+import usePendingRetailerListStore from "./pendingRetailerList";
 import usePendingDeliveryListStore from "./pendingDeliveryList";
 import useCheckoutStore from "./checkout";
 import useCustomerStore from "./customer";
@@ -21,6 +22,7 @@ import useCreateItemStore from "./createItem";
 import useTransactionStore from "./transaction";
 import useEditItemStore from "./editItem";
 import useDeliveriesStore from "./deliveries";
+
 export {
   useDeliveriesStore,
   useEditItemStore,
@@ -32,6 +34,7 @@ export {
   useCustomerStore,
   usePendingDeliveryListStore,
   usePendingCustomerListStore,
+  usePendingRetailerListStore,
   useRiderAppointmentsListStore,
   useCheckoutStore,
   useHomeStore,

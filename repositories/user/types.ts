@@ -38,6 +38,8 @@ export interface AuthenticateArgs {
 export type Authenticate = (request: AuthenticateArgs) => PromiseUserResponse;
 
 export type VerifyCustomer = (id: string) => PromiseUserResponse;
+export type VerifyRetailer = (id: string) => PromiseUserResponse;
+
 
 export type DeleteUser = (id: string) => PromiseUserResponse;
 

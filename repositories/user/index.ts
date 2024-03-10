@@ -48,6 +48,14 @@ export const verifyCustomer = async function <T extends IUserModel>(
   return data as Promise<IHttpResponse<T>>;
 };
 
+export const verifyRetailer = async function <T extends IUserModel>(
+  id: string
+) {
+  const { data } = await patch(`users/${id}/verifyRetailer`, {});
+  return data as Promise<IHttpResponse<T>>;
+};
+
+
 export const changePassword = async function <T extends IUserModel>(
   id: string,
   body: ChangePasswordArgs
@@ -65,6 +73,7 @@ export default {
   authenticate,
   changePassword,
   verifyCustomer,
+  verifyRetailer,
   getUsers,
   deleteUser,
   createUser,

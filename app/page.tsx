@@ -22,6 +22,7 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { Baranggay, TimeFilter } from "@/interfaces";
 import { BARANGGAYS, TIME_FILTERS } from "@/constants";
+import PendingRetailerList from "./components/PendingRetailerList";
 
 export default function Home() {
   const downloadAsPDF2 = async () => {
@@ -230,6 +231,7 @@ export default function Home() {
         <div className="grid grid-cols-2 gap-2 w-full my-5">
           <RiderAppointmentsList />
           <PendingCustomerList />
+          <PendingRetailerList />
         </div>
       </Sidenav>
     </main>
