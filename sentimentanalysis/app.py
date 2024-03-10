@@ -36,7 +36,7 @@ st.markdown("<h1 style='text-align: center; color: white;'>SENTIMENT ANALYSIS RE
 selected_question = st.sidebar.radio("Choose Question Number:", list(questions_data.keys()))
 
 # Load the data for the selected question
-excel_file = 'sample_lang.xlsx'
+excel_file = 'Testing_Sentiment.xlsx'
 sheet_name = questions_data[selected_question]["sheet_name"]
 df = pd.read_excel(excel_file, sheet_name=sheet_name, usecols='A:E', header=0)
 
