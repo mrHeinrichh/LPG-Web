@@ -5,6 +5,7 @@ import { initialState } from "./initialState";
 import { IDeliveryModel } from "@/models";
 
 export default create<DevliveryStore>((set) => {
+  
   const getPendingDeliveries = async ({ page = 0, limit = 0 }) => {
     const { data, status } =
       await transactionRepository.getTransactions<IDeliveryModel>({
@@ -76,21 +77,19 @@ export default create<DevliveryStore>((set) => {
       });
     }
   };
-
-  const decline = async (id: string) => {
-    const { data, status } =
-      await transactionRepository.declineDelivery<IDeliveryModel>(id, {});
-    if (status == "success" && data.length !== 0) {
+  const decline = async (id: string, cancelReason?: string) => {
+    const body = cancelReason ? { cancelReason } : {};
+    const { data, status } = await transactionRepository.declineDelivery<IDeliveryModel>(id, body);
+  
+    if (status === "success" && data.length !== 0) {
       return set((state) => {
         return {
-          pendingDeliveries: state.pendingDeliveries.filter(
-            (delivery) => delivery._id != id
-          ),
+          pendingDeliveries: state.pendingDeliveries.filter((delivery) => delivery._id !== id),
         };
       });
     }
   };
-
+  
   const setLimit = (value: number) => {
     return set(() => ({ limit: value }));
   };

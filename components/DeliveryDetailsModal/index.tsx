@@ -7,7 +7,9 @@ import Button from "../Button";
 import { useDeliveriesStore } from "@/states";
 
 function DeliveryDetailsModal({ isOpen, setIsOpen, data }: any) {
-  const { approve, decline } = useDeliveriesStore();
+  const { approve } = useDeliveriesStore();
+  const [cancelReason, setCancelReason] = React.useState<string>("");
+  const { decline } = useDeliveriesStore();
 
   if (!isOpen) {
     return <></>;
@@ -85,7 +87,7 @@ function DeliveryDetailsModal({ isOpen, setIsOpen, data }: any) {
           </div>
         </div>
 
-        {data.status == "Pending" ? (
+        {data.status === "Pending" ? (
           <div className="w-full flex justify-between items-center">
             <Button
               onClick={() => {
@@ -95,14 +97,24 @@ function DeliveryDetailsModal({ isOpen, setIsOpen, data }: any) {
             >
               <p>Approve</p>
             </Button>
-            <Button
-              onClick={() => {
-                decline(data._id);
-                setIsOpen(false);
-              }}
-            >
-              <p>Decline</p>
-            </Button>
+            <div className="flex gap-4 items-center">
+              <div>
+                <input
+                  type="text"
+                  placeholder="Cancel Reason"
+                  value={cancelReason}
+                  onChange={(e) => setCancelReason(e.target.value)}
+                />
+             <Button
+  onClick={() => {
+    decline(data._id, cancelReason); // Make sure decline accepts two arguments
+    setIsOpen(false);
+  }}
+>
+  <p>Decline with Reason</p>
+</Button>
+              </div>
+            </div>
           </div>
         ) : (
           <></>

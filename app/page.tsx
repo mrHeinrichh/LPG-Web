@@ -232,6 +232,7 @@ export default function Home() {
           <RiderAppointmentsList />
           <PendingCustomerList />
           <PendingRetailerList />
+          
         </div>
       </Sidenav>
     </main>
