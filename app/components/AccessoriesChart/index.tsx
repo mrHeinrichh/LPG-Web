@@ -6,6 +6,7 @@ import {
   getKeywordsFromItems,
   getMutiplier,
   getStartDayDate,
+  parseDatesToStartDay,
 } from "@/utils";
 import { useMemo } from "react";
 import { BarGraph } from "@/components";
@@ -19,9 +20,7 @@ export default function AccessoriesChart() {
   );
 
   const data = useMemo(() => {
-    const parsedStartDay = getDates(timeFilter, units).map((e: Date) =>
-      getStartDayDate(e)
-    );
+    const parsedStartDay = parseDatesToStartDay(getDates(timeFilter, units));
 
     const multiplier = getMutiplier(timeFilter);
 

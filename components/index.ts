@@ -11,8 +11,9 @@ import ApprovalsList from "./ApprovalsList";
 import DeliveryDetailsModal from "./DeliveryDetailsModal";
 import DeliveryCard from "./DeliveryCard";
 import BarGraph from "./BarGraph";
-
+import LineGraph from "./LineGraph";
 export {
+  LineGraph,
   BarGraph,
   DeliveryCard,
   DeliveryDetailsModal,

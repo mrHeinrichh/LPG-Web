@@ -1,6 +1,43 @@
 import { MUTIPLIERS } from "@/constants";
-import { ISearchFilter, ItemCategory, TimeFilter } from "@/interfaces";
-import { ITransactionModel } from "@/models";
+import {
+  Baranggay,
+  ISearchFilter,
+  ItemCategory,
+  TimeFilter,
+} from "@/interfaces";
+import { IDeliveryModel, ITransactionModel } from "@/models";
+
+export function filterTransactionsByBaranggay(
+  transactions: IDeliveryModel[],
+  baranggay: Baranggay
+) {
+  if (baranggay != "All") {
+    return transactions.filter((transaction) => {
+      return transaction.__t == "Delivery" && transaction.barangay == baranggay;
+    });
+  }
+
+  return transactions;
+}
+
+export function filterTransactionsByTimeSpan(
+  transactions: ITransactionModel[],
+  date: Date,
+  multiplier: number
+) {
+  return transactions.filter((transaction) => {
+    return (
+      date.getTime() <=
+        getStartDayDate(new Date(transaction.createdAt)).getTime() &&
+      date.getTime() + 86399999 * multiplier >=
+        getStartDayDate(new Date(transaction.createdAt)).getTime()
+    );
+  });
+}
+
+export function parseDatesToStartDay(dates: Date[]) {
+  return dates.map((e: Date) => getStartDayDate(e));
+}
 
 export function getKeywordsFromItems(
   soldTransactions: ITransactionModel[],

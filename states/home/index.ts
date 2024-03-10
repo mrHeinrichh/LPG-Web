@@ -25,6 +25,7 @@ export default create<HomeStore>((set) => {
       };
     });
   };
+
   const setDates = (timeFilter: TimeFilter, units: number) => {
     return set(() => {
       const startDate = new Date();
@@ -53,6 +54,19 @@ export default create<HomeStore>((set) => {
     });
   };
 
+  const getOrderAccomplishments = async (start: Date, end: Date) => {
+    const { data, status } =
+      await transactionRepository.getTransactions<IDeliveryModel>({
+        page: 0,
+        limit: 0,
+        filter: `{"$and": [{ "createdAt": { "$gte": "${start.toISOString()}", "$lte": "${end.toISOString()}" }}, {"$or": [{"$and": [{"__t": "Delivery"}, {"status": {"$in": ["Completed", "Cancelled", "Declined" ]}}]}, {"__t": {"$eq": null}}]}]} `,
+      });
+
+    if (status === "success") {
+      return set(() => ({ orderAccomplishments: data }));
+    }
+  };
+
   const getSoldTransactions = async (start: Date, end: Date) => {
     const { data, status } =
       await transactionRepository.getTransactions<IDeliveryModel>({
@@ -75,7 +89,7 @@ export default create<HomeStore>((set) => {
     const { data, status } = await userRepository.getUsers<ICustomerModel>({
       page: 0,
       limit: 0,
-      filter: `{"__t": "Customer", "$and": [{"verified": true}, { "createdAt": { "$gte": "${start.toISOString()}", "$lte": "${end.toISOString()}" }}]}`,
+      filter: `{ "__t": "Customer", "verified": true }`,
     });
 
     if (status == "success") {
@@ -175,6 +189,7 @@ export default create<HomeStore>((set) => {
   };
 
   return {
+    getOrderAccomplishments,
     setBaranggay,
     setTimeFilter,
     setUnit,

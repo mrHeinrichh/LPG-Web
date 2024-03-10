@@ -8,8 +8,12 @@ import CustomerPriceChangesChart from "./CustomerPriceChangesChart";
 import RetailerPriceChangesChart from "./RetailerPriceChangesChart";
 import PricesTable from "./PricesTable";
 import PriceChangesChart from "./PriceChangesChart";
+import VerifiedCustomersChart from "./VerifiedCustomersChart";
+import DeliveryStatusesChart from "./DeliveryStatusesChart";
 
 export {
+  DeliveryStatusesChart,
+  VerifiedCustomersChart,
   PriceChangesChart,
   PricesTable,
   RetailerPriceChangesChart,

@@ -7,6 +7,7 @@ export const initialState: IHomeState = {
   revenueToday: 0,
   verifiedCustomers: [],
   pendingDeliveries: [],
+  orderAccomplishments: [],
   completedDeliveries: [],
   soldTransactions: [],
   units: 10,

@@ -2,10 +2,13 @@
 import { ITEM_CATEGORIES } from "@/constants";
 import { useHomeStore } from "@/states";
 import {
+  filterTransactionsByBaranggay,
+  filterTransactionsByTimeSpan,
   getDates,
   getKeywordsFromItems,
   getMutiplier,
   getStartDayDate,
+  parseDatesToStartDay,
 } from "@/utils";
 import { useMemo } from "react";
 import { BarGraph } from "@/components";
@@ -20,28 +23,22 @@ export default function BrandNewTanksChart() {
   );
 
   const data = useMemo(() => {
-    const parsedStartDay = getDates(timeFilter, units).map((e: Date) =>
-      getStartDayDate(e)
-    );
-
+    const parsedStartDay = parseDatesToStartDay(getDates(timeFilter, units));
     const multiplier = getMutiplier(timeFilter);
-
     return parsedStartDay.map((e: Date) => {
       let temp: any = {};
       keywords.forEach((keyword: any) => {
         temp[keyword] = 0;
       });
 
-      let transactionsTemp = soldTransactions.filter((sold: any) => {
-        return (
-          e.getTime() <= getStartDayDate(new Date(sold.createdAt)).getTime() &&
-          e.getTime() + 86399999 * multiplier >=
-            getStartDayDate(new Date(sold.createdAt)).getTime()
-        );
-      });
+      let transactionsTemp = filterTransactionsByTimeSpan(
+        soldTransactions,
+        e,
+        multiplier
+      );
 
       if (baranggay != "All") {
-        transactionsTemp = transactionsTemp.filter((sold: any) => {
+        transactionsTemp.filter((sold: any) => {
           return sold.__t == "Delivery" && sold.barangay == baranggay;
         });
       }

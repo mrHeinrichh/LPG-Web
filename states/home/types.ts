@@ -18,7 +18,8 @@ export type PriceNext = () => void;
 export type PriceBack = () => void;
 export type SetPriceLimit = (value: number) => void;
 export type GetVerifiedCustomers = () => void;
-export type GetSoldTransactions = (start: any, end: any) => Promise<void>;
+export type GetSoldTransactions = (start: Date, end: Date) => Promise<void>;
+export type GetOrderAccomplishments = (start: Date, end: Date) => Promise<void>;
 export type SetUnit = (value: number) => void;
 export type SetTimeFilter = (value: TimeFilter) => void;
 export type SetDates = (timeFilter: TimeFilter, units: number) => void;
@@ -35,18 +36,19 @@ export interface IHomeActions {
   getPendingDeliveries: GetPendingDeliveries;
   getCompletedDeliveries: GetCompletedDeliveries;
   getSoldTransactions: GetSoldTransactions;
+  getOrderAccomplishments: GetOrderAccomplishments;
   setUnit: SetUnit;
   setTimeFilter: SetTimeFilter;
   setDates: SetDates;
   setBaranggay: SetBaranggay;
 }
-
 // States
 export interface IHomeState {
   prices: IPriceModel<IItemModel>[];
   verifiedCustomers: ICustomerModel[];
   pendingDeliveries: IDeliveryModel[];
   completedDeliveries: IDeliveryModel[];
+  orderAccomplishments: IDeliveryModel[];
   soldTransactions: ITransactionModel[];
   pricePage: number;
   priceLimit: number;

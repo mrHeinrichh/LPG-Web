@@ -6,6 +6,7 @@ import {
   AccessoriesChart,
   BrandNewTanksChart,
   CustomerPriceChangesChart,
+  DeliveryStatusesChart,
   PendingCustomerList,
   PendingDeliveryList,
   PriceChangesChart,
@@ -13,6 +14,7 @@ import {
   RefillTanksChart,
   RetailerPriceChangesChart,
   RiderAppointmentsList,
+  VerifiedCustomersChart,
 } from "./components";
 import {
   getDates,
@@ -24,21 +26,17 @@ import {
 import React from "react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-
+import { Baranggay, TimeFilter } from "@/interfaces";
+import { BARANGGAYS, TIME_FILTERS } from "@/constants";
 import {
-  BarChart,
-  Bar,
-  Rectangle,
+  LineChart,
+  CartesianGrid,
   XAxis,
   YAxis,
-  CartesianGrid,
   Tooltip,
   Legend,
   Line,
-  LineChart,
 } from "recharts";
-import { Baranggay, TimeFilter } from "@/interfaces";
-import { BARANGGAYS, TIME_FILTERS } from "@/constants";
 
 export default function Home() {
   const downloadAsPDF2 = async () => {
@@ -109,7 +107,7 @@ export default function Home() {
     start,
     end,
     setBaranggay,
-    baranggay,
+    getOrderAccomplishments,
   } = useHomeStore();
   const { getPrices } = usePriceStore() as any;
 
@@ -138,51 +136,9 @@ export default function Home() {
   //         return sold.__t == "Delivery" && sold.barangay == baranggay;
   //       });
   //     }
-
-  // const data = useMemo(() => {
-  //   const parsedStartDay = getDates(timeFilter, units).map((e: Date) =>
-  //     getStartDayDate(e)
-  //   );
-  //   const multiplier = getMutiplier(timeFilter);
-  //   return parsedStartDay.map((e: Date) => {
-  //     let transactionsTemp: any[] = [];
-  //     transactionsTemp = solds.filter((sold: any) => {
-  //       return (
-  //         e.getTime() <= getStartDayDate(new Date(sold.createdAt)).getTime() &&
-  //         e.getTime() + 86399999 * multiplier >=
-  //         getStartDayDate(new Date(sold.createdAt)).getTime()
-  //       );
-  //     });
-
-  //     const delivery = transactionsTemp.reduce((acc: any, curr: any) => {
-  //       return curr.__t == "Delivery" ? acc + 1 : acc;
-  //     }, 0);
-
-  //     const accessories = transactionsTemp.reduce((acc: any, curr: any) => {
-  //       return (
-  //         curr.items.filter((item: any) => item.type == "Accessory").length +
-  //         acc
-  //       );
-  //     }, 0);
-
-  //     const products = transactionsTemp.reduce((acc: any, curr: any) => {
-  //       return (
-  //         curr.items.filter((item: any) => item.type == "Product").length + acc
-  //       );
-  //     }, 0);
-
-  //     return {
-  //       name: e.toDateString(),
-  //       accesories: accessories,
-  //       products: products,
-  //       walkin,
-  //       delivery,
-  //       completed,
-  //       cancelled,
-  //       declined,
-  //     };
-  //   });
-  // }, [solds, units, timeFilter, baranggay]);
+  useEffect(() => {
+    getOrderAccomplishments(start, end);
+  }, [getOrderAccomplishments, start, end]);
 
   useEffect(() => {
     getSoldTransactions(start, end);
@@ -227,11 +183,13 @@ export default function Home() {
   }, [getCompletedDeliveries]);
 
   useEffect(() => {
+    getVerifiedCustomers();
+  }, [getVerifiedCustomers]);
+
+  useEffect(() => {
     const startDate = new Date();
     const endDate = new Date();
     startDate.setDate(startDate.getDate() - units * getMutiplier(timeFilter));
-    getVerifiedCustomers();
-
     startDate.setDate(startDate.getDate() - units * getMutiplier(timeFilter));
     getPrices(
       0,
@@ -311,13 +269,6 @@ export default function Home() {
           }}
         ></InputField>
 
-        {/* <PriceChangesChart>
-          <RetailerPriceChangesChart timeFilter={timeFilter} units={units} />
-          <CustomerPriceChangesChart timeFilter={timeFilter} units={units} />
-        </PriceChangesChart> */}
-        <BrandNewTanksChart />
-        <RefillTanksChart />
-        <AccessoriesChart />
         <button
           className="bg-blue-500 text-white px-4 py-2 rounded-md"
           onClick={downloadAsPDF2}
@@ -325,21 +276,9 @@ export default function Home() {
           Download as PDF
         </button>
         <div id="pdf-content2">
-          {/* <BrandNewTanksChart
-            baranggay={baranggay}
-            timeFilter={timeFilter}
-            units={units}
-          />
-          <RefillTanksChart
-            baranggay={baranggay}
-            timeFilter={timeFilter}
-            units={units}
-          />
-          <AccessoriesChart
-            baranggay={baranggay}
-            timeFilter={timeFilter}
-            units={units}
-          /> */}
+          <BrandNewTanksChart />
+          <RefillTanksChart />
+          <AccessoriesChart />
         </div>
         <button
           className="bg-blue-500 text-white px-4 py-2 rounded-md"
@@ -348,33 +287,9 @@ export default function Home() {
           Download as PDF
         </button>
         <div id="pdf-content3">
-          {/* <Card style={{ background: "white" }}>
-            <p className="text-2xl font-black">Verified Customers</p>
+          <VerifiedCustomersChart />
+          <DeliveryStatusesChart />
 
-            <LineChart
-              width={1200}
-              height={300}
-              data={parsedCustomers}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="customers"
-                stroke="#8884d8"
-                activeDot={{ r: 8 }}
-              />
-            </LineChart>
-          </Card> */}
           {/* <Card style={{ background: 'white' }}>
 
             <p className="text-2xl font-black">Orders Accomplishments</p>
