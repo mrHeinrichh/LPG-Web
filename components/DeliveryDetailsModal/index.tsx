@@ -100,39 +100,32 @@ function DeliveryDetailsModal({ isOpen, setIsOpen, data }: any) {
             >
               <p>Approve</p>
             </Button>
-          <div className="flex gap-4 items-center">
-  <div>
-    {!showCancelReasonInput ? (
-      <Button
-        onClick={() => {
-          setShowCancelReasonInput(true);
-        }}
-      >
-        <p>Decline with Reason</p>
-      </Button>
-    ) : (
-      <>
-        <input
-          type="text"
-          placeholder="Cancel Reason"
-          value={cancelReason}
-          onChange={(e) => setCancelReason(e.target.value)}
-        />
-        <Button
-          onClick={() => {
-            // Call the decline function when the button is clicked again
-            decline(data._id, cancelReason);
-            setIsOpen(false);
-          }}
-        >
-          <p>Confirm Decline</p>
-        </Button>
-      </>
-    )}
-  </div>
-</div>
+            <div className="flex gap-4 items-center">
+              <div>
+                <input
+                  type="text"
+                  placeholder="Cancel Reason"
+                  value={cancelReason}
+                  onChange={(e) => setCancelReason(e.target.value)}
+                />
+            <Button
+ onClick={async () => {
+  try {
+    await (decline as (id: string, cancelReason?: string) => Promise<void>)(data._id, cancelReason);
+    setIsOpen(false);
+  } catch (error) {
+    console.error("Error while declining:", error);
+    // Handle the error gracefully
+  }
+}}
+
+>
+  <p>Decline with Reason</p>
+</Button>
+
+              </div>
             </div>
-          
+          </div>
         ) : (
           <></>
         )}
