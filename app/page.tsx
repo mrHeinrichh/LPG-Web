@@ -1,43 +1,27 @@
 "use client";
 import { Sidenav, Card, SelectField, InputField } from "@/components";
-import { useHomeStore, usePriceStore, useTransactionStore } from "@/states";
-import { useEffect, useMemo, useState } from "react";
+import { useHomeStore, usePriceStore } from "@/states";
+import { useEffect } from "react";
 import {
   AccessoriesChart,
   BrandNewTanksChart,
-  CustomerPriceChangesChart,
   DeliveryStatusesChart,
   PendingCustomerList,
-  PendingDeliveryList,
-  PriceChangesChart,
   PricesTable,
   RefillTanksChart,
-  RetailerPriceChangesChart,
   RiderAppointmentsList,
   TransactionTypeChart,
   VerifiedCustomersChart,
+  RetailerPriceChangesChart,
+  PriceChangesChart,
+  CustomerPriceChangesChart,
 } from "./components";
-import {
-  getDates,
-  getEndDayDate,
-  getMutiplier,
-  getStartDayDate,
-  parseToFiat,
-} from "@/utils";
+import { parseToFiat } from "@/utils";
 import React from "react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { Baranggay, TimeFilter } from "@/interfaces";
 import { BARANGGAYS, TIME_FILTERS } from "@/constants";
-import {
-  LineChart,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Legend,
-  Line,
-} from "recharts";
 
 export default function Home() {
   const downloadAsPDF2 = async () => {
@@ -94,7 +78,6 @@ export default function Home() {
     getTotalRevenueToday,
     revenueToday,
     getVerifiedCustomers,
-    verifiedCustomers,
     getPendingDeliveries,
     pendingDeliveries,
     getCompletedDeliveries,
@@ -151,35 +134,13 @@ export default function Home() {
   }, [getVerifiedCustomers]);
 
   useEffect(() => {
-    const startDate = new Date();
-    const endDate = new Date();
-    startDate.setDate(startDate.getDate() - units * getMutiplier(timeFilter));
-    startDate.setDate(startDate.getDate() - units * getMutiplier(timeFilter));
     getPrices(
       0,
       0,
-      `{"$and": [{"createdAt": {"$gte": "${startDate.toISOString()}", "$lte": "${endDate.toISOString()}"}}]}`,
+      `{"createdAt": {"$gte": "${start.toISOString()}", "$lte": "${end.toISOString()}"}}`,
       "item"
     );
   }, [units, timeFilter, getPrices]);
-
-  // useEffect(() => {
-  //   const startDate = new Date();
-  //   const endDate = new Date();
-  //   startDate.setDate(startDate.getDate() - units * getMutiplier(timeFilter));
-  //   getSolds(0, 0, startDate, endDate);
-  // }, [units, timeFilter, baranggay, getSolds]);
-
-  // useEffect(() => {
-  //   getTotal(
-  //     0,
-  //     0,
-  //     `{"createdAt": {"$gte": "${getStartDayDate(
-  //       new Date()
-  //     ).toISOString()}", "$lte": "${getEndDayDate(new Date()).toISOString()}"}}`
-  //   );
-  //   getDeliveriesByStatuses(0, 0, ["Pending", "Completed"]);
-  // }, [getDeliveriesByStatuses, getTotal]);
 
   return (
     <main>
@@ -233,6 +194,17 @@ export default function Home() {
           }}
         ></InputField>
 
+        <PriceChangesChart>
+          <RetailerPriceChangesChart
+            units={units}
+            timeFilter={timeFilter}
+          ></RetailerPriceChangesChart>
+          <CustomerPriceChangesChart
+            units={units}
+            timeFilter={timeFilter}
+          ></CustomerPriceChangesChart>
+        </PriceChangesChart>
+
         <button
           className="bg-blue-500 text-white px-4 py-2 rounded-md"
           onClick={downloadAsPDF2}
@@ -254,46 +226,11 @@ export default function Home() {
           <VerifiedCustomersChart />
           <DeliveryStatusesChart />
           <TransactionTypeChart />
-          {/* 
-
-          <Card style={{ background: 'white' }}>
-            <p className="text-2xl font-black">Accessories and Products</p>
-
-            <BarChart
-              width={1200}
-              height={300}
-              data={data}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar
-                dataKey="accesories"
-                fill="#8884d8"
-                activeBar={<Rectangle fill="pink" stroke="blue" />}
-              />
-              <Bar
-                dataKey="products"
-                fill="#82ca9d"
-                activeBar={<Rectangle fill="gold" stroke="purple" />}
-              />
-            </BarChart>
-          </Card> */}
         </div>
-        {/* <RiderAppointmentsList />
         <div className="grid grid-cols-2 gap-2 w-full my-5">
+          <RiderAppointmentsList />
           <PendingCustomerList />
-          <PendingDeliveryList />
-        </div> */}
-        <PendingCustomerList />
+        </div>
       </Sidenav>
     </main>
   );
