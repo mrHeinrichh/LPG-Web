@@ -1,29 +1,22 @@
 "use client";
 import { ITEM_CATEGORIES } from "@/constants";
 import { useHomeStore } from "@/states";
-import { getDates, getMutiplier, getStartDayDate } from "@/utils";
+import {
+  getDates,
+  getKeywordsFromItems,
+  getMutiplier,
+  getStartDayDate,
+} from "@/utils";
 import { useMemo } from "react";
 import { BarGraph } from "@/components";
 
 export default function RefillTanksChart() {
   const { soldTransactions, timeFilter, units, baranggay } = useHomeStore();
 
-  const keywords = useMemo(() => {
-    const itemsList = soldTransactions.map((sold: any) => sold.items);
-    const temp = new Set<string>();
-    itemsList.forEach((items: any) => {
-      items.forEach((item: any) => {
-        if (
-          !temp.has(item.name) &&
-          item.category == ITEM_CATEGORIES.REFILL_TANKS
-        ) {
-          temp.add(item.name);
-        }
-      });
-    });
-
-    return [...temp];
-  }, [soldTransactions]);
+  const keywords = useMemo(
+    () => getKeywordsFromItems(soldTransactions, ITEM_CATEGORIES.REFILL_TANKS),
+    [soldTransactions]
+  );
 
   const data = useMemo(() => {
     const parsedStartDay = getDates(timeFilter, units).map((e: Date) =>

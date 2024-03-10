@@ -1,5 +1,23 @@
 import { MUTIPLIERS } from "@/constants";
-import { ISearchFilter, TimeFilter } from "@/interfaces";
+import { ISearchFilter, ItemCategory, TimeFilter } from "@/interfaces";
+import { ITransactionModel } from "@/models";
+
+export function getKeywordsFromItems(
+  soldTransactions: ITransactionModel[],
+  category: ItemCategory
+) {
+  const itemsList = soldTransactions.map((sold) => sold.items);
+  const temp = new Set<string>();
+  itemsList.forEach((items: any) => {
+    items.forEach((item: any) => {
+      if (!temp.has(item.name) && item.category == category) {
+        temp.add(item.name);
+      }
+    });
+  });
+
+  return [...temp];
+}
 
 export function parseToFiat(value: string | number) {
   if (typeof value == "string" && !isNumber(value)) {
