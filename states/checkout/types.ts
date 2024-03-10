@@ -4,7 +4,8 @@ import { ICartItemModel, IItemModel } from "@/models";
 export interface ICreateTransactionArgs {
   name: string;
   contactNumber: string;
-  discountIdImage: string | null;
+  // discountIdImage: string | null;
+  discounted: boolean; 
   items: ICartItemModel[];
 }
 // Types & Interfaces
@@ -28,7 +29,7 @@ export interface ICheckoutActions {
 export interface ICheckoutState {
   name: string;
   contactNumber: string;
-  discountIdImage: boolean;
+  discounted: boolean;
   createSuccess: boolean;
 }
 

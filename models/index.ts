@@ -88,7 +88,7 @@ export interface ITransactionModel extends IModel {
   items: ICartItemModel[];
   discounted: boolean;
   completed: boolean;
-  discountIdImage: string;
+  // discountIdImage: string;
 }
 
 export interface IUploadModel extends IModel {

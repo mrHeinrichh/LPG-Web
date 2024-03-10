@@ -107,7 +107,7 @@ function DeliveryDetailsModal({ isOpen, setIsOpen, data }: any) {
                 />
              <Button
   onClick={() => {
-    decline(data._id, cancelReason); // Make sure decline accepts two arguments
+    decline(data._id, cancelReason); 
     setIsOpen(false);
   }}
 >

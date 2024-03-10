@@ -1,43 +1,44 @@
-import { create } from "zustand";
-import {
-  CheckoutStore,
-  CreateTransaction,
-  ICreateTransactionArgs,
-} from "./types";
-import { transactionRepository } from "@/repositories";
-import { initialState } from "./initialState";
+// Your Zustand store
+import create from 'zustand';
+import { CheckoutStore, CreateTransaction, ICreateTransactionArgs } from './types';
+import { transactionRepository } from '@/repositories';
+import { initialState } from './initialState';
 
 export default create<CheckoutStore>((set) => {
-  const createTransaction: CreateTransaction = async (
-    body: ICreateTransactionArgs
-  ) => {
+  const createTransaction: CreateTransaction = async (body: ICreateTransactionArgs) => {
     const { status } = await transactionRepository.createTransaction({
       ...body,
-      priceType: "Customer",
+      discounted:true,
+      priceType: 'Customer',
+      completed: true,
     });
 
-    if (status === "success") {
+    if (status === 'success') {
       return set(() => ({ createSuccess: true }));
     }
   };
 
   const setFormData = (body: any) => {
     return set((state) => ({
-      ...{ name: state.name, contactNumber: state.contactNumber },
+      ...state,
       ...body,
     }));
   };
 
   const setDiscounted = (value: boolean) => {
-    return set(() => ({
-      discountIdImage: value,
+    console.log('Discounted:', value); // Log the discounted state
+    set(() => ({
+      discounted: value,
     }));
   };
+  
+
   const resetCheckout = () => {
     return set(() => ({
       ...initialState,
     }));
   };
+
   return {
     resetCheckout,
     setDiscounted,

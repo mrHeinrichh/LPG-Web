@@ -14,7 +14,7 @@ export default function Checkout({}: any) {
     setFormData,
     setDiscounted,
     createSuccess,
-    discountIdImage,
+    discounted,
     resetCheckout,
   } = useCheckoutStore();
   const router = useRouter();
@@ -25,14 +25,21 @@ export default function Checkout({}: any) {
     const { name, value } = event.target;
     setFormData({ [name]: value });
   };
-
+  
+  const handleCheckboxChange = (e: any) => {
+    const isChecked = e.target.checked;
+    console.log('Checkbox checked:', isChecked);
+    setDiscounted(isChecked);
+    console.log('Discounted:', discounted);
+  };
+  
   const total = useMemo(() => {
     const temp = cartItems.reduce(
       (acc: any, curr: any) => acc + curr.customerPrice * curr.quantity,
       0
     );
-    return discountIdImage ? temp * DISCOUNT : temp;
-  }, [cartItems, discountIdImage]);
+    return discounted ? temp * DISCOUNT : temp;
+  }, [cartItems, discounted]);
 
   useEffect(() => {
     if (createSuccess) {
@@ -95,12 +102,10 @@ export default function Checkout({}: any) {
             />
             <div className="w-full flex justify-end">
               <label className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  onClick={(e: any) => {
-                    setDiscounted(e.target.checked);
-                  }}
-                />
+              <input
+          type="checkbox"
+          onChange={handleCheckboxChange}  
+        />
                 <p>Discounted? </p>
               </label>
             </div>

@@ -3,6 +3,6 @@ import { ICheckoutState } from "./types";
 export const initialState: ICheckoutState = {
   name: "",
   contactNumber: "",
-  discountIdImage: false,
+  discounted: false,
   createSuccess: false,
 };
