@@ -8,6 +8,7 @@ import {
   CustomerPriceChangesChart,
   PendingCustomerList,
   PendingDeliveryList,
+  PriceChangesChart,
   PricesTable,
   RefillTanksChart,
   RetailerPriceChangesChart,
@@ -40,30 +41,6 @@ import { TimeFilter } from "@/interfaces";
 import { BARANGGAYS, TIME_FILTERS } from "@/constants";
 
 export default function Home() {
-  const downloadAsPDF = async () => {
-    const element = document.getElementById("pdf-content");
-
-    if (element) {
-      try {
-        const canvas = await html2canvas(element);
-        const pdf = new jsPDF("p", "mm", "a4");
-        pdf.addImage(canvas.toDataURL("image/png"), "PNG", 15, 15, 150, 150);
-
-        // Create a Blob from the PDF data
-        const pdfBlob = pdf.output("blob");
-
-        // Create a URL for the Blob
-        const pdfUrl = URL.createObjectURL(pdfBlob);
-
-        // Open the PDF in a new window or tab
-        window.open(pdfUrl, "_blank");
-      } catch (error) {
-        console.error("Error generating PDF:", error);
-      }
-    } else {
-      console.error("Element not found");
-    }
-  };
   const downloadAsPDF2 = async () => {
     const element = document.getElementById("pdf-content2");
 
@@ -119,6 +96,10 @@ export default function Home() {
     revenueToday,
     getVerifiedCustomers,
     verifiedCustomers,
+    getPendingDeliveries,
+    pendingDeliveries,
+    getCompletedDeliveries,
+    completedDeliveries,
   } = useHomeStore();
   const [units, setunits] = useState(20);
   const [timeFilter, settimeFilter] = useState<TimeFilter>("Daily");
@@ -217,6 +198,9 @@ export default function Home() {
       };
     });
   }, [verifiedCustomers, units, timeFilter]);
+  useEffect(() => {
+    getPendingDeliveries({});
+  }, [getPendingDeliveries]);
 
   useEffect(() => {
     const startDate = new Date();
@@ -255,6 +239,10 @@ export default function Home() {
     getTotalRevenueToday({});
   }, [getTotalRevenueToday]);
 
+  useEffect(() => {
+    getCompletedDeliveries({});
+  }, [getCompletedDeliveries]);
+
   return (
     <main>
       <Sidenav>
@@ -265,21 +253,20 @@ export default function Home() {
               <p className="text-2xl"> {parseToFiat(revenueToday)}</p>
             </div>
           </Card>
-          {/* <Card>
+          <Card>
             <div className="flex flex-col justify-evenly h-full p-4">
               <p className="text-2xl font-bold">Pending Deliveries</p>
-              <p className="text-2xl">{pending}</p>
+              <p className="text-2xl">{pendingDeliveries.length}</p>
             </div>
           </Card>
           <Card>
             <div className="flex flex-col justify-evenly h-full p-4">
               <p className="text-2xl font-bold">Completed Deliveries</p>
-              <p className="text-2xl">{completed}</p>
+              <p className="text-2xl">{completedDeliveries.length}</p>
             </div>
-          </Card> */}
+          </Card>
         </div>
         <PricesTable />
-
         <SelectField
           options={TIME_FILTERS}
           name={"Time Filter"}
@@ -307,17 +294,12 @@ export default function Home() {
             setunits(value);
           }}
         ></InputField>
-        <button
-          className="bg-blue-500 text-white px-4 py-2 rounded-md"
-          onClick={downloadAsPDF}
-        >
-          Download as PDF
-        </button>
 
-        <div id="pdf-content">
-          {/* <RetailerPriceChangesChart timeFilter={timeFilter} units={units} />
-          <CustomerPriceChangesChart timeFilter={timeFilter} units={units} /> */}
-        </div>
+        <PriceChangesChart>
+          <RetailerPriceChangesChart timeFilter={timeFilter} units={units} />
+          <CustomerPriceChangesChart timeFilter={timeFilter} units={units} />
+        </PriceChangesChart>
+
         <button
           className="bg-blue-500 text-white px-4 py-2 rounded-md"
           onClick={downloadAsPDF2}
@@ -347,7 +329,6 @@ export default function Home() {
         >
           Download as PDF
         </button>
-
         <div id="pdf-content3">
           {/* <Card style={{ background: "white" }}>
             <p className="text-2xl font-black">Verified Customers</p>
@@ -459,12 +440,12 @@ export default function Home() {
             </BarChart>
           </Card> */}
         </div>
-
         {/* <RiderAppointmentsList />
         <div className="grid grid-cols-2 gap-2 w-full my-5">
           <PendingCustomerList />
           <PendingDeliveryList />
         </div> */}
+        <PendingCustomerList />
       </Sidenav>
     </main>
   );

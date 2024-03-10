@@ -15,7 +15,7 @@ import {
 import { initialState } from "./initialState";
 import { IQuery } from "@/interfaces";
 import { getEndDayDate, getStartDayDate } from "@/utils";
-import { ICustomerModel } from "@/models";
+import { ICustomerModel, IDeliveryModel } from "@/models";
 
 export default create<HomeStore>((set) => {
   const getVerifiedCustomers = async (
@@ -30,6 +30,30 @@ export default create<HomeStore>((set) => {
 
     if (status == "success") {
       return set(() => ({ verifiedCustomers: data }));
+    }
+  };
+
+  const getPendingDeliveries = async ({ page = 0, limit = 0 }) => {
+    const { data, status } =
+      await transactionRepository.getTransactions<IDeliveryModel>({
+        page,
+        limit,
+        filter: `{"__t": "Delivery", "status": "Pending"}`,
+      });
+    if (status === "success") {
+      return set(() => ({ pendingDeliveries: data }));
+    }
+  };
+
+  const getCompletedDeliveries = async ({ page = 0, limit = 0 }) => {
+    const { data, status } =
+      await transactionRepository.getTransactions<IDeliveryModel>({
+        page,
+        limit,
+        filter: `{"__t": "Delivery", "status": "Completed"}`,
+      });
+    if (status === "success") {
+      return set(() => ({ completedDeliveries: data }));
     }
   };
   const getTotalRevenueToday: GetTotalRevenueToday = async ({
@@ -90,6 +114,7 @@ export default create<HomeStore>((set) => {
       return { ...state };
     });
   };
+
   const setPriceLimit: SetPriceLimit = (value: number) => {
     return set(() => {
       return {
@@ -99,7 +124,9 @@ export default create<HomeStore>((set) => {
   };
 
   return {
+    getPendingDeliveries,
     getVerifiedCustomers,
+    getCompletedDeliveries,
     getTotalRevenueToday,
     setPriceLimit,
     priceNext,

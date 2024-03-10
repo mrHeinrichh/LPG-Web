@@ -6,4 +6,6 @@ export const initialState: IHomeState = {
   priceLimit: 10,
   revenueToday: 0,
   verifiedCustomers: [],
+  pendingDeliveries: [],
+  completedDeliveries: [],
 };

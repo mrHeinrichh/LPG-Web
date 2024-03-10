@@ -7,7 +7,10 @@ import AccessoriesChart from "./AccessoriesChart";
 import CustomerPriceChangesChart from "./CustomerPriceChangesChart";
 import RetailerPriceChangesChart from "./RetailerPriceChangesChart";
 import PricesTable from "./PricesTable";
+import PriceChangesChart from "./PriceChangesChart";
+
 export {
+  PriceChangesChart,
   PricesTable,
   RetailerPriceChangesChart,
   CustomerPriceChangesChart,

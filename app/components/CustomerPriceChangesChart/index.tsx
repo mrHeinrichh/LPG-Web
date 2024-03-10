@@ -1,5 +1,4 @@
 import React, { useMemo } from "react";
-import { Card } from 'antd'; // Assuming you're using Ant Design
 import {
   LineChart,
   CartesianGrid,
@@ -44,9 +43,9 @@ function PriceChangesChart({ timeFilter, units }: any) {
         .filter((e: any) => {
           return (
             element.getTime() <=
-            getStartDayDate(new Date(e.createdAt)).getTime() &&
+              getStartDayDate(new Date(e.createdAt)).getTime() &&
             element.getTime() + 86399999 * multiplier >=
-            getStartDayDate(new Date(e.createdAt)).getTime() &&
+              getStartDayDate(new Date(e.createdAt)).getTime() &&
             e.type === "Customer"
           );
         })
@@ -102,38 +101,35 @@ function PriceChangesChart({ timeFilter, units }: any) {
   //   });
   // }, [prices, keywords, timeFilter, units]);
   return (
-    <Card style={{ background: 'white' }}>
-
-      <div>
-        <p className="text-2xl font-black">Customer Price Changes</p>
-        <LineChart
-          width={1200}
-          height={400}
-          data={data}
-          margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          {keywords.map((keyword: string) => (
-            <Line
-              key={keyword}
-              type="monotone"
-              dataKey={keyword}
-              stroke={generateRandomColor()}
-              activeDot={{ r: 8 }}
-            />
-          ))}
-        </LineChart>
-      </div>
-    </Card>
+    <div className="bg-white-50 p-6 flex justify-center items-center flex-col gap-4 rounded-lg">
+      <p className="text-2xl font-black">Customer Price Changes</p>
+      <LineChart
+        width={1200}
+        height={400}
+        data={data}
+        margin={{
+          top: 5,
+          right: 30,
+          left: 20,
+          bottom: 5,
+        }}
+      >
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="name" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        {keywords.map((keyword: string) => (
+          <Line
+            key={keyword}
+            type="monotone"
+            dataKey={keyword}
+            stroke={generateRandomColor()}
+            activeDot={{ r: 8 }}
+          />
+        ))}
+      </LineChart>
+    </div>
   );
 }
 
