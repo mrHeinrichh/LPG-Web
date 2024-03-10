@@ -15,7 +15,7 @@ import {
 import { initialState } from "./initialState";
 import { Baranggay, IQuery, TimeFilter } from "@/interfaces";
 import { getEndDayDate, getMutiplier, getStartDayDate } from "@/utils";
-import { ICustomerModel, IDeliveryModel } from "@/models";
+import { ICustomerModel, IDeliveryModel, ITransactionModel } from "@/models";
 
 export default create<HomeStore>((set) => {
   const setBaranggay = (baranggay: Baranggay) => {
@@ -67,6 +67,19 @@ export default create<HomeStore>((set) => {
     }
   };
 
+  const getTransactionTypes = async (start: Date, end: Date) => {
+    const { data, status } =
+      await transactionRepository.getTransactions<ITransactionModel>({
+        page: 0,
+        limit: 0,
+        filter: `{ "createdAt": { "$gte": "${start.toISOString()}", "$lte": "${end.toISOString()}" }} `,
+      });
+
+    if (status === "success") {
+      return set(() => ({ transactionTypes: data }));
+    }
+  };
+
   const getSoldTransactions = async (start: Date, end: Date) => {
     const { data, status } =
       await transactionRepository.getTransactions<IDeliveryModel>({
@@ -74,8 +87,6 @@ export default create<HomeStore>((set) => {
         limit: 0,
         filter: `{"$and": [{ "createdAt": { "$gte": "${start.toISOString()}", "$lte": "${end.toISOString()}" }}, {"$or": [{"$and": [{"__t": "Delivery"}, {"status": "Completed"}]}, {"__t": {"$eq": null}}]}]} `,
       });
-
-    console.log({ data, status });
 
     if (status === "success") {
       return set(() => ({ soldTransactions: data }));
@@ -189,6 +200,7 @@ export default create<HomeStore>((set) => {
   };
 
   return {
+    getTransactionTypes,
     getOrderAccomplishments,
     setBaranggay,
     setTimeFilter,

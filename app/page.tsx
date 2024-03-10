@@ -14,6 +14,7 @@ import {
   RefillTanksChart,
   RetailerPriceChangesChart,
   RiderAppointmentsList,
+  TransactionTypeChart,
   VerifiedCustomersChart,
 } from "./components";
 import {
@@ -108,6 +109,7 @@ export default function Home() {
     end,
     setBaranggay,
     getOrderAccomplishments,
+    getTransactionTypes,
   } = useHomeStore();
   const { getPrices } = usePriceStore() as any;
 
@@ -116,26 +118,10 @@ export default function Home() {
     title: e,
   }));
 
-  // const data = useMemo(() => {
-  //   const parsedStartDay = getDates(timeFilter, units).map((e: Date) =>
-  //     getStartDayDate(e)
-  //   );
-  //   const multiplier = getMutiplier(timeFilter);
-  //   return parsedStartDay.map((e: Date) => {
-  //     let transactionsTemp: any[] = [];
-  //     transactionsTemp = solds.filter((sold: any) => {
-  //       return (
-  //         e.getTime() <= getStartDayDate(new Date(sold.createdAt)).getTime() &&
-  //         e.getTime() + 86399999 * multiplier >=
-  //           getStartDayDate(new Date(sold.createdAt)).getTime()
-  //       );
-  //     });
+  useEffect(() => {
+    getTransactionTypes(start, end);
+  }, [getTransactionTypes, start, end]);
 
-  //     if (baranggay != "All") {
-  //       transactionsTemp = transactionsTemp.filter((sold: any) => {
-  //         return sold.__t == "Delivery" && sold.barangay == baranggay;
-  //       });
-  //     }
   useEffect(() => {
     getOrderAccomplishments(start, end);
   }, [getOrderAccomplishments, start, end]);
@@ -143,28 +129,6 @@ export default function Home() {
   useEffect(() => {
     getSoldTransactions(start, end);
   }, [getSoldTransactions, start, end]);
-
-  const parsedCustomers = useMemo(() => {
-    const parsedStartDay = getDates(timeFilter, units).map((e: Date) =>
-      getStartDayDate(e)
-    );
-
-    const multiplier = getMutiplier(timeFilter);
-    return parsedStartDay.map((e: Date) => {
-      const customersTemp = verifiedCustomers.filter((sold: any) => {
-        return (
-          e.getTime() <= getStartDayDate(new Date(sold.createdAt)).getTime() &&
-          e.getTime() + 86399999 * multiplier >=
-            getStartDayDate(new Date(sold.createdAt)).getTime()
-        );
-      });
-
-      return {
-        name: e.toDateString(),
-        customers: customersTemp.length,
-      };
-    });
-  }, [verifiedCustomers, units, timeFilter]);
 
   useEffect(() => {
     getPendingDeliveries({});
@@ -197,7 +161,7 @@ export default function Home() {
       `{"$and": [{"createdAt": {"$gte": "${startDate.toISOString()}", "$lte": "${endDate.toISOString()}"}}]}`,
       "item"
     );
-  }, [units, timeFilter, getPrices, getVerifiedCustomers]);
+  }, [units, timeFilter, getPrices]);
 
   // useEffect(() => {
   //   const startDate = new Date();
@@ -289,58 +253,9 @@ export default function Home() {
         <div id="pdf-content3">
           <VerifiedCustomersChart />
           <DeliveryStatusesChart />
+          <TransactionTypeChart />
+          {/* 
 
-          {/* <Card style={{ background: 'white' }}>
-
-            <p className="text-2xl font-black">Orders Accomplishments</p>
-            <LineChart
-              width={1200}
-              height={300}
-              data={data}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="completed"
-                stroke="#8884d8"
-                activeDot={{ r: 8 }}
-              />
-              <Line type="monotone" dataKey="cancelled" stroke="#86ca9d" />
-              <Line type="monotone" dataKey="declined" stroke="#83ca9d" />
-            </LineChart>
-          </Card>
-          <Card style={{ background: 'white' }}>
-            <p className="text-2xl font-black">Walkin and Delivery Orders</p>
-            <BarChart
-              width={1200}
-              height={300}
-              data={data}
-              margin={{
-                top: 20,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="walkin" stackId="a" fill="#8884d8" />
-              <Bar dataKey="delivery" stackId="a" fill="#82ca9d" />
-            </BarChart>
-          </Card>
           <Card style={{ background: 'white' }}>
             <p className="text-2xl font-black">Accessories and Products</p>
 

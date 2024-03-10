@@ -10,6 +10,7 @@ export const initialState: IHomeState = {
   orderAccomplishments: [],
   completedDeliveries: [],
   soldTransactions: [],
+  transactionTypes: [],
   units: 10,
   timeFilter: "Daily",
   start: new Date(),
