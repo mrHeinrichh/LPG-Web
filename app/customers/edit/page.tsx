@@ -76,7 +76,7 @@ export default function EditCustomer({}: any) {
 
           <InputField
             name="contactNumber"
-            placeholder="Contact Number"
+            placeholder="Mobile Number"
             onChange={handleChange}
             defaultValue={editFormData.contactNumber}
           />

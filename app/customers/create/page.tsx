@@ -64,7 +64,7 @@ export default function CreateCustomer({}: any) {
           <InputField name="name" placeholder="Name" onChange={handleChange} />
           <InputField
             name="contactNumber"
-            placeholder="Contact Number"
+            placeholder="Mobile Number"
             onChange={handleChange}
           />
           <InputField

@@ -119,10 +119,7 @@ export default function PendingDeliveryList() {
               
               <Button
                 onClick={() => {
-                  // Toggle the visibility of the cancel reason input
                   setShowCancelReasonInput((prev) => ({ ...prev, [e._id]: !prev[e._id] }));
-                  
-                  // If the cancel reason input is visible, decline the transaction
                   if (showCancelReasonInput[e._id]) {
                     decline(e._id, cancelReasons[e._id] || '');
                   }

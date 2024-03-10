@@ -10,6 +10,7 @@ function DeliveryDetailsModal({ isOpen, setIsOpen, data }: any) {
   const { approve } = useDeliveriesStore();
   const [cancelReason, setCancelReason] = React.useState<string>("");
   const { decline } = useDeliveriesStore();
+  const [showCancelReasonInput, setShowCancelReasonInput] = React.useState<boolean>(false);
 
   if (!isOpen) {
     return <></>;
@@ -44,6 +45,7 @@ function DeliveryDetailsModal({ isOpen, setIsOpen, data }: any) {
             <p>
               Location: {data.deliveryLocation} {data.houseLotBlk}
             </p>
+            <p>Payment Method: {data.paymentMethod}</p>
 
             <p>
               {data.discountIdImage != null
@@ -64,6 +66,7 @@ function DeliveryDetailsModal({ isOpen, setIsOpen, data }: any) {
               <></>
             )}
           </div>
+          
           <div className="flex flex-col gap-2">
             <div className="flex flex-col gap-4">
               {data.items.map((e: any) => {
@@ -97,25 +100,39 @@ function DeliveryDetailsModal({ isOpen, setIsOpen, data }: any) {
             >
               <p>Approve</p>
             </Button>
-            <div className="flex gap-4 items-center">
-              <div>
-                <input
-                  type="text"
-                  placeholder="Cancel Reason"
-                  value={cancelReason}
-                  onChange={(e) => setCancelReason(e.target.value)}
-                />
-             <Button
-  onClick={() => {
-    decline(data._id, cancelReason); 
-    setIsOpen(false);
-  }}
->
-  <p>Decline with Reason</p>
-</Button>
-              </div>
+          <div className="flex gap-4 items-center">
+  <div>
+    {!showCancelReasonInput ? (
+      <Button
+        onClick={() => {
+          setShowCancelReasonInput(true);
+        }}
+      >
+        <p>Decline with Reason</p>
+      </Button>
+    ) : (
+      <>
+        <input
+          type="text"
+          placeholder="Cancel Reason"
+          value={cancelReason}
+          onChange={(e) => setCancelReason(e.target.value)}
+        />
+        <Button
+          onClick={() => {
+            // Call the decline function when the button is clicked again
+            decline(data._id, cancelReason);
+            setIsOpen(false);
+          }}
+        >
+          <p>Confirm Decline</p>
+        </Button>
+      </>
+    )}
+  </div>
+</div>
             </div>
-          </div>
+          
         ) : (
           <></>
         )}

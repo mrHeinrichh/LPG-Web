@@ -210,7 +210,7 @@ export default function Transactions({}: any) {
           />
           <InputField
             name="contactNumber"
-            placeholder="Contact Number: "
+            placeholder="Mobile Number: "
             onChange={handleChange}
             defaultValue={formData.contactNumber}
           />

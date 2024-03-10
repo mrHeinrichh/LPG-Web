@@ -8,17 +8,18 @@ import { useEffect, useState } from "react";
 export default function WalkIn({}: any) {
   const { messages, getMessages, addMessage, addNewMessage } =
     useMessageStore() as any;
+  
   const { user } = useAuthStore() as any;
-  const { customers, getCustomer } = useCustomerStore() as any;
+  const { customers, getCustomers } = useCustomerStore() as any;
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
   const [message, setmessage] = useState<string>("");
 
   useEffect(() => {
-    getCustomer();
-  });
-
+    getCustomers();  // Corrected function name
+  }, []);
+  
   useEffect(() => {
     if (id) getMessages(id);
     function onCreatedMssage(data: any) {
@@ -45,7 +46,7 @@ export default function WalkIn({}: any) {
       <Sidenav>
         <div className="flex flex-col gap-2">
           <div className="flex gap-2">
-            <div className="w-2/3 flex flex-col gap-3 bg-white-50 p-2">
+            <div className="w-2/3 flex flex-col gap-3 bg-white-50 p-2" style={{ height: '600px' }}>
               {messages.map((e: any) => {
                 return (
                   <div

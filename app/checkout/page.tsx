@@ -89,6 +89,7 @@ export default function Checkout({}: any) {
               <p>{parseToFiat(total)} </p>
             </div>
           </div>
+          
           <div className="w-1/2">
             <InputField
               name="name"
@@ -97,7 +98,7 @@ export default function Checkout({}: any) {
             />
             <InputField
               name="contactNumber"
-              placeholder="Contact Number"
+              placeholder="Mobile Number"
               onChange={handleChange}
             />
             <div className="w-full flex justify-end">
