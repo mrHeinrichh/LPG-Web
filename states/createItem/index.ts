@@ -11,10 +11,7 @@ export default create<CreateItemStore>((set) => {
   };
 
   const createItem = async (body: ICreateItemArgs) => {
-    console.log({ body });
-
     const { data, status, message } = await itemRepository.createItem(body);
-    console.log({ data, status, message });
 
     if (status == "success" && data.length !== 0) {
       return set(() => ({

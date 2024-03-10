@@ -37,7 +37,7 @@ import {
   Line,
   LineChart,
 } from "recharts";
-import { TimeFilter } from "@/interfaces";
+import { Baranggay, TimeFilter } from "@/interfaces";
 import { BARANGGAYS, TIME_FILTERS } from "@/constants";
 
 export default function Home() {
@@ -100,10 +100,17 @@ export default function Home() {
     pendingDeliveries,
     getCompletedDeliveries,
     completedDeliveries,
+    getSoldTransactions,
+    units,
+    setUnit,
+    timeFilter,
+    setTimeFilter,
+    setDates,
+    start,
+    end,
+    setBaranggay,
+    baranggay,
   } = useHomeStore();
-  const [units, setunits] = useState(20);
-  const [timeFilter, settimeFilter] = useState<TimeFilter>("Daily");
-  const [baranggay, setbaranggay] = useState<String>("All");
   const { getPrices } = usePriceStore() as any;
 
   const BARANGGAY_FILTERS = BARANGGAYS.map((e: any) => ({
@@ -177,6 +184,10 @@ export default function Home() {
   //   });
   // }, [solds, units, timeFilter, baranggay]);
 
+  useEffect(() => {
+    getSoldTransactions(start, end);
+  }, [getSoldTransactions, start, end]);
+
   const parsedCustomers = useMemo(() => {
     const parsedStartDay = getDates(timeFilter, units).map((e: Date) =>
       getStartDayDate(e)
@@ -198,9 +209,22 @@ export default function Home() {
       };
     });
   }, [verifiedCustomers, units, timeFilter]);
+
   useEffect(() => {
     getPendingDeliveries({});
   }, [getPendingDeliveries]);
+
+  useEffect(() => {
+    getTotalRevenueToday({});
+  }, [getTotalRevenueToday]);
+
+  useEffect(() => {
+    setDates(timeFilter, units);
+  }, [timeFilter, units, setDates]);
+
+  useEffect(() => {
+    getCompletedDeliveries({});
+  }, [getCompletedDeliveries]);
 
   useEffect(() => {
     const startDate = new Date();
@@ -235,14 +259,6 @@ export default function Home() {
   //   getDeliveriesByStatuses(0, 0, ["Pending", "Completed"]);
   // }, [getDeliveriesByStatuses, getTotal]);
 
-  useEffect(() => {
-    getTotalRevenueToday({});
-  }, [getTotalRevenueToday]);
-
-  useEffect(() => {
-    getCompletedDeliveries({});
-  }, [getCompletedDeliveries]);
-
   return (
     <main>
       <Sidenav>
@@ -273,7 +289,7 @@ export default function Home() {
           title={"Time Filter"}
           onChange={function (e: any): void {
             const { name, value } = e.target;
-            settimeFilter(value);
+            setTimeFilter(value as TimeFilter);
           }}
         />
         <SelectField
@@ -282,7 +298,7 @@ export default function Home() {
           title={"Time Filter"}
           onChange={function (e: any): void {
             const { name, value } = e.target;
-            setbaranggay(value);
+            setBaranggay(value as Baranggay);
           }}
         />
         <InputField
@@ -291,15 +307,17 @@ export default function Home() {
           value={units}
           onChange={function (e: any): void {
             const { name, value } = e.target;
-            setunits(value);
+            setUnit(Number(value));
           }}
         ></InputField>
 
-        <PriceChangesChart>
+        {/* <PriceChangesChart>
           <RetailerPriceChangesChart timeFilter={timeFilter} units={units} />
           <CustomerPriceChangesChart timeFilter={timeFilter} units={units} />
-        </PriceChangesChart>
-
+        </PriceChangesChart> */}
+        <BrandNewTanksChart />
+        <RefillTanksChart />
+        <AccessoriesChart />
         <button
           className="bg-blue-500 text-white px-4 py-2 rounded-md"
           onClick={downloadAsPDF2}

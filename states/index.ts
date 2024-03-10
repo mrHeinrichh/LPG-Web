@@ -21,7 +21,6 @@ import useCreateItemStore from "./createItem";
 import useTransactionStore from "./transaction";
 import useEditItemStore from "./editItem";
 import useDeliveriesStore from "./deliveries";
-
 export {
   useDeliveriesStore,
   useEditItemStore,
@@ -93,7 +92,7 @@ export const useAuthStore = create((set) => ({
 //   ) => {
 //     const temp = `transactions?page=${page}&limit=${limit}&filter={"$and": [{ "createdAt": { "$gte": "${start.toISOString()}", "$lte": "${end.toISOString()}" }}, {"$or": [{"$and": [{"__t": "Delivery"}, {"status": "Completed"}]}, {"__t": {"$eq": null}}]}]} `;
 //     const { data } = await get(temp);
-//     if (data.status == "success") {
+//     if (data.status == "success") {.
 //       return set(() => ({ solds: data.data }));
 //     }
 //   },

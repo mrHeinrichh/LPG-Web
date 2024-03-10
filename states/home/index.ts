@@ -13,11 +13,61 @@ import {
   userRepository,
 } from "@/repositories";
 import { initialState } from "./initialState";
-import { IQuery } from "@/interfaces";
-import { getEndDayDate, getStartDayDate } from "@/utils";
+import { Baranggay, IQuery, TimeFilter } from "@/interfaces";
+import { getEndDayDate, getMutiplier, getStartDayDate } from "@/utils";
 import { ICustomerModel, IDeliveryModel } from "@/models";
 
 export default create<HomeStore>((set) => {
+  const setBaranggay = (baranggay: Baranggay) => {
+    return set(() => {
+      return {
+        baranggay,
+      };
+    });
+  };
+  const setDates = (timeFilter: TimeFilter, units: number) => {
+    return set(() => {
+      const startDate = new Date();
+      const endDate = new Date();
+      startDate.setDate(startDate.getDate() - units * getMutiplier(timeFilter));
+      return {
+        start: startDate,
+        end: endDate,
+      };
+    });
+  };
+
+  const setUnit = (value: number) => {
+    return set(() => {
+      return {
+        units: value,
+      };
+    });
+  };
+
+  const setTimeFilter = (value: TimeFilter) => {
+    return set(() => {
+      return {
+        timeFilter: value,
+      };
+    });
+  };
+
+  const getSoldTransactions = async (start: Date, end: Date) => {
+    const { data, status } =
+      await transactionRepository.getTransactions<IDeliveryModel>({
+        page: 0,
+        limit: 0,
+        filter: `{"$and": [{ "createdAt": { "$gte": "${start.toISOString()}", "$lte": "${end.toISOString()}" }}, {"$or": [{"$and": [{"__t": "Delivery"}, {"status": "Completed"}]}, {"__t": {"$eq": null}}]}]} `,
+      });
+
+    console.log({ data, status });
+
+    if (status === "success") {
+      return set(() => ({ soldTransactions: data }));
+    }
+  };
+
   const getVerifiedCustomers = async (
     start = getStartDayDate(new Date()),
     end = getEndDayDate(new Date())
@@ -56,6 +106,7 @@ export default create<HomeStore>((set) => {
       return set(() => ({ completedDeliveries: data }));
     }
   };
+
   const getTotalRevenueToday: GetTotalRevenueToday = async ({
     page = 0,
     limit = 0,
@@ -124,6 +175,9 @@ export default create<HomeStore>((set) => {
   };
 
   return {
+    setBaranggay,
+    setTimeFilter,
+    setUnit,
     getPendingDeliveries,
     getVerifiedCustomers,
     getCompletedDeliveries,
@@ -132,6 +186,8 @@ export default create<HomeStore>((set) => {
     priceNext,
     getPrices,
     priceBack,
+    getSoldTransactions,
+    setDates,
     ...initialState,
   };
 });

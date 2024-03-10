@@ -64,7 +64,6 @@ export default create<EditItemStore>((set) => {
       reason: body.reason == "" ? body.reason : null,
       type: "Customer",
     });
-    console.log({ data, status, message });
 
     if (status == "success" && data.length !== 0) {
       return set(() => ({

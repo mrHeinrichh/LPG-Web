@@ -13,8 +13,6 @@ export default create<PendingCustomerListStore>((set) => {
       filter: `{"__t": "Customer", "verified": false}`,
     });
 
-    console.log(data);
-
     if (status === "success") {
       return set(() => ({ pendingCustomers: data }));
     }

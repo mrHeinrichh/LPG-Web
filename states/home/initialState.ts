@@ -8,4 +8,10 @@ export const initialState: IHomeState = {
   verifiedCustomers: [],
   pendingDeliveries: [],
   completedDeliveries: [],
+  soldTransactions: [],
+  units: 10,
+  timeFilter: "Daily",
+  start: new Date(),
+  end: new Date(),
+  baranggay: "All",
 };

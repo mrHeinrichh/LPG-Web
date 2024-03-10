@@ -10,7 +10,10 @@ import SelectField from "./SelectField";
 import ApprovalsList from "./ApprovalsList";
 import DeliveryDetailsModal from "./DeliveryDetailsModal";
 import DeliveryCard from "./DeliveryCard";
+import BarGraph from "./BarGraph";
+
 export {
+  BarGraph,
   DeliveryCard,
   DeliveryDetailsModal,
   ApprovalsList,

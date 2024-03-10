@@ -1,4 +1,6 @@
-export const BARANGGAYS: String[] = [
+import { Baranggay } from "@/interfaces";
+
+export const BARANGGAYS: Baranggay[] = [
   "All",
   "Bagumbayan",
   "Bambang",

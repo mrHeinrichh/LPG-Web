@@ -1,34 +1,15 @@
 "use client";
 import { ITEM_CATEGORIES } from "@/constants";
-import { useTransactionStore } from "@/states";
-import { Card } from 'antd'; // Assuming you're using Ant Design
-import {
-  generateRandomColor,
-  getDates,
-  getMutiplier,
-  getStartDayDate,
-} from "@/utils";
+import { useHomeStore } from "@/states";
+import { getDates, getMutiplier, getStartDayDate } from "@/utils";
 import { useMemo } from "react";
-import {
-  BarChart,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Legend,
-  Bar,
-  Rectangle,
-} from "recharts";
+import { BarGraph } from "@/components";
 
-export default function BrandNewTanksChart({
-  timeFilter,
-  units,
-  baranggay,
-}: any) {
-  const { solds } = useTransactionStore() as any;
+export default function BrandNewTanksChart() {
+  const { soldTransactions, timeFilter, units, baranggay } = useHomeStore();
 
   const keywords = useMemo(() => {
-    const itemsList = solds.map((sold: any) => sold.items);
+    const itemsList = soldTransactions.map((sold: any) => sold.items);
     const temp = new Set<string>();
     itemsList.forEach((items: any) => {
       items.forEach((item: any) => {
@@ -42,7 +23,7 @@ export default function BrandNewTanksChart({
     });
 
     return [...temp];
-  }, [solds]);
+  }, [soldTransactions]);
 
   const data = useMemo(() => {
     const parsedStartDay = getDates(timeFilter, units).map((e: Date) =>
@@ -57,11 +38,11 @@ export default function BrandNewTanksChart({
         temp[keyword] = 0;
       });
 
-      let transactionsTemp = solds.filter((sold: any) => {
+      let transactionsTemp = soldTransactions.filter((sold: any) => {
         return (
           e.getTime() <= getStartDayDate(new Date(sold.createdAt)).getTime() &&
           e.getTime() + 86399999 * multiplier >=
-          getStartDayDate(new Date(sold.createdAt)).getTime()
+            getStartDayDate(new Date(sold.createdAt)).getTime()
         );
       });
 
@@ -90,44 +71,11 @@ export default function BrandNewTanksChart({
         ...temp,
       };
     });
-  }, [solds, timeFilter, units, baranggay, keywords]);
+  }, [soldTransactions, timeFilter, units, baranggay, keywords]);
 
   return (
-    <Card style={{ background: 'white' }}>
-
-      <div>
-        <p className="text-2xl font-black">Brand New Tanks Sales</p>
-        <BarChart
-          width={1200}
-          height={400}
-          data={data}
-          margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          {keywords.map((e: any) => (
-            <Bar
-              key={e}
-              dataKey={e}
-              fill={generateRandomColor()}
-              activeBar={
-                <Rectangle
-                  fill={generateRandomColor()}
-                  stroke={generateRandomColor()}
-                />
-              }
-            />
-          ))}
-        </BarChart>
-      </div>
-    </Card>
+    <>
+      <BarGraph data={data} title="Brand New Tanks Sales" keywords={keywords} />
+    </>
   );
 }

@@ -1,10 +1,11 @@
-import { IQuery } from "@/interfaces";
+import { Baranggay, IQuery, TimeFilter } from "@/interfaces";
 import {
   ICartItemModel,
   ICustomerModel,
   IDeliveryModel,
   IItemModel,
   IPriceModel,
+  ITransactionModel,
 } from "@/models";
 
 // Types & Interfaces
@@ -17,6 +18,11 @@ export type PriceNext = () => void;
 export type PriceBack = () => void;
 export type SetPriceLimit = (value: number) => void;
 export type GetVerifiedCustomers = () => void;
+export type GetSoldTransactions = (start: any, end: any) => Promise<void>;
+export type SetUnit = (value: number) => void;
+export type SetTimeFilter = (value: TimeFilter) => void;
+export type SetDates = (timeFilter: TimeFilter, units: number) => void;
+export type SetBaranggay = (baranggay: Baranggay) => void;
 
 // Actions
 export interface IHomeActions {
@@ -28,6 +34,11 @@ export interface IHomeActions {
   getVerifiedCustomers: GetVerifiedCustomers;
   getPendingDeliveries: GetPendingDeliveries;
   getCompletedDeliveries: GetCompletedDeliveries;
+  getSoldTransactions: GetSoldTransactions;
+  setUnit: SetUnit;
+  setTimeFilter: SetTimeFilter;
+  setDates: SetDates;
+  setBaranggay: SetBaranggay;
 }
 
 // States
@@ -36,9 +47,32 @@ export interface IHomeState {
   verifiedCustomers: ICustomerModel[];
   pendingDeliveries: IDeliveryModel[];
   completedDeliveries: IDeliveryModel[];
+  soldTransactions: ITransactionModel[];
   pricePage: number;
   priceLimit: number;
   revenueToday: number;
+  units: number;
+  timeFilter: TimeFilter;
+  start: Date;
+  end: Date;
+  baranggay: Baranggay;
 }
 
 export type HomeStore = IHomeActions & IHomeState;
+// import { IQuery } from "@/interfaces";
+// import { ITransactionModel } from "@/models";
+
+// // Types & Interfaces
+// export type GetSoldTransactions = (query: IQuery) => Promise<void>;
+
+// // Actions
+// export interface IChartActions {
+//   getSoldTransactions: GetSoldTransactions;
+// }
+
+// // States
+// export interface IChartState {
+//   soldTransactions: ITransactionModel[];
+// }
+
+// export type ChartStore = IChartActions & IChartState;

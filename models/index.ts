@@ -85,8 +85,7 @@ export interface ITransactionModel extends IModel {
   name: string;
   contactNumber: string;
   total: number;
-  // TODO: Add cart items model
-  items: any[];
+  items: ICartItemModel[];
   discounted: boolean;
   completed: boolean;
   discountIdImage: string;
