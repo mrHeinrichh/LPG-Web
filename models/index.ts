@@ -2,6 +2,12 @@
 export interface IModel {
   _id?: string;
   __t?: string;
+  applicationResponsiveness: String;
+  orderAcceptance: String;
+  riderPerformance: String;
+  overallSatisfaction: String;
+  recommendation: String;
+
   deleted: boolean;
   createdAt: Date | string;
   updatedAt: Date | string;

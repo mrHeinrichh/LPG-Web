@@ -12,6 +12,7 @@ import DeliveryDetailsModal from "./DeliveryDetailsModal";
 import DeliveryCard from "./DeliveryCard";
 import BarGraph from "./BarGraph";
 import LineGraph from "./LineGraph";
+import SentimentCard from "./SentimentCard";
 export {
   LineGraph,
   BarGraph,
@@ -24,6 +25,7 @@ export {
   Datatable,
   StatsCard,
   Card,
+  SentimentCard,
   Sidenav,
   Navbar,
   Button,

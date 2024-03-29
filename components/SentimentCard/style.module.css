@@ -1,0 +1,7 @@
+.container {
+  @apply bg-white-100 shadow-sm;
+}
+
+.smaller {
+  @apply p-1 rounded-md;
+}
