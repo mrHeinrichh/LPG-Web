@@ -7,14 +7,18 @@ import Button from "../Button";
 import { useDeliveriesStore } from "@/states";
 
 function DeliveryDetailsModal({ isOpen, setIsOpen, data }: any) {
-  const { approve } = useDeliveriesStore();
+  const { approve, decline } = useDeliveriesStore();
   const [cancelReason, setCancelReason] = React.useState<string>("");
-  const { decline } = useDeliveriesStore();
   const [showCancelReasonInput, setShowCancelReasonInput] = React.useState<boolean>(false);
 
   if (!isOpen) {
     return <></>;
   }
+
+  // Calculate discounted amount
+  const discountedAmount = data.discountIdImage != null ? data.total * 0.2 : 0;
+  // Calculate deducted amount from the total
+  const deductedAmount = data.total - discountedAmount;
 
   return (
     <div className="fixed min-h-screen min-w-full z-30 bg-gray-500/50 flex justify-center items-center">
@@ -86,6 +90,15 @@ function DeliveryDetailsModal({ isOpen, setIsOpen, data }: any) {
             <div className="w-full flex item-center justify-between">
               <p>Total</p>
               <p>{data.total} PHP</p>
+            </div>
+            {/* Display discounted amount and deducted amount */}
+            <div className="w-full flex item-center justify-between">
+              <p>Discounted Amount (20%): </p>
+              <p>₱{discountedAmount}</p>
+            </div>
+            <div className="w-full flex item-center justify-between">
+              <p>Deducted from Total: </p>
+              <p>₱{deductedAmount}</p>
             </div>
           </div>
         </div>

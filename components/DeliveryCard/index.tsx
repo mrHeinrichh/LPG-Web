@@ -3,6 +3,11 @@ import React from "react";
 import Card from "../Card";
 
 function DeliveryCard({ data, onClick }: any) {
+  // Calculate discounted amount
+  const discountedAmount = data.discountIdImage != null ? data.total * 0.2 : 0;
+  // Calculate deducted amount from the total
+  const deductedAmount = data.total - discountedAmount;
+
   return (
     <Card onClick={onClick}>
       <div className="flex flex-col gap-4 p-3">
@@ -42,14 +47,15 @@ function DeliveryCard({ data, onClick }: any) {
           <p className="">₱{data.total}</p>
         </div>
 
-        {/* {data.status == "Pending" ? (
-          <div className="flex w-full items-center justify-between">
-            <Button>Approve</Button>
-            <Button>Decline</Button>
-          </div>
-        ) : (
-          <></>
-        )} */}
+        {/* Display discounted amount and deducted amount */}
+        <div className="flex w-full items-center justify-between">
+          <p>Discounted Amount (20%): </p>
+          <p className="">₱{discountedAmount}</p>
+        </div>
+        <div className="flex w-full items-center justify-between">
+          <p>Deducted from Total: </p>
+          <p className="">₱{deductedAmount}</p>
+        </div>
       </div>
     </Card>
   );
