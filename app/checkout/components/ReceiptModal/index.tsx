@@ -10,14 +10,6 @@ function ReceiptModal({ isOpen, setIsOpen }: any) {
     useCheckoutStore();
   const { cartItems } = useWalkinStore();
 
-  const total = useMemo(() => {
-    const temp = cartItems.reduce(
-      (acc: any, curr: any) => acc + curr.customerPrice * curr.quantity,
-      0
-    );
-    return discounted ? temp * DISCOUNT : temp;
-  }, [cartItems, discounted]);
-  
 
   const handleSubmit = async () => {
     createTransaction({
@@ -27,8 +19,24 @@ function ReceiptModal({ isOpen, setIsOpen }: any) {
       discounted,
     });
   };
+  const discountedAmount = useMemo(() => {
+    const temp = cartItems.reduce(
+      (acc: any, curr: any) => acc + curr.customerPrice * curr.quantity,
+      0
+    );
+    const discountApplied = temp * DISCOUNT;
+    return discountApplied;
+  }, [cartItems]);
   
+  const total = useMemo(() => {
+    const temp = cartItems.reduce(
+      (acc: any, curr: any) => acc + curr.customerPrice * curr.quantity,
+      0
+    );
+    return temp;
+  }, [cartItems]);
   
+  const deductedAmount = total - discountedAmount;
 
   if (!isOpen) {
     return <></>;
@@ -65,8 +73,18 @@ function ReceiptModal({ isOpen, setIsOpen }: any) {
             );
           })}
         </div>
+        <br />
+        <div className="w-full flex item-center justify-between">
+          <p>Discounted Amount (20%):</p>
+          <p> {discountedAmount} PHP</p>
+        </div>
+        <div className="w-full flex item-center justify-between">
+          <p>Deducted from Total:</p>
+          <p> {deductedAmount} PHP</p>
+        </div>
 
         <div className="w-full flex item-center justify-between">
+          
           <p>Total</p>
           <p>{total} PHP</p>
         </div>

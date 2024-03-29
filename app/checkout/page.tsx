@@ -32,14 +32,24 @@ export default function Checkout({}: any) {
     setDiscounted(isChecked);
     console.log('Discounted:', discounted);
   };
+
+  const discountedAmount = useMemo(() => {
+    const temp = cartItems.reduce(
+      (acc: any, curr: any) => acc + curr.customerPrice * curr.quantity,
+      0
+    );
+    const discountApplied = temp * DISCOUNT;
+    return discountApplied;
+  }, [cartItems]);
+  
   
   const total = useMemo(() => {
     const temp = cartItems.reduce(
       (acc: any, curr: any) => acc + curr.customerPrice * curr.quantity,
       0
     );
-    return discounted ? temp * DISCOUNT : temp;
-  }, [cartItems, discounted]);
+    return temp;
+  }, [cartItems]);
 
   useEffect(() => {
     if (createSuccess) {
