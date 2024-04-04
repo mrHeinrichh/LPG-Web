@@ -12,6 +12,8 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { TABLE_HEADERS } from "./data";
 import axios from "axios";
 import Chart from "chart.js/auto";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 // Define an interface for transaction data
 interface Transaction {
@@ -317,7 +319,19 @@ const handleStartDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 const handleEndDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   setEndDate(new Date(event.target.value));
 };
-
+const downloadChartAsPdf = async (canvasId: string) => {
+  const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
+  const pdf = new jsPDF();
+  const ratio = 2; // Adjust ratio for better resolution if needed
+  const width = canvas.width / ratio;
+  const height = canvas.height / ratio;
+  const imageData = await html2canvas(canvas, { scale: ratio }).then(canvas =>
+    canvas.toDataURL('image/png')
+  );
+  pdf.addImage(imageData, 'PNG', 0, 0, width, height);
+  pdf.save(`${canvasId}.pdf`);
+  };
+  
   const filteredTransactions = useMemo(() => {
     if (!startDate || !endDate) return transactions;
     return transactions.filter((transaction) => {
@@ -395,11 +409,44 @@ const handleEndDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 
           </Datatable>
         </Card>
+        <div className="flex justify-center mt-4 space-x-4">
+        <button
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none"
+          onClick={() => downloadChartAsPdf('applicationResponsiveness')}
+        >
+          Download applicationResponsiveness Chart
+        </button>
+        <button
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none"
+          onClick={() => downloadChartAsPdf('orderAcceptance')}
+        >
+          Download orderAcceptance Chart
+        </button>
+        <button
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none"
+          onClick={() => downloadChartAsPdf('riderPerformance')}
+        >
+          Download riderPerformance Chart
+        </button>
+        <button
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none"
+          onClick={() => downloadChartAsPdf('overallSatisfaction')}
+        >
+          Download overallSatisfaction Chart
+        </button>
+        <button
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none"
+          onClick={() => downloadChartAsPdf('recommendation')}
+        >
+          Download recommendation Chart
+        </button>
+      </div>
       </Sidenav>
       <SentimentCard id="chartsCard" className="flex flex-row space-x-4 overflow-x-auto">
         <canvas id="applicationResponsiveness"></canvas>
       
       </SentimentCard>
+      
       <canvas id="orderAcceptance"></canvas>
         <canvas id="riderPerformance"></canvas>
         <canvas id="overallSatisfaction"></canvas>
