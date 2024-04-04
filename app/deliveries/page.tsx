@@ -108,15 +108,7 @@ useEffect(() => {
           <ApprovedDeliveryList setcurrent={setcurrent} setopen={setopen} />
           <OnGoingDeliveryList setcurrent={setcurrent} setopen={setopen} />
         </div>
-        <p className="text-2xl font-bold">Delivery Feedbacks</p>
-        <div className="flex justify-between items-center w-full mt-5 mb-2 bg-white-100 rounded-md px-4 py-2">
-          <div className=""></div>
-          <div className="flex justify-end mt-2">
-            <button className="bg-blue-500 text-white px-4 py-2 rounded-md" onClick={downloadFeedbackData}>
-              Download Datatable Data
-            </button>
-          </div>
-        </div>
+      
         <div className="w-full flex justify-between py-2 px-3 bg-white-50">
           <div className="flex items-center gap-4 ">
             <SelectField

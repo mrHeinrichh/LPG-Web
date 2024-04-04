@@ -31,6 +31,7 @@ export default function Deliveries() {
     setLimit,
     nextPage,
     previousPage,
+    feedbacks,
   } = useDeliveriesStore();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
@@ -270,10 +271,55 @@ export default function Deliveries() {
       }
     });
   }
-
+  const downloadFeedbackData = () => {
+    const feedbackArrayData = transactions.map((transaction: Transaction) => {
+      // Constructing a CSV row for each transaction
+      const rowData = [
+        transaction.applicationResponsiveness,
+        transaction.orderAcceptance,
+        transaction.riderPerformance,
+        transaction.overallSatisfaction,
+        transaction.recommendation,
+        transaction.updatedAt.toString() // Assuming updatedAt is a Date object
+      ];
+      return rowData.join(','); // Joining the fields with commas
+    });
+  
+    // Constructing the CSV string
+    const csvString = 'applicationResponsiveness,orderAcceptance,riderPerformance,overallSatisfaction,recommendation,updatedAt\n' + feedbackArrayData.join('\n');
+  
+    // Creating a Blob from the CSV string
+    const blob = new Blob([csvString], { type: 'text/csv' });
+  
+    // Creating a URL for the Blob
+    const url = window.URL.createObjectURL(blob);
+  
+    // Creating a link element to trigger the download
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'feedback_data.csv';
+  
+    // Triggering the download
+    document.body.appendChild(a);
+    a.click();
+  
+    // Cleanup
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  };
+  
   return (
     <>
       <Sidenav>
+      <p className="text-2xl font-bold">Delivery Feedbacks</p>
+        <div className="flex justify-between items-center w-full mt-5 mb-2 bg-white-100 rounded-md px-4 py-2">
+          <div className=""></div>
+          <div className="flex justify-end mt-2">
+            <button className="bg-blue-500 text-white px-4 py-2 rounded-md" onClick={downloadFeedbackData}>
+              Download Datatable Data
+            </button>
+          </div>
+        </div>
         <Card>
           <p className="text-2xl font-bold">Feedbacks</p>
           <div className="w-full flex justify-between py-2 px-3 bg-white-50">
