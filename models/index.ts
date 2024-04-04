@@ -67,7 +67,7 @@ export interface IDeliveryModel extends ITransactionModel {
   houseLotBlk: string;
   paymentMethod: PaymentMethod;
   status: DeliveryStatus;
-  assembly: boolean;
+  installed: boolean;
   deliveryDate: Date | string | null;
   barangay: string;
   to: string | IUserModel;
