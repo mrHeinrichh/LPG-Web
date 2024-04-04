@@ -108,51 +108,8 @@ useEffect(() => {
           <ApprovedDeliveryList setcurrent={setcurrent} setopen={setopen} />
           <OnGoingDeliveryList setcurrent={setcurrent} setopen={setopen} />
         </div>
-      
-        <div className="w-full flex justify-between py-2 px-3 bg-white-50">
-          <div className="flex items-center gap-4 ">
-            <SelectField
-              options={[
-                { title: '100', value: 100 },
-                { title: '20', value: 20 },
-                { title: '10', value: 10 },
-                { title: '5', value: 5 },
-                { title: '1', value: 1 },
-              ]}
-              name={''}
-              title={''}
-              onChange={(e: any) => {
-                setLimit(Number(e.target.value));
-              }}
-            />
-          </div>
-          <div className="flex items-center gap-4 ">
-            <FaChevronLeft
-              onClick={() => {
-                previousPage();
-              }}
-            />
 
-            {page}
-            <FaChevronRight
-              onClick={() => {
-                nextPage();
-              }}
-            />
-          </div>
-        </div>
-        <Datatable header={TABLE_HEADERS}>
-            {transactions.map((transaction) => (
-              <tr key={transaction._id}>
-                <td>{transaction.applicationResponsiveness}</td>
-                <td>{transaction.orderAcceptance}</td>
-                <td>{transaction.riderPerformance}</td>
-                <td>{transaction.overallSatisfaction}</td>
-                <td>{transaction.recommendation}</td>
-                <td>{transaction.updatedAt.toString()}</td>
-              </tr>
-            ))}
-          </Datatable>
+      
       </Sidenav>
     </>
   );
