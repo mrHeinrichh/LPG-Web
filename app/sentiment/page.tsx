@@ -53,6 +53,12 @@ export default function Deliveries() {
     };
     fetchTransactions();
   }, []);
+  const [startDate, setStartDate] = useState<Date | null>(null);
+const [endDate, setEndDate] = useState<Date | null>(null);
+
+const handleStartDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  setStartDate(new Date(event.target.value));
+};
 
   useEffect(() => {
     if (transactions.length > 0) {
@@ -64,7 +70,7 @@ export default function Deliveries() {
 
 
     }
-  }, [transactions]);
+  }, [transactions, startDate, endDate]);
 
   const createBarGraph = (transactions: Transaction[]) => {
     const sentiments = transactions.map(transaction => transaction.applicationResponsiveness);
@@ -309,12 +315,6 @@ export default function Deliveries() {
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
   };
-  const [startDate, setStartDate] = useState<Date | null>(null);
-const [endDate, setEndDate] = useState<Date | null>(null);
-
-const handleStartDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  setStartDate(new Date(event.target.value));
-};
 
 const handleEndDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   setEndDate(new Date(event.target.value));
@@ -339,6 +339,11 @@ const downloadChartAsPdf = async (canvasId: string) => {
       return transactionDate >= startDate && transactionDate <= endDate;
     });
   }, [transactions, startDate, endDate]);
+  
+  
+  
+  
+  
   
   return (
     <>
