@@ -7,7 +7,7 @@ import {
   SentimentCard,
 } from "@/components";
 import { useDeliveriesStore } from "@/states";
-import { useEffect, useState } from "react";
+import React, { useState, useEffect, useMemo } from 'react';
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { TABLE_HEADERS } from "./data";
 import axios from "axios";
@@ -307,10 +307,29 @@ export default function Deliveries() {
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
   };
+  const [startDate, setStartDate] = useState<Date | null>(null);
+const [endDate, setEndDate] = useState<Date | null>(null);
+
+const handleStartDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  setStartDate(new Date(event.target.value));
+};
+
+const handleEndDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  setEndDate(new Date(event.target.value));
+};
+
+  const filteredTransactions = useMemo(() => {
+    if (!startDate || !endDate) return transactions;
+    return transactions.filter((transaction) => {
+      const transactionDate = new Date(transaction.updatedAt);
+      return transactionDate >= startDate && transactionDate <= endDate;
+    });
+  }, [transactions, startDate, endDate]);
   
   return (
     <>
       <Sidenav>
+
       <p className="text-2xl font-bold">Delivery Feedbacks</p>
         <div className="flex justify-between items-center w-full mt-5 mb-2 bg-white-100 rounded-md px-4 py-2">
           <div className=""></div>
@@ -321,6 +340,15 @@ export default function Deliveries() {
           </div>
         </div>
         <Card>
+        <div>
+  <label>Start Date:</label>
+  <input type="date" onChange={handleStartDateChange} />
+</div>
+<div>
+  <label>End Date:</label>
+  <input type="date" onChange={handleEndDateChange} />
+</div>
+
           <p className="text-2xl font-bold">Feedbacks</p>
           <div className="w-full flex justify-between py-2 px-3 bg-white-50">
             <div className="flex items-center gap-4 ">
@@ -354,16 +382,17 @@ export default function Deliveries() {
             </div>
           </div>
           <Datatable header={TABLE_HEADERS}>
-            {transactions.map((transaction) => (
-              <tr key={transaction._id}>
-                <td>{transaction.applicationResponsiveness}</td>
-                <td>{transaction.orderAcceptance}</td>
-                <td>{transaction.riderPerformance}</td>
-                <td>{transaction.overallSatisfaction}</td>
-                <td>{transaction.recommendation}</td>
-                <td>{transaction.updatedAt.toString()}</td>
-              </tr>
-            ))}
+          {filteredTransactions.map((transaction: any) => (
+  <tr key={transaction._id}>
+    <td>{transaction.applicationResponsiveness}</td>
+    <td>{transaction.orderAcceptance}</td>
+    <td>{transaction.riderPerformance}</td>
+    <td>{transaction.overallSatisfaction}</td>
+    <td>{transaction.recommendation}</td>
+    <td>{transaction.updatedAt.toString()}</td>
+  </tr>
+))}
+
           </Datatable>
         </Card>
       </Sidenav>
