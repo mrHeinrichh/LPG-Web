@@ -68,8 +68,6 @@ export default function Deliveries() {
       createBarGraph3(transactions);
       createBarGraph4(transactions);
       createBarGraph5(transactions);
-
-
     }
   }, [transactions, startDate, endDate]);
 
@@ -83,12 +81,14 @@ export default function Deliveries() {
     canvas.height = 50; // Adjust height as needed
     canvas.style.marginRight = '10px'; // Add margin between canvases
 
+
     const ctx = document.getElementById('applicationResponsiveness') as HTMLCanvasElement;
     new Chart(ctx, {
       type: 'bar',
       data: {
         labels: ['Positive', 'Negative', 'Neutral'],
         datasets: [{
+          label: 'applicationResponsiveness',
           data: [positiveCount, negativeCount, neutralCount],
           backgroundColor: [
             'rgba(75, 192, 192, 0.2)',
@@ -324,7 +324,7 @@ export default function Deliveries() {
   const downloadChartAsPdf = async (canvasId: string) => {
     const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
     const pdf = new jsPDF();
-    const ratio = 2; // Adjust ratio for better resolution if needed
+    const ratio = 8; // Adjust ratio for better resolution if needed
     const width = canvas.width / ratio;
     const height = canvas.height / ratio;
     const imageData = await html2canvas(canvas, { scale: ratio }).then(canvas =>
