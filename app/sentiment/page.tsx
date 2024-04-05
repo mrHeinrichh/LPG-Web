@@ -14,9 +14,7 @@ import axios from "axios";
 import Chart from "chart.js/auto";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import { BarChart } from "recharts";
 
-// Define an interface for transaction data
 interface Transaction {
   _id: string;
   applicationResponsiveness: string;
@@ -26,16 +24,8 @@ interface Transaction {
   recommendation: string;
   updatedAt: Date;
 }
-
 export default function Deliveries() {
-  const {
-    page,
-    limit,
-    setLimit,
-    nextPage,
-    previousPage,
-    feedbacks,
-  } = useDeliveriesStore();
+  const { page, limit, setLimit, nextPage, previousPage, feedbacks } = useDeliveriesStore();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -60,35 +50,58 @@ export default function Deliveries() {
   const handleStartDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setStartDate(new Date(event.target.value));
   };
+  const [filteredTransactions, setFilteredTransactions] = useState<Transaction[]>([]);
 
   useEffect(() => {
     if (transactions.length > 0) {
-      createBarGraph(transactions);
-      createBarGraph2(transactions);
-      createBarGraph3(transactions);
-      createBarGraph4(transactions);
-      createBarGraph5(transactions);
+      createBarGraph('applicationResponsiveness', filteredTransactions);
+      createBarGraph2('orderAcceptance', filteredTransactions);
+      createBarGraph3('riderPerformance', filteredTransactions);
+      createBarGraph4('overallSatisfaction', filteredTransactions);
+      createBarGraph5('recommendation', filteredTransactions);
     }
-  }, [transactions, startDate, endDate]);
+  }, [filteredTransactions]);
 
-  const createBarGraph = (transactions: Transaction[]) => {
-    const sentiments = transactions.map(transaction => transaction.applicationResponsiveness);
+  useEffect(() => {
+    const filteredTransactions = transactions.filter(transaction => {
+      if (!startDate || !endDate) return true;
+      const transactionDate = new Date(transaction.updatedAt);
+      return transactionDate >= startDate && transactionDate <= endDate;
+    });
+    setFilteredTransactions(filteredTransactions);
+  }, [startDate, endDate, transactions]);
+
+  useEffect(() => {
+    if (filteredTransactions.length > 0) {
+      createBarGraph('applicationResponsiveness', filteredTransactions);
+      createBarGraph2('orderAcceptance', filteredTransactions);
+      createBarGraph3('riderPerformance', filteredTransactions);
+      createBarGraph4('overallSatisfaction', filteredTransactions);
+      createBarGraph5('recommendation', filteredTransactions);
+    }
+  }, [filteredTransactions]);
+
+
+  const createBarGraph = <K extends keyof Transaction>(canvasId: K, transactions: Transaction[]) => {
+    const sentiments = transactions.map(transaction => transaction[canvasId]);
+
     const positiveCount = sentiments.filter(sentiment => sentiment === 'Absolutely Satisfied').length;
     const negativeCount = sentiments.filter(sentiment => sentiment === 'Somewhat Dissatisfied').length;
     const neutralCount = sentiments.filter(sentiment => sentiment === 'Moderately Satisfied').length;
-    const canvas = document.createElement('canvas');
-    canvas.width = 50; // Adjust width as needed
-    canvas.height = 50; // Adjust height as needed
-    canvas.style.marginRight = '10px'; // Add margin between canvases
 
+    const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
+    const existingChart = Chart.getChart(canvas);
 
-    const ctx = document.getElementById('applicationResponsiveness') as HTMLCanvasElement;
-    new Chart(ctx, {
+    if (existingChart) {
+      existingChart.destroy();
+    }
+
+    new Chart(canvas, {
       type: 'bar',
       data: {
         labels: ['Positive', 'Negative', 'Neutral'],
         datasets: [{
-          label: 'applicationResponsiveness',
+          label: canvasId,
           data: [positiveCount, negativeCount, neutralCount],
           backgroundColor: [
             'rgba(75, 192, 192, 0.2)',
@@ -100,7 +113,7 @@ export default function Deliveries() {
             'rgba(255, 99, 132, 1)',
             'rgba(255, 206, 86, 1)',
           ],
-          borderWidth: 4
+          borderWidth: 1
         }]
       },
       options: {
@@ -111,27 +124,27 @@ export default function Deliveries() {
         }
       }
     });
+  };
+  const createBarGraph2 = <K extends keyof Transaction>(canvasId: K, transactions: Transaction[]) => {
+    const sentiments = transactions.map(transaction => transaction[canvasId]);
 
-
-  }
-
-  const createBarGraph2 = (transactions: Transaction[]) => {
-    const sentiments = transactions.map(transaction => transaction.orderAcceptance);
     const positiveCount = sentiments.filter(sentiment => sentiment === 'Fast and Hasslefree').length;
     const negativeCount = sentiments.filter(sentiment => sentiment === 'Complicated and Inconvenient').length;
     const neutralCount = sentiments.filter(sentiment => sentiment === 'Experiencing Delays but Tolerable').length;
-    const canvas = document.createElement('canvas');
-    canvas.width = 50; // Adjust width as needed
-    canvas.height = 50; // Adjust height as needed
-    canvas.style.marginRight = '10px'; // Add margin between canvases
 
-    const ctx = document.getElementById('orderAcceptance') as HTMLCanvasElement;
-    new Chart(ctx, {
+    const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
+    const existingChart = Chart.getChart(canvas);
+
+    if (existingChart) {
+      existingChart.destroy();
+    }
+
+    new Chart(canvas, {
       type: 'bar',
       data: {
         labels: ['Positive', 'Negative', 'Neutral'],
         datasets: [{
-          label: 'orderAcceptance',
+          label: canvasId,
           data: [positiveCount, negativeCount, neutralCount],
           backgroundColor: [
             'rgba(75, 192, 192, 0.2)',
@@ -143,7 +156,7 @@ export default function Deliveries() {
             'rgba(255, 99, 132, 1)',
             'rgba(255, 206, 86, 1)',
           ],
-          borderWidth: 4
+          borderWidth: 1
         }]
       },
       options: {
@@ -154,24 +167,28 @@ export default function Deliveries() {
         }
       }
     });
-  }
-  const createBarGraph3 = (transactions: Transaction[]) => {
-    const sentiments = transactions.map(transaction => transaction.riderPerformance);
+  };
+
+  const createBarGraph3 = <K extends keyof Transaction>(canvasId: K, transactions: Transaction[]) => {
+    const sentiments = transactions.map(transaction => transaction[canvasId]);
+
     const positiveCount = sentiments.filter(sentiment => sentiment === 'Interactive and Arrived on time').length;
     const negativeCount = sentiments.filter(sentiment => sentiment === 'Needs more training and arrived late').length;
     const neutralCount = sentiments.filter(sentiment => sentiment === 'Average expectation').length;
-    const canvas = document.createElement('canvas');
-    canvas.width = 50; // Adjust width as needed
-    canvas.height = 50; // Adjust height as needed
-    canvas.style.marginRight = '10px'; // Add margin between canvases
 
-    const ctx = document.getElementById('riderPerformance') as HTMLCanvasElement;
-    new Chart(ctx, {
+    const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
+    const existingChart = Chart.getChart(canvas);
+
+    if (existingChart) {
+      existingChart.destroy();
+    }
+
+    new Chart(canvas, {
       type: 'bar',
       data: {
         labels: ['Positive', 'Negative', 'Neutral'],
         datasets: [{
-          label: 'riderPerformance',
+          label: canvasId,
           data: [positiveCount, negativeCount, neutralCount],
           backgroundColor: [
             'rgba(75, 192, 192, 0.2)',
@@ -183,7 +200,7 @@ export default function Deliveries() {
             'rgba(255, 99, 132, 1)',
             'rgba(255, 206, 86, 1)',
           ],
-          borderWidth: 4
+          borderWidth: 1
         }]
       },
       options: {
@@ -194,25 +211,28 @@ export default function Deliveries() {
         }
       }
     });
-  }
+  };
 
-  const createBarGraph4 = (transactions: Transaction[]) => {
-    const sentiments = transactions.map(transaction => transaction.overallSatisfaction);
+  const createBarGraph4 = <K extends keyof Transaction>(canvasId: K, transactions: Transaction[]) => {
+    const sentiments = transactions.map(transaction => transaction[canvasId]);
+
     const positiveCount = sentiments.filter(sentiment => sentiment === 'One of a kind, will reuse the app').length;
     const negativeCount = sentiments.filter(sentiment => sentiment === 'Inconvenient, will stick to conventional purchasing method.').length;
     const neutralCount = sentiments.filter(sentiment => sentiment === 'Medium performance, needs improvement').length;
-    const canvas = document.createElement('canvas');
-    canvas.width = 10; // Adjust width as needed
-    canvas.height = 10; // Adjust height as needed
-    canvas.style.marginRight = '10px'; // Add margin between canvases
 
-    const ctx = document.getElementById('overallSatisfaction') as HTMLCanvasElement;
-    new Chart(ctx, {
+    const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
+    const existingChart = Chart.getChart(canvas);
+
+    if (existingChart) {
+      existingChart.destroy();
+    }
+
+    new Chart(canvas, {
       type: 'bar',
       data: {
         labels: ['Positive', 'Negative', 'Neutral'],
         datasets: [{
-          label: 'overallSatisfaction',
+          label: canvasId,
           data: [positiveCount, negativeCount, neutralCount],
           backgroundColor: [
             'rgba(75, 192, 192, 0.2)',
@@ -224,7 +244,7 @@ export default function Deliveries() {
             'rgba(255, 99, 132, 1)',
             'rgba(255, 206, 86, 1)',
           ],
-          borderWidth: 4
+          borderWidth: 1
         }]
       },
       options: {
@@ -235,29 +255,28 @@ export default function Deliveries() {
         }
       }
     });
-  }
-  const createBarGraph5 = (transactions: Transaction[]) => {
-    const sentiments = transactions.map(transaction => transaction.recommendation);
+  };
+
+  const createBarGraph5 = <K extends keyof Transaction>(canvasId: K, transactions: Transaction[]) => {
+    const sentiments = transactions.map(transaction => transaction[canvasId]);
+
     const positiveCount = sentiments.filter(sentiment => sentiment === 'Will highly recommend to others').length;
     const negativeCount = sentiments.filter(sentiment => sentiment === 'Unlikely to recommend to others').length;
     const neutralCount = sentiments.filter(sentiment => sentiment === 'Undecided to recommend to others').length;
-    const canvas = document.createElement('canvas');
-    canvas.width = 50; // Adjust width as needed
-    canvas.height = 50; // Adjust height as needed
-    canvas.style.marginRight = '10px'; // Add margin between canvases
-    const container = document.createElement('div');
-    container.classList.add('flex');
 
-    const ctx = document.getElementById('recommendation') as HTMLCanvasElement;
-    container.appendChild(canvas);
-    const card = document.getElementById('chartsCard') as HTMLDivElement;
+    const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
+    const existingChart = Chart.getChart(canvas);
 
-    new Chart(ctx, {
+    if (existingChart) {
+      existingChart.destroy();
+    }
+
+    new Chart(canvas, {
       type: 'bar',
       data: {
         labels: ['Positive', 'Negative', 'Neutral'],
         datasets: [{
-          label: 'recommendation',
+          label: canvasId,
           data: [positiveCount, negativeCount, neutralCount],
           backgroundColor: [
             'rgba(75, 192, 192, 0.2)',
@@ -269,7 +288,7 @@ export default function Deliveries() {
             'rgba(255, 99, 132, 1)',
             'rgba(255, 206, 86, 1)',
           ],
-          borderWidth: 4
+          borderWidth: 1
         }]
       },
       options: {
@@ -280,7 +299,14 @@ export default function Deliveries() {
         }
       }
     });
-  }
+  };
+
+
+
+
+
+
+
   const downloadFeedbackData = () => {
     const feedbackArrayData = transactions.map((transaction: Transaction) => {
       // Constructing a CSV row for each transaction
@@ -334,13 +360,6 @@ export default function Deliveries() {
     pdf.save(`${canvasId}.pdf`);
   };
 
-  const filteredTransactions = useMemo(() => {
-    if (!startDate || !endDate) return transactions;
-    return transactions.filter((transaction) => {
-      const transactionDate = new Date(transaction.updatedAt);
-      return transactionDate >= startDate && transactionDate <= endDate;
-    });
-  }, [transactions, startDate, endDate]);
 
 
 
@@ -352,23 +371,24 @@ export default function Deliveries() {
       <Sidenav>
 
         <p className="text-2xl font-bold">Delivery Feedbacks</p>
-        <div className="flex justify-between items-center mt-2">
-          <div className="flex">
-            <div className="mr-4">
-              <label htmlFor="startDate">Start Date:</label>
-              <input id="startDate" type="date" onChange={handleStartDateChange} className="ml-2" />
-            </div>
-            <div>
-              <label htmlFor="endDate">End Date:</label>
-              <input id="endDate" type="date" onChange={handleEndDateChange} className="ml-2" />
-            </div>
+        <div className="flex justify-between items-center w-full mt-5 mb-2 bg-white-100 rounded-md px-4 py-2">
+          <div className=""></div>
+          <div className="flex justify-end mt-2">
+            <button className="bg-blue-500 text-white px-4 py-2 rounded-md" onClick={downloadFeedbackData}>
+              Download Datatable Data
+            </button>
           </div>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-md" onClick={downloadFeedbackData}>
-            Download Datatable Data
-          </button>
         </div>
-
         <Card>
+          <div>
+            <label>Start Date:</label>
+            <input type="date" onChange={handleStartDateChange} />
+          </div>
+          <div>
+            <label>End Date:</label>
+            <input type="date" onChange={handleEndDateChange} />
+          </div>
+
           <p className="text-2xl font-bold">Feedbacks</p>
           <div className="w-full flex justify-between py-2 px-3 bg-white-50">
             <div className="flex items-center gap-4 ">
@@ -412,7 +432,6 @@ export default function Deliveries() {
                 <td>{transaction.updatedAt.toString()}</td>
               </tr>
             ))}
-
           </Datatable>
         </Card>
         <div className="flex justify-center mt-4 space-x-4">
@@ -447,32 +466,39 @@ export default function Deliveries() {
             Download recommendation Chart
           </button>
         </div>
+
         <br></br>
-        <div className="bg-white-50 p-6 flex justify-center items-center flex-col gap-4 rounded-lg">
-          <p className="text-2xl font-black ">Application Responsiveness</p>
+        <SentimentCard id="chartsCard" className="flex flex-row space-x-4 overflow-x-auto">
+          <p className="text-2xl font-black text-center">Application Responsiveness</p>
           <canvas id="applicationResponsiveness"></canvas>
-        </div>
+        </SentimentCard>
+
         <br></br>
-        <div className="bg-white-50 p-6 flex justify-center items-center flex-col gap-4 rounded-lg">
-          <p className="text-2xl font-black ">Order Acceptance</p>
+        <SentimentCard id="chartsCard" className="flex flex-row space-x-4 overflow-x-auto">
+          <p className="text-2xl font-black text-center">Order Acceptance</p>
           <canvas id="orderAcceptance"></canvas>
-        </div>
+        </SentimentCard>
+
         <br></br>
-        <div className="bg-white-50 p-6 flex justify-center items-center flex-col gap-4 rounded-lg">
-          <p className="text-2xl font-black ">Rider Performance</p>
+        <SentimentCard id="chartsCard" className="flex flex-row space-x-4 overflow-x-auto">
+          <p className="text-2xl font-black text-center">Rider Performance</p>
           <canvas id="riderPerformance"></canvas>
-        </div>
+        </SentimentCard>
+
         <br></br>
-        <div className="bg-white-50 p-6 flex justify-center items-center flex-col gap-4 rounded-lg">
-          <p className="text-2xl font-black ">Overall Satisfaction</p>
+        <SentimentCard id="chartsCard" className="flex flex-row space-x-4 overflow-x-auto">
+          <p className="text-2xl font-black text-center">Overall Satisfaction</p>
           <canvas id="overallSatisfaction"></canvas>
-        </div>
+        </SentimentCard>
+
         <br></br>
-        <div className="bg-white-50 p-6 flex justify-center items-center flex-col gap-4 rounded-lg">
-          <p className="text-2xl font-black ">Recommendation</p>
+        <SentimentCard id="chartsCard" className="flex flex-row space-x-4 overflow-x-auto">
+          <p className="text-2xl font-black text-center">Recommendation</p>
           <canvas id="recommendation"></canvas>
-        </div>
+        </SentimentCard>
+
       </Sidenav>
+
 
     </>
   );
